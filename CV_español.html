@@ -211,7 +211,7 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Perfil Profesional</h3>
                     <p class="text-sm text-justify leading-relaxed text-gray-700">
-                        Ingeniero de Machine Learning y Estadístico con experiencia sólida en el ciclo de vida completo de modelos de IA. Especializado en <strong>Azure Databricks</strong>, <strong>MLflow</strong> y arquitecturas <strong>RAG</strong> para GenAI. Actualmente enfocado en la integración de servicios cognitivos como <strong>Azure AI Search</strong> y <strong>Document Intelligence</strong> para automatización de procesos empresariales. Combina una fuerte base matemática con ingeniería de software (CI/CD, Docker) para desplegar soluciones escalables.
+                        AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.
                     </p>
                 </section>
 
@@ -226,9 +226,9 @@
                         </div>
                         <div class="text-sm font-semibold text-gray-600 mb-2">Proyecto Freelance / Consultoría</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>Automatización Inteligente:</strong> Implementación de <strong>Azure Document Intelligence</strong> para la extracción y estandarización automática de hojas de vida.</li>
-                            <li><strong>Motores de Búsqueda:</strong> Integración con <strong>Azure AI Search</strong> para consultas semánticas rápidas y comparativas entre candidatos y ofertas.</li>
-                            <li><strong>Algoritmos de Matching:</strong> Configuración de coeficientes de similitud para optimizar la selección de talento humano.</li>
+                            <li><strong>Sistema de Matching CV-Oferta:</strong> Desarrollé pipeline completo con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con 95% de precisión en extracción. Búsqueda semántica con embeddings reduce tiempo de screening en <strong>70%</strong>.</li>
+                            <li><strong>Automatización Inteligente:</strong> Implementé vectorización y chunking semántico optimizado para matching candidato-oferta, mejorando la calidad de recomendaciones en <strong>40%</strong> vs. keyword search tradicional.</li>
+                            <li><strong>Impacto:</strong> Sistema procesando <strong>10k+ búsquedas/mes</strong> con latencia <200ms. Stack: Python, Azure AI Search, Document Intelligence, FastAPI.</li>
                         </ul>
                     </div>
 
@@ -239,10 +239,10 @@
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">Global Hitss</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>GenAI & RAG:</strong> Diseñé flujos de trabajo de NLP para agentes conversacionales, reduciendo la carga operativa inbound.</li>
-                            <li><strong>MLOps:</strong> Orquesté modelos predictivos en <strong>Databricks con MLflow</strong>, asegurando trazabilidad y monitoreo.</li>
-                            <li><strong>Reinforcement Learning:</strong> Productivicé un sistema de <em>Next Best Offer</em> (NBO) maximizando rentabilidad mediante funciones de recompensa.</li>
-                            <li><strong>Impacto:</strong> Modelo de churn con <strong>Lift de 5.0</strong> integrado a sistemas de retención.</li>
+                            <li><strong>GenAI & RAG:</strong> Diseñé e implementé agente conversacional con RAG que redujo tickets de soporte en <strong>40%</strong>, procesando <strong>10k+ consultas/mes</strong> con 85% de resolución sin escalamiento. Stack: LangChain, Azure OpenAI, FAISS.</li>
+                            <li><strong>MLOps:</strong> Implementé pipeline CI/CD en <strong>Databricks + MLflow</strong> que redujo tiempo de deployment de 2 semanas a <strong>2 días</strong>. Modelos en producción con monitoreo automático de drift y reentrenamiento.</li>
+                            <li><strong>Reinforcement Learning:</strong> Productivicé sistema <em>Next Best Offer</em> (NBO) con A/B testing que incrementó conversión en <strong>28%</strong> y revenue en <strong>$1.2M/año</strong>.</li>
+                            <li><strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 5.0</strong> y recall del 82% en top decil, integrado a CRM para retención proactiva. Impactó <strong>50k+ clientes</strong>.</li>
                         </ul>
                     </div>
 
@@ -265,8 +265,40 @@
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">NAE</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>Negocio:</strong> Modelo de contactabilidad que incrementó efectividad en <strong>60%</strong>.</li>
+                            <li><strong>Modelo de Contactabilidad:</strong> Desarrollé modelo con <strong>LightGBM</strong> que incrementó tasa de contacto efectivo en <strong>60%</strong> (de 25% a 40%), optimizando ventanas horarias y canales. Impactó campañas con <strong>100k+ contactos/mes</strong>.</li>
                         </ul>
+                    </div>
+                </section>
+
+                <!-- Proyectos Destacados -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">Proyectos Open Source</h3>
+
+                    <div class="mb-4">
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <h4 class="font-bold text-gray-900 text-sm">🤖 Agente Email con LangChain</h4>
+                            <a href="https://github.com/alejortizp/email-agent-langchain" target="_blank" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/email-agent</a>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Agente inteligente que consulta emails vía IMAP, clasifica con LLM y genera respuestas contextuales automáticas. Reduce tiempo de respuesta en <strong>80%</strong>.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, Azure OpenAI, IMAP, Python, Prompt Engineering</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <h4 class="font-bold text-gray-900 text-sm">💬 NL-to-SQL/Pandas Agent</h4>
+                            <a href="https://github.com/alejortizp/nl-to-code-agent" target="_blank" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/nl-to-code</a>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Agente que traduce lenguaje natural a queries SQL y operaciones Pandas. Incluye validación de código, ejecución segura en sandbox y visualización automática de resultados.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <h4 class="font-bold text-gray-900 text-sm">🛒 RAG Restaurant Ordering System</h4>
+                            <a href="https://github.com/alejortizp/rag-ordering-system" target="_blank" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/rag-ordering</a>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Sistema de pedidos conversacional con RAG sobre menú de restaurante. Agente procesa selección de productos en lenguaje natural, genera factura y calcula totales. Incluye gestión de inventario.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, FAISS, Azure OpenAI, FastAPI, Streamlit</p>
                     </div>
                 </section>
             </div>
@@ -306,22 +338,61 @@
                 <!-- Stack Técnico -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Stack Tecnológico</h3>
-                    <div class="space-y-3 text-sm">
+                    <div class="space-y-3 text-xs">
                         <div class="item-no-break">
-                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1">Azure AI & Cloud</span>
-                            <div class="flex flex-wrap gap-1">
-                                <span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs border border-blue-100">Azure AI Search</span>
-                                <span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs border border-blue-100">Doc Intelligence</span>
-                                <span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs border border-blue-100">Databricks</span>
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">GenAI & LLMs</span>
+                            <div class="space-y-1">
+                                <div><strong>LangChain</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(Agents, RAG)</span></div>
+                                <div><strong>Azure OpenAI</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(GPT-4, Embeddings)</span></div>
+                                <div><strong>Prompt Engineering</strong> ⭐⭐⭐⭐⭐</div>
+                                <div><strong>Vector DBs</strong> ⭐⭐⭐⭐ <span class="text-gray-500">(FAISS, Pinecone)</span></div>
                             </div>
                         </div>
                         <div class="item-no-break">
-                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1">MLOps & Core</span>
-                            <p class="text-gray-800">Python, SQL, PySpark, MLflow, Docker, CI/CD, Git.</p>
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">Azure AI & Cloud</span>
+                            <div class="space-y-1">
+                                <div><strong>Azure AI Search</strong> ⭐⭐⭐⭐⭐</div>
+                                <div><strong>Document Intelligence</strong> ⭐⭐⭐⭐</div>
+                                <div><strong>Databricks + MLflow</strong> ⭐⭐⭐⭐⭐</div>
+                            </div>
                         </div>
                         <div class="item-no-break">
-                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1">AI Frameworks</span>
-                            <p class="text-gray-800">PyTorch, TensorFlow, LangChain, Hugging Face.</p>
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">ML/DL Frameworks</span>
+                            <div class="space-y-1">
+                                <div><strong>PyTorch</strong> ⭐⭐⭐⭐ | <strong>TensorFlow</strong> ⭐⭐⭐</div>
+                                <div><strong>Scikit-learn, XGBoost, LightGBM</strong> ⭐⭐⭐⭐⭐</div>
+                                <div><strong>Hugging Face Transformers</strong> ⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <div class="item-no-break">
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">MLOps & Engineering</span>
+                            <div class="space-y-1">
+                                <div><strong>Python, SQL, PySpark</strong> ⭐⭐⭐⭐⭐</div>
+                                <div><strong>Docker, CI/CD</strong> ⭐⭐⭐⭐</div>
+                                <div><strong>FastAPI, Streamlit</strong> ⭐⭐⭐⭐</div>
+                                <div><strong>Git, GitHub Actions</strong> ⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Idiomas -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Idiomas</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="item-no-break flex items-center gap-2">
+                            <span class="text-lg">🇪🇸</span>
+                            <div>
+                                <p class="font-bold text-gray-900">Español</p>
+                                <p class="text-xs text-gray-600">Nativo</p>
+                            </div>
+                        </div>
+                        <div class="item-no-break flex items-center gap-2">
+                            <span class="text-lg">🇬🇧</span>
+                            <div>
+                                <p class="font-bold text-gray-900">Inglés</p>
+                                <p class="text-xs text-gray-600">Profesional Avanzado (B2/C1)</p>
+                            </div>
                         </div>
                     </div>
                 </section>
