@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
@@ -34,6 +34,8 @@
         .item-no-break {
             page-break-inside: avoid;
             break-inside: avoid;
+            display: block;
+            position: relative;
         }
 
         /* Markdown Styles */
@@ -43,9 +45,56 @@
         .prose p { margin-bottom: 0.5em; }
 
         @media print {
-            body { background: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .page { margin: 0; border: initial; width: 100%; box-shadow: initial; page-break-after: always; }
-            .no-print { display: none !important; }
+            /* Reset básico que funcionaba antes */
+            body {
+                background: none;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .page {
+                margin: 0;
+                border: initial;
+                width: 100%;
+                box-shadow: initial;
+                page-break-after: always;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            /* SOLO mejoras que NO afectan el layout */
+
+            /* Forzar colores exactos para badges y fondos */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Evitar que títulos queden huérfanos */
+            h3, h4 {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            /* Mantener items pequeños juntos (solo sidebar) */
+            .item-no-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Fallback para Font Awesome */
+            .fa, .fas, .fab {
+                font-family: "Font Awesome 6 Free", sans-serif !important;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* Links visibles */
+            a {
+                color: #2563eb !important;
+                text-decoration: none;
+            }
         }
     </style>
 </head>
@@ -132,7 +181,7 @@
     </div>
 
     <!-- CV Content (English) -->
-    <div id="cvContent" class="page text-gray-800">
+    <article id="cvContent" class="page text-gray-800" role="main" aria-label="Curriculum Vitae of Alejandro Ortiz Perdomo">
         
         <!-- Header -->
         <header class="border-b-2 border-gray-200 pb-6 mb-6">
@@ -308,7 +357,7 @@
 
             </div>
         </div>
-    </div>
+    </article>
 
     <!-- Script Logic -->
     <script>
