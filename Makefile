@@ -1,7 +1,7 @@
 .PHONY: all build html es en carta portfolio setup clean open-es open-en open-carta open-portfolio help
 
-# Default: build everything (HTML + PDF)
-all: build
+# Default: build everything (CVs HTML + PDF + portfolio)
+all: build portfolio
 
 # Build HTML + PDF for both languages
 build:
@@ -58,7 +58,8 @@ help:
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  build      Build HTML + PDF for both CV languages (default)"
+	@echo "  all        Build everything: CVs + PDFs + portfolio (default)"
+	@echo "  build      Build HTML + PDF for both CV languages"
 	@echo "  html       Build HTML only (skip PDF)"
 	@echo "  es         Build Spanish CV only (HTML + PDF)"
 	@echo "  en         Build English CV only (HTML + PDF)"

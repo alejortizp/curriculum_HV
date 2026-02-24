@@ -4,6 +4,19 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>{% block title %}AI Engineer Portfolio{% endblock %}</title>
+    <meta name="description" content="{{ cv.personal.name }} — {{ cv.personal.title }}. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
+    <meta name="author" content="{{ cv.personal.name }}"/>
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}{{ cv.personal.name }} | AI Engineer Portfolio{% endblock %}"/>
+    <meta property="og:description" content="{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain."/>
+    <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <meta property="og:url" content="{{ cv.personal.portfolio.url }}"/>
+    <meta property="og:type" content="website"/>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="{{ cv.personal.name }} | AI Engineer"/>
+    <meta name="twitter:description" content="{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes."/>
+    <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -55,12 +68,28 @@
             <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
         </nav>
         <div class="flex items-center gap-4">
-            <a href="contact.html" class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">
+            <a href="contact.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">
                 Contratar
             </a>
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
         </div>
     </div>
 </header>
+
+<!-- Mobile menu panel -->
+<div id="mobile-menu" class="hidden fixed inset-0 z-40 md:hidden">
+    <div id="mobile-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <nav class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index.html">Inicio</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
+        <hr class="border-slate-800"/>
+        <a href="contact.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-blue-700 transition-all">Contratar</a>
+    </nav>
+</div>
 
 {% block content %}{% endblock %}
 
@@ -86,5 +115,19 @@
     </div>
 </footer>
 
+<script>
+(function() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-overlay');
+    const icon = btn.querySelector('.material-symbols-outlined');
+    function toggle() {
+        const open = menu.classList.toggle('hidden');
+        icon.textContent = open ? 'menu' : 'close';
+    }
+    btn.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+})();
+</script>
 </body>
 </html>

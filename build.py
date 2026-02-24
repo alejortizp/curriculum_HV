@@ -157,6 +157,14 @@ def build_portfolio(cv_data: dict):
             print(f"  Copy: docs/{files['html']}")
         else:
             print(f"  Note: {files['html']} not found — run 'make html' first")
+    # Copy profile photo to docs/ if source exists
+    photo_src = ROOT / "static" / "profile.jpg"
+    photo_dst = DOCS_DIR / "profile.jpg"
+    if photo_src.exists():
+        shutil.copy2(photo_src, photo_dst)
+        print("  Copy: docs/profile.jpg")
+    elif not photo_dst.exists():
+        print("  Note: profile.jpg not found in static/ or docs/")
     # Create .nojekyll to prevent GitHub Pages Jekyll processing
     (DOCS_DIR / ".nojekyll").touch()
     print("Portfolio generated in docs/")

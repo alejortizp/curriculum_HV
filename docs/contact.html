@@ -4,6 +4,19 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Contacto - Alejandro Ortiz Perdomo</title>
+    <meta name="description" content="Alejandro Ortiz Perdomo — AI Engineer | Machine Learning Engineer. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
+    <meta name="author" content="Alejandro Ortiz Perdomo"/>
+    <!-- Open Graph -->
+    <meta property="og:title" content="Alejandro Ortiz Perdomo | AI Engineer Portfolio"/>
+    <meta property="og:description" content="AI Engineer | Machine Learning Engineer. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain."/>
+    <meta property="og:image" content="https://alejortizp.github.io/curriculum_HV/profile.jpg"/>
+    <meta property="og:url" content="https://alejortizp.github.io/curriculum_HV/"/>
+    <meta property="og:type" content="website"/>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="Alejandro Ortiz Perdomo | AI Engineer"/>
+    <meta name="twitter:description" content="AI Engineer | Machine Learning Engineer. Especializado en GenAI/RAG, LLMs y agentes inteligentes."/>
+    <meta name="twitter:image" content="https://alejortizp.github.io/curriculum_HV/profile.jpg"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -55,12 +68,28 @@
             <a class="text-sm font-medium hover:text-primary transition-colors text-primary" href="contact.html">Contacto</a>
         </nav>
         <div class="flex items-center gap-4">
-            <a href="contact.html" class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">
+            <a href="contact.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">
                 Contratar
             </a>
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
         </div>
     </div>
 </header>
+
+<!-- Mobile menu panel -->
+<div id="mobile-menu" class="hidden fixed inset-0 z-40 md:hidden">
+    <div id="mobile-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <nav class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
+        <a class="text-lg font-medium hover:text-primary transition-colors " href="index.html">Inicio</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors " href="projects.html">Proyectos</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors text-primary" href="contact.html">Contacto</a>
+        <hr class="border-slate-800"/>
+        <a href="contact.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-blue-700 transition-all">Contratar</a>
+    </nav>
+</div>
 
 
 <main class="flex-grow flex flex-col items-center py-12 px-6 sm:px-12 lg:px-24 pt-28">
@@ -122,7 +151,7 @@
         <div class="flex flex-col justify-center">
             <div class="bg-surface-dark border border-border-dark rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-                <form id="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="flex flex-col gap-6 relative z-10">
+                <form id="contact-form" action="https://formspree.io/f/xzdaygrk" method="POST" class="flex flex-col gap-6 relative z-10">
                     <h3 class="text-2xl font-bold mb-2">Envíame un mensaje</h3>
                     <!-- Honeypot anti-spam -->
                     <input type="text" name="_gotcha" style="display:none"/>
@@ -238,5 +267,19 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     </div>
 </footer>
 
+<script>
+(function() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-overlay');
+    const icon = btn.querySelector('.material-symbols-outlined');
+    function toggle() {
+        const open = menu.classList.toggle('hidden');
+        icon.textContent = open ? 'menu' : 'close';
+    }
+    btn.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+})();
+</script>
 </body>
 </html>
