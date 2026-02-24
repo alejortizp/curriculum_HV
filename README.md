@@ -144,6 +144,4 @@ Ambos CVs incluyen un modal interactivo con herramientas de IA (requiere API key
 
 Para configurar la API key, crear un archivo `.env` en la raíz del proyecto:
 
-```
-GEMINI_API_KEY=tu_api_key_aquí
-```
+
