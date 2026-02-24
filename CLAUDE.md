@@ -72,10 +72,10 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 
 ### Static files
 
-- **`static/styles.css`** — All CSS: page layout (A4), `.item-no-break`, `.prose`, `@media print`. Edit here for styling changes.
+- **`static/styles.css`** — All CSS: page layout (A4), `.item-no-break`, `.prose`, `@page` rule (zero margins), `@media print` (section break control, orphans/widows). Edit here for styling changes.
 - **`static/ai-suite.js`** — All JS logic: `downloadPDF()`, modal helpers, Gemini API calls, AI features. Reads config from the global `CV_CONFIG` object. Edit here for behavior changes.
 - The `.page` class defines A4-sized pages (`21cm` wide, `29.7cm` min-height, `2.5cm`/`2cm` padding)
-- Use `.item-no-break` only on small sidebar elements to prevent splitting across pages
+- Use `.item-no-break` on any element that should not split across pages (experience entries, projects, sidebar items)
 - Use `.no-print` on UI elements that should not appear in PDFs (buttons, modals)
 - The current/highlighted job entry uses `border-l-2 border-blue-600` and a blue badge for the date
 

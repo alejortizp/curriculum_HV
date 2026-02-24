@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - {{ cv.personal.name }}{% if lang == 'en' %} (English){% endif %}</title>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -153,7 +154,7 @@
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Experiencia Laboral{% else %}Work Experience{% endif %}</h3>
                     {% for exp in cv.experience %}
                     {% if lang in exp.langs %}
-                    <div class="{% if exp.current %}mb-6 relative pl-4 border-l-2 border-blue-600{% else %}mb-5{% endif %}">
+                    <div class="item-no-break {% if exp.current %}mb-6 relative pl-4 border-l-2 border-blue-600{% else %}mb-5{% endif %}">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">{{ t(exp.title) }}</h4>
                             {% if exp.current %}
@@ -177,7 +178,7 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Proyectos Open Source{% else %}Open Source Projects{% endif %}</h3>
                     {% for proj in cv.projects %}
-                    <div class="mb-4">
+                    <div class="mb-4 item-no-break">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm">{{ proj.emoji }} {{ t(proj.title) }}</h4>
                             <a href="{{ proj.url }}" target="_blank" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>

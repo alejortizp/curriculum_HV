@@ -29,6 +29,11 @@ body {
 .prose strong { color: #2563eb; }
 .prose p { margin-bottom: 0.5em; }
 
+@page {
+    size: A4;
+    margin: 0;
+}
+
 @media print {
     body {
         background: none;
@@ -48,7 +53,7 @@ body {
         display: none !important;
     }
 
-    * {
+    body, body * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
@@ -58,9 +63,19 @@ body {
         break-after: avoid;
     }
 
+    section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
     .item-no-break {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+    }
+
+    p, li {
+        orphans: 3;
+        widows: 3;
     }
 
     .fa, .fas, .fab {
