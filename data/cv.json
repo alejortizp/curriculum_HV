@@ -246,6 +246,12 @@
 
   "certifications": [
     {
+      "title": {"es": "AI-102: Microsoft Certified Azure AI Engineer Associate", "en": "AI-102: Microsoft Certified Azure AI Engineer Associate"},
+      "detail": null,
+      "institution": {"es": "Udemy", "en": "Udemy"},
+      "date": {"es": "Feb 2026", "en": "Feb 2026"}
+    },
+    {
       "title": {"es": "Intro al control de versiones con Git y GitHub", "en": "Intro to Version Control with Git and GitHub"},
       "detail": null,
       "institution": {"es": "Univ. de los Andes", "en": "Univ. de los Andes"},
