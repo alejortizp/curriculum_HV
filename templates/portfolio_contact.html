@@ -62,25 +62,27 @@
         <div class="flex flex-col justify-center">
             <div class="bg-surface-dark border border-border-dark rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-                <form class="flex flex-col gap-6 relative z-10">
+                <form id="contact-form" action="https://formspree.io/f/{{ cv.personal.formspree_id }}" method="POST" class="flex flex-col gap-6 relative z-10">
                     <h3 class="text-2xl font-bold mb-2">Envíame un mensaje</h3>
+                    <!-- Honeypot anti-spam -->
+                    <input type="text" name="_gotcha" style="display:none"/>
                     <label class="flex flex-col gap-2">
                         <span class="text-sm font-medium text-white">Nombre Completo</span>
-                        <input class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="Ej. Juan Pérez" type="text"/>
+                        <input name="name" required class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="Ej. Juan Pérez" type="text"/>
                     </label>
                     <label class="flex flex-col gap-2">
                         <span class="text-sm font-medium text-white">Correo Electrónico</span>
-                        <input class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="juan@empresa.com" type="email"/>
+                        <input name="email" required class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="juan@empresa.com" type="email"/>
                     </label>
                     <label class="flex flex-col gap-2">
                         <span class="text-sm font-medium text-white">Tipo de Proyecto</span>
                         <div class="relative">
-                            <select class="w-full h-12 appearance-none rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all pr-10">
+                            <select name="project_type" required class="w-full h-12 appearance-none rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all pr-10">
                                 <option disabled="" selected="" value="">Selecciona una opción</option>
-                                <option value="consulting">Consultoría IA</option>
-                                <option value="development">Desarrollo de ML/LLM</option>
-                                <option value="speaking">Conferencia / Workshop</option>
-                                <option value="other">Otro</option>
+                                <option value="Consultoría IA">Consultoría IA</option>
+                                <option value="Desarrollo de ML/LLM">Desarrollo de ML/LLM</option>
+                                <option value="Conferencia / Workshop">Conferencia / Workshop</option>
+                                <option value="Otro">Otro</option>
                             </select>
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
                                 <span class="material-symbols-outlined">expand_more</span>
@@ -89,15 +91,67 @@
                     </label>
                     <label class="flex flex-col gap-2">
                         <span class="text-sm font-medium text-white">Mensaje</span>
-                        <textarea class="w-full min-h-[140px] rounded-lg bg-background-dark border border-border-dark p-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all resize-y" placeholder="Cuéntame brevemente sobre tu proyecto o consulta..."></textarea>
+                        <textarea name="message" required class="w-full min-h-[140px] rounded-lg bg-background-dark border border-border-dark p-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all resize-y" placeholder="Cuéntame brevemente sobre tu proyecto o consulta..."></textarea>
                     </label>
-                    <button class="mt-2 w-full h-12 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 group" type="button">
-                        <span>Enviar Mensaje</span>
-                        <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">send</span>
+                    <!-- Submit button -->
+                    <button id="submit-btn" class="mt-2 w-full h-12 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 group" type="submit">
+                        <span id="btn-text">Enviar Mensaje</span>
+                        <span id="btn-icon" class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">send</span>
                     </button>
+                    <!-- Success message (hidden by default) -->
+                    <div id="form-success" class="hidden text-center py-4">
+                        <span class="material-symbols-outlined text-green-400 text-5xl mb-3">check_circle</span>
+                        <p class="text-lg font-bold text-white">Mensaje enviado</p>
+                        <p class="text-text-secondary text-sm mt-1">Gracias por contactarme. Te responderé pronto.</p>
+                    </div>
+                    <!-- Error message (hidden by default) -->
+                    <div id="form-error" class="hidden text-center py-4">
+                        <span class="material-symbols-outlined text-red-400 text-5xl mb-3">error</span>
+                        <p class="text-lg font-bold text-white">Error al enviar</p>
+                        <p class="text-text-secondary text-sm mt-1">Intenta de nuevo o escríbeme a <a href="mailto:{{ cv.personal.email }}" class="text-primary hover:underline">{{ cv.personal.email }}</a></p>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </main>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnIcon = document.getElementById('btn-icon');
+    const successMsg = document.getElementById('form-success');
+    const errorMsg = document.getElementById('form-error');
+
+    // Loading state
+    btn.disabled = true;
+    btnText.textContent = 'Enviando...';
+    btnIcon.textContent = 'hourglass_empty';
+    successMsg.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+
+    try {
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+            form.reset();
+            successMsg.classList.remove('hidden');
+            btn.classList.add('hidden');
+        } else {
+            throw new Error('Form submission failed');
+        }
+    } catch {
+        errorMsg.classList.remove('hidden');
+        btn.disabled = false;
+        btnText.textContent = 'Enviar Mensaje';
+        btnIcon.textContent = 'send';
+    }
+});
+</script>
 {% endblock %}
