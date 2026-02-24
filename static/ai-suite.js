@@ -1,9 +1,53 @@
 /**
  * AI Career Suite + PDF download functionality.
  * Reads configuration from the global CV_CONFIG object set by the HTML template.
+ * API key resolution: build-time (.env) → localStorage → prompt user.
  */
 
 let currentQuestion = "";
+
+// -- API Key Management --
+function getApiKey() {
+    return CV_CONFIG.apiKey;
+}
+
+function saveApiKey(key) {
+    localStorage.setItem("gemini_api_key", key.trim());
+    CV_CONFIG.apiKey = key.trim();
+}
+
+function clearApiKey() {
+    localStorage.removeItem("gemini_api_key");
+    CV_CONFIG.apiKey = "";
+}
+
+function hasApiKey() {
+    return CV_CONFIG.apiKey && CV_CONFIG.apiKey.length > 0;
+}
+
+function showApiKeyPrompt(onSuccess) {
+    document.getElementById('aiMenu').classList.add('hidden');
+    document.getElementById('aiKeySetup').classList.remove('hidden');
+    const btn = document.getElementById('saveApiKeyBtn');
+    btn.onclick = () => {
+        const key = document.getElementById('apiKeyInput').value.trim();
+        if (key) {
+            saveApiKey(key);
+            document.getElementById('aiKeySetup').classList.add('hidden');
+            document.getElementById('apiKeyInput').value = "";
+            if (onSuccess) onSuccess();
+            else resetAI();
+        }
+    };
+}
+
+function requireApiKey(callback) {
+    if (hasApiKey()) {
+        callback();
+    } else {
+        showApiKeyPrompt(callback);
+    }
+}
 
 // -- PDF Download --
 function downloadPDF() {
@@ -45,9 +89,24 @@ function resetAI() {
     document.getElementById('aiLoading').classList.add('hidden');
     document.getElementById('aiResult').classList.add('hidden');
     document.getElementById('aiInputView').classList.add('hidden');
+    document.getElementById('aiKeySetup').classList.add('hidden');
     document.getElementById('interviewInputArea').classList.add('hidden');
     document.getElementById('userAnswer').value = "";
     currentQuestion = "";
+    updateKeyStatus();
+}
+
+function updateKeyStatus() {
+    const statusEl = document.getElementById('apiKeyStatus');
+    if (!statusEl) return;
+    if (hasApiKey()) {
+        const source = CV_CONFIG._buildTimeKey ? CV_CONFIG.i18n.keyFromBuild : CV_CONFIG.i18n.keyFromBrowser;
+        statusEl.innerHTML = `<span class="text-green-600"><i class="fas fa-check-circle"></i> ${source}</span>
+            <button onclick="clearApiKey(); resetAI();" class="text-xs text-red-500 hover:underline ml-2">${CV_CONFIG.i18n.clearKey}</button>`;
+    } else {
+        statusEl.innerHTML = `<span class="text-amber-600"><i class="fas fa-exclamation-triangle"></i> ${CV_CONFIG.i18n.noKey}</span>
+            <button onclick="showApiKeyPrompt();" class="text-xs text-blue-600 hover:underline ml-2">${CV_CONFIG.i18n.configureKey}</button>`;
+    }
 }
 
 function showInputView(type) {
@@ -118,12 +177,14 @@ function getCVText() {
 }
 
 async function generateElevatorPitch() {
-    showResult(await callGemini(CV_CONFIG.prompts.elevatorPitch(getCVText())));
+    requireApiKey(async () => showResult(await callGemini(CV_CONFIG.prompts.elevatorPitch(getCVText()))));
 }
 
 async function startMockInterview() {
-    currentQuestion = await callGemini(CV_CONFIG.prompts.mockInterview(getCVText()));
-    showResult(`### ${CV_CONFIG.i18n.interviewQuestionLabel}:\n\n${currentQuestion}`, true);
+    requireApiKey(async () => {
+        currentQuestion = await callGemini(CV_CONFIG.prompts.mockInterview(getCVText()));
+        showResult(`### ${CV_CONFIG.i18n.interviewQuestionLabel}:\n\n${currentQuestion}`, true);
+    });
 }
 
 async function submitAnswer() {
@@ -132,9 +193,9 @@ async function submitAnswer() {
 }
 
 async function generateCoverLetter(comp, role) {
-    showResult(await callGemini(CV_CONFIG.prompts.coverLetter(comp, role, getCVText())));
+    requireApiKey(async () => showResult(await callGemini(CV_CONFIG.prompts.coverLetter(comp, role, getCVText()))));
 }
 
 async function generateGapAnalysis(role) {
-    showResult(await callGemini(CV_CONFIG.prompts.gapAnalysis(role, getCVText())));
+    requireApiKey(async () => showResult(await callGemini(CV_CONFIG.prompts.gapAnalysis(role, getCVText()))));
 }

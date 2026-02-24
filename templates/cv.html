@@ -39,6 +39,7 @@
             </div>
             <div class="p-6 overflow-y-auto flex-grow bg-white" id="aiContentArea">
                 <div id="aiMenu" class="text-center space-y-6">
+                    <div id="apiKeyStatus" class="text-xs"></div>
                     <p class="text-gray-600">{% if lang == 'es' %}Selecciona una herramienta:{% else %}Prepare for the international market:{% endif %}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <button onclick="generateElevatorPitch()" class="border border-gray-200 p-5 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
@@ -77,6 +78,21 @@
                     <div class="flex gap-3 pt-2">
                         <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
                         <button id="inputActionBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Generar{% else %}Generate{% endif %}</button>
+                    </div>
+                </div>
+                <div id="aiKeySetup" class="hidden space-y-4">
+                    <div class="text-center">
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                            <i class="fas fa-key text-amber-500 text-2xl mb-2"></i>
+                            <h4 class="font-bold text-gray-800 mb-1">{% if lang == 'es' %}Configurar API Key{% else %}Configure API Key{% endif %}</h4>
+                            <p class="text-sm text-gray-600">{% if lang == 'es' %}Se requiere una API key de Gemini. Se guardará en tu navegador (localStorage).{% else %}A Gemini API key is required. It will be saved in your browser (localStorage).{% endif %}</p>
+                        </div>
+                        <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
+                        <button id="saveApiKeyBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Guardar{% else %}Save{% endif %}</button>
                     </div>
                 </div>
                 <div id="aiLoading" class="hidden flex-col items-center py-12">
@@ -265,12 +281,18 @@
     <!-- Language-specific config for AI Suite -->
     <script>
         const CV_CONFIG = {
-            apiKey: "{{ api_key }}",
+            _buildTimeKey: Boolean("{{ api_key }}"),
+            apiKey: "{{ api_key }}" || localStorage.getItem("gemini_api_key") || "",
             pdfFilename: "{% if lang == 'es' %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}",
             i18n: {
                 generating: "{% if lang == 'es' %}Generando...{% else %}Generating...{% endif %}",
                 pdfError: "{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}",
                 connectionError: "{% if lang == 'es' %}Error de conexión.{% else %}Connection Error: Unable to reach Gemini.{% endif %}",
+                keyFromBuild: "{% if lang == 'es' %}API key configurada (build){% else %}API key configured (build){% endif %}",
+                keyFromBrowser: "{% if lang == 'es' %}API key guardada en navegador{% else %}API key saved in browser{% endif %}",
+                noKey: "{% if lang == 'es' %}API key no configurada{% else %}API key not configured{% endif %}",
+                configureKey: "{% if lang == 'es' %}Configurar{% else %}Configure{% endif %}",
+                clearKey: "{% if lang == 'es' %}Borrar{% else %}Clear{% endif %}",
                 interviewQuestionLabel: "{% if lang == 'es' %}Pregunta{% else %}\ud83e\udd16 Interview Question{% endif %}",
                 coverLetter: {
                     title: "{% if lang == 'es' %}Detalles del Empleo{% else %}Job Details{% endif %}",

@@ -81,4 +81,9 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 
 ### Gemini API key
 
-Set via environment variable `GEMINI_API_KEY` or in a `.env` file at the project root. Injected into the HTML at build time.
+Resolution order (first non-empty wins):
+1. **Build-time** — `GEMINI_API_KEY` env var or `.env` file → injected into HTML by `build.py`
+2. **Browser localStorage** — user-provided key saved as `gemini_api_key`
+3. **Prompt** — when the user opens the AI modal without a key, they are prompted to enter one
+
+The `.env` file is in `.gitignore`. See `.env.example` for the expected format.
