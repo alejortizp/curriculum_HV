@@ -9,7 +9,9 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 ## Key Files
 
 - `data/cv.json` — **Single source of truth** for all CV content (edit this to update the CV)
-- `templates/cv.html` — Jinja2 template with shared HTML/CSS/JS structure
+- `templates/cv.html` — Jinja2 template (HTML structure + modal markup)
+- `static/styles.css` — Shared CSS (page layout, print styles, markdown prose)
+- `static/ai-suite.js` — Shared JS (PDF download, AI modal logic, Gemini API calls)
 - `build.py` — Build script that generates HTMLs + PDFs
 - `CV_español.html` / `CV_english.html` — Generated HTML files (do not edit directly)
 - `CV_español.pdf` / `CV_english.pdf` — Generated PDF files (do not edit directly)
@@ -65,10 +67,13 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 - The `t()` macro resolves i18n fields: `{{ t(entry.title) }}` returns the value for the current language
 - The `stars()` macro generates star emojis from a number
 - Use `cat['items']` (not `cat.items`) for tech_stack items to avoid conflict with Python dict `.items()` method
-- UI strings (section titles, modal labels, AI prompts) are handled with `{% if lang == 'es' %}...{% else %}...{% endif %}` blocks directly in the template
+- UI strings (section titles, modal labels) are handled with `{% if lang == 'es' %}...{% else %}...{% endif %}` in the template
+- The template renders a small inline `CV_CONFIG` object with language-specific strings and prompt functions, then loads `static/ai-suite.js` which reads from it
 
-### CSS and print conventions
+### Static files
 
+- **`static/styles.css`** — All CSS: page layout (A4), `.item-no-break`, `.prose`, `@media print`. Edit here for styling changes.
+- **`static/ai-suite.js`** — All JS logic: `downloadPDF()`, modal helpers, Gemini API calls, AI features. Reads config from the global `CV_CONFIG` object. Edit here for behavior changes.
 - The `.page` class defines A4-sized pages (`21cm` wide, `29.7cm` min-height, `2.5cm`/`2cm` padding)
 - Use `.item-no-break` only on small sidebar elements to prevent splitting across pages
 - Use `.no-print` on UI elements that should not appear in PDFs (buttons, modals)

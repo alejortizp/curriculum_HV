@@ -12,82 +12,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-
-        .page {
-            background: white;
-            width: 21cm;
-            min-height: 29.7cm;
-            display: block;
-            margin: 0 auto;
-            box-shadow: 0 0 0.5cm rgba(0,0,0,0.1);
-            padding: 2.5cm 2cm;
-            position: relative;
-        }
-
-        .item-no-break {
-            page-break-inside: avoid;
-            break-inside: avoid;
-            display: block;
-            position: relative;
-        }
-
-        .prose h3 { font-size: 1.1em; font-weight: bold; margin-top: 1em; color: #1e3a8a; }
-        .prose ul { list-style-type: disc; padding-left: 1.5em; }
-        .prose strong { color: #2563eb; }
-        .prose p { margin-bottom: 0.5em; }
-
-        @media print {
-            body {
-                background: none;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .page {
-                margin: 0;
-                border: initial;
-                width: 100%;
-                box-shadow: initial;
-                page-break-after: always;
-            }
-
-            .no-print {
-                display: none !important;
-            }
-
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            h3, h4 {
-                page-break-after: avoid;
-                break-after: avoid;
-            }
-
-            .item-no-break {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            .fa, .fas, .fab {
-                font-family: "Font Awesome 6 Free", sans-serif !important;
-                -webkit-font-smoothing: antialiased;
-            }
-
-            a {
-                color: #2563eb !important;
-                text-decoration: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body class="py-10 print:py-0">
 
@@ -337,152 +262,43 @@
         </div>
     </article>
 
-    <!-- Script -->
+    <!-- Language-specific config for AI Suite -->
     <script>
-        const apiKey = "{{ api_key }}";
-        let currentQuestion = "";
-
-        function downloadPDF() {
-            const element = document.getElementById('cvContent');
-            const btn = document.getElementById('btnDownload');
-            const originalContent = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {% if lang == "es" %}Generando...{% else %}Generating...{% endif %}';
-            btn.disabled = true;
-
-            const opt = {
-                margin: 0,
-                filename: '{% if lang == "es" %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }).catch(err => {
-                alert("{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}");
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            });
-        }
-
-        function toggleAIModal() {
-            const modal = document.getElementById('aiModal');
-            modal.classList.toggle('hidden');
-            modal.classList.toggle('flex');
-            if(!modal.classList.contains('hidden')) resetAI();
-        }
-        function resetAI() {
-            document.getElementById('aiMenu').classList.remove('hidden');
-            document.getElementById('aiLoading').classList.add('hidden');
-            document.getElementById('aiResult').classList.add('hidden');
-            document.getElementById('aiInputView').classList.add('hidden');
-            document.getElementById('interviewInputArea').classList.add('hidden');
-            document.getElementById('userAnswer').value = "";
-            currentQuestion = "";
-        }
-        function showInputView(type) {
-            document.getElementById('aiMenu').classList.add('hidden');
-            document.getElementById('aiInputView').classList.remove('hidden');
-            document.getElementById('aiInputView').classList.add('flex');
-            const container = document.getElementById('inputForm');
-            container.innerHTML = '';
-            const title = document.getElementById('inputTitle');
-            const btn = document.getElementById('inputActionBtn');
-            if (type === 'coverLetter') {
+        const CV_CONFIG = {
+            apiKey: "{{ api_key }}",
+            pdfFilename: "{% if lang == 'es' %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}",
+            i18n: {
+                generating: "{% if lang == 'es' %}Generando...{% else %}Generating...{% endif %}",
+                pdfError: "{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}",
+                connectionError: "{% if lang == 'es' %}Error de conexión.{% else %}Connection Error: Unable to reach Gemini.{% endif %}",
+                interviewQuestionLabel: "{% if lang == 'es' %}Pregunta{% else %}\ud83e\udd16 Interview Question{% endif %}",
+                coverLetter: {
+                    title: "{% if lang == 'es' %}Detalles del Empleo{% else %}Job Details{% endif %}",
+                    companyPlaceholder: "{% if lang == 'es' %}Empresa{% else %}Company Name{% endif %}",
+                    rolePlaceholder: "{% if lang == 'es' %}Cargo{% else %}Job Title{% endif %}"
+                },
+                gapAnalysis: {
+                    title: "{% if lang == 'es' %}Rol Soñado{% else %}Dream Job{% endif %}",
+                    placeholder: "{% if lang == 'es' %}Rol Objetivo{% else %}Target Role (e.g., AI Architect){% endif %}"
+                }
+            },
+            prompts: {
                 {% if lang == 'es' %}
-                title.innerText = "Detalles del Empleo";
-                container.innerHTML = `<input type="text" id="inputCompany" placeholder="Empresa" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="Cargo" class="w-full border p-2 rounded">`;
+                elevatorPitch: (cv) => `Crea Elevator Pitch (30s) para AI Engineer. Resalta Maestría y Azure. CV: ${cv}`,
+                mockInterview: (cv) => `Haz UNA pregunta técnica difícil sobre Azure AI o MLOps basada en CV: ${cv}`,
+                submitAnswer: (q, a) => `Evalúa respuesta (1-10). Pregunta: ${q}. Respuesta: ${a}`,
+                coverLetter: (comp, role, cv) => `Carta Presentación para ${role} en ${comp}. CV: ${cv}`,
+                gapAnalysis: (role, cv) => `Gap Analysis para rol ${role}. CV: ${cv}`
                 {% else %}
-                title.innerText = "Job Details";
-                container.innerHTML = `<input type="text" id="inputCompany" placeholder="Company Name" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="Job Title" class="w-full border p-2 rounded">`;
+                elevatorPitch: (cv) => `Act as a Career Coach. Create a 30-40s "Elevator Pitch" for this AI Engineer profile. Highlight: Master's in Software Eng, Azure AI Search, and RAG. Tone: Professional and confident. Language: English. CV: ${cv}`,
+                mockInterview: (cv) => `Act as a Senior Technical Recruiter. Ask ONE challenging situational technical question about Azure Document Intelligence, MLOps, or RAG based on this CV. DO NOT give the answer yet. Language: English. CV: ${cv}`,
+                submitAnswer: (q, a) => `Evaluate this interview answer (1-10) and give constructive technical feedback. Question: "${q}". Candidate Answer: "${a}". Language: English.`,
+                coverLetter: (comp, role, cv) => `Write a persuasive Cover Letter for the role of "${role}" at "${comp}". Use my CV details to connect my skills (Azure, RAG, Databricks) to the role. Structure: Opening, Why Me, Closing. Language: English. CV: ${cv}`,
+                gapAnalysis: (role, cv) => `Act as a Senior Career Mentor. Target Role: "${role}". Analyze my current CV against market standards. Output (Markdown): 1. Strengths, 2. Gaps, 3. Action Plan. Language: English. CV: ${cv}`
                 {% endif %}
-                btn.onclick = () => { if(document.getElementById('inputCompany').value) generateCoverLetter(document.getElementById('inputCompany').value, document.getElementById('inputRole').value); };
-            } else if (type === 'gapAnalysis') {
-                {% if lang == 'es' %}
-                title.innerText = "Rol Soñado";
-                container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="Rol Objetivo" class="w-full border p-2 rounded">`;
-                {% else %}
-                title.innerText = "Dream Job";
-                container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="Target Role (e.g., AI Architect)" class="w-full border p-2 rounded">`;
-                {% endif %}
-                btn.onclick = () => { if(document.getElementById('inputDreamJob').value) generateGapAnalysis(document.getElementById('inputDreamJob').value); };
             }
-        }
-        function showLoading() {
-            document.getElementById('aiMenu').classList.add('hidden');
-            document.getElementById('aiInputView').classList.add('hidden');
-            document.getElementById('aiLoading').classList.remove('hidden');
-            document.getElementById('aiLoading').classList.add('flex');
-        }
-        function showResult(text, isInterview = false) {
-            document.getElementById('aiLoading').classList.add('hidden');
-            document.getElementById('aiLoading').classList.remove('flex');
-            document.getElementById('aiResult').classList.remove('hidden');
-            document.getElementById('aiResponseText').innerHTML = marked.parse(text);
-            if(isInterview) document.getElementById('interviewInputArea').classList.remove('hidden');
-        }
-
-        async function callGemini(prompt) {
-            showLoading();
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const data = await res.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (e) { return "{% if lang == 'es' %}Error de conexión.{% else %}Connection Error: Unable to reach Gemini.{% endif %}"; }
-        }
-
-        async function generateElevatorPitch() {
-            const cv = document.getElementById('cvContent').innerText;
-            {% if lang == 'es' %}
-            const prompt = `Crea Elevator Pitch (30s) para AI Engineer. Resalta Maestría y Azure. CV: ${cv.substring(0,3000)}`;
-            {% else %}
-            const prompt = `Act as a Career Coach. Create a 30-40s "Elevator Pitch" for this AI Engineer profile. Highlight: Master's in Software Eng, Azure AI Search, and RAG. Tone: Professional and confident. Language: English. CV: ${cv.substring(0,3000)}`;
-            {% endif %}
-            showResult(await callGemini(prompt));
-        }
-        async function startMockInterview() {
-            const cv = document.getElementById('cvContent').innerText;
-            {% if lang == 'es' %}
-            const prompt = `Haz UNA pregunta técnica difícil sobre Azure AI o MLOps basada en CV: ${cv.substring(0,3000)}`;
-            {% else %}
-            const prompt = `Act as a Senior Technical Recruiter. Ask ONE challenging situational technical question about Azure Document Intelligence, MLOps, or RAG based on this CV. DO NOT give the answer yet. Language: English. CV: ${cv.substring(0,3000)}`;
-            {% endif %}
-            currentQuestion = await callGemini(prompt);
-            showResult(`### {% if lang == 'es' %}Pregunta{% else %}🤖 Interview Question{% endif %}:\n\n${currentQuestion}`, true);
-        }
-        async function submitAnswer() {
-            const ans = document.getElementById('userAnswer').value;
-            {% if lang == 'es' %}
-            const prompt = `Evalúa respuesta (1-10). Pregunta: ${currentQuestion}. Respuesta: ${ans}`;
-            {% else %}
-            const prompt = `Evaluate this interview answer (1-10) and give constructive technical feedback. Question: "${currentQuestion}". Candidate Answer: "${ans}". Language: English.`;
-            {% endif %}
-            showResult(await callGemini(prompt));
-        }
-        async function generateCoverLetter(comp, role) {
-            const cv = document.getElementById('cvContent').innerText;
-            {% if lang == 'es' %}
-            const prompt = `Carta Presentación para ${role} en ${comp}. CV: ${cv.substring(0,3000)}`;
-            {% else %}
-            const prompt = `Write a persuasive Cover Letter for the role of "${role}" at "${comp}". Use my CV details to connect my skills (Azure, RAG, Databricks) to the role. Structure: Opening, Why Me, Closing. Language: English. CV: ${cv.substring(0,3000)}`;
-            {% endif %}
-            showResult(await callGemini(prompt));
-        }
-        async function generateGapAnalysis(role) {
-            const cv = document.getElementById('cvContent').innerText;
-            {% if lang == 'es' %}
-            const prompt = `Gap Analysis para rol ${role}. CV: ${cv.substring(0,3000)}`;
-            {% else %}
-            const prompt = `Act as a Senior Career Mentor. Target Role: "${role}". Analyze my current CV against market standards. Output (Markdown): 1. Strengths, 2. Gaps, 3. Action Plan. Language: English. CV: ${cv.substring(0,3000)}`;
-            {% endif %}
-            showResult(await callGemini(prompt));
-        }
+        };
     </script>
+    <script src="static/ai-suite.js"></script>
 </body>
 </html>
