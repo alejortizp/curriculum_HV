@@ -46,6 +46,8 @@ body {
         border: initial;
         width: 100%;
         box-shadow: initial;
+        padding-top: 1cm;
+        padding-bottom: 1.5cm;
         page-break-after: always;
     }
 

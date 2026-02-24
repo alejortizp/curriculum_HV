@@ -44,7 +44,7 @@ def generate_pdfs():
                 path=str(pdf_path),
                 format="A4",
                 print_background=True,
-                margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
+                margin={"top": "1.5cm", "bottom": "1cm", "left": "0", "right": "0"},
             )
             page.close()
             print(f"  PDF: {pdf_path.name}")
