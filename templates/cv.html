@@ -1,6 +1,5 @@
 {# Macro to resolve i18n fields: if dict with lang keys, return lang value; else return as-is #}
 {%- macro t(value) %}{% if value is mapping and lang in value %}{{ value[lang] }}{% else %}{{ value }}{% endif %}{% endmacro -%}
-{%- macro stars(n) %}{% for _ in range(n) %}⭐{% endfor %}{% endmacro -%}
 <!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
@@ -259,7 +258,7 @@
 
                 <!-- Tech Stack (last: longest section, flows naturally across pages) -->
                 <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Stack Tecnológico{% else %}Tech Stack{% endif %}</h3>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Stack Tecnológico{% else %}Tech Stack{% endif %} <span class="text-[10px] font-normal text-gray-400 normal-case tracking-normal">{% if lang == 'es' %}(años exp.){% else %}(years exp.){% endif %}</span></h3>
                     <div class="space-y-3 text-xs">
                         {% for cat in cv.tech_stack %}
                         <div class="item-no-break">
@@ -269,7 +268,7 @@
                                 <div>
                                     {% for skill in line %}
                                     {% if not loop.first %} | {% endif %}
-                                    <strong>{{ skill.name }}</strong> {{ stars(skill.stars) }}{% if skill.detail %} <span class="text-gray-500">{{ skill.detail }}</span>{% endif %}
+                                    <strong>{{ skill.name }}</strong>{% if skill.years %} <span class="text-blue-600 font-semibold">{{ skill.years }}+</span>{% endif %}{% if skill.detail %} <span class="text-gray-500">{{ skill.detail }}</span>{% endif %}
                                     {% endfor %}
                                 </div>
                                 {% endfor %}

@@ -219,35 +219,35 @@
     {
       "category": "GenAI & LLMs",
       "items": [
-        [{"name": "LangChain", "stars": 5, "detail": "(Agents, RAG)"}],
-        [{"name": "Azure OpenAI", "stars": 5, "detail": "(GPT-4, Embeddings)"}],
-        [{"name": "Prompt Engineering", "stars": 5}],
-        [{"name": "Vector DBs", "stars": 4, "detail": "(FAISS, Pinecone)"}]
+        [{"name": "LangChain", "years": 2, "detail": "(Agents, RAG)"}],
+        [{"name": "Azure OpenAI", "years": 2, "detail": "(GPT-4, Embeddings)"}],
+        [{"name": "Prompt Engineering", "years": 2}],
+        [{"name": "Vector DBs", "years": 2, "detail": "(FAISS, Pinecone)"}]
       ]
     },
     {
       "category": "Azure AI & Cloud",
       "items": [
-        [{"name": "Azure AI Search", "stars": 5}],
-        [{"name": "Document Intelligence", "stars": 4}],
-        [{"name": "Databricks + MLflow", "stars": 5}]
+        [{"name": "Azure AI Search", "years": 1}],
+        [{"name": "Document Intelligence", "years": 1}],
+        [{"name": "Databricks + MLflow", "years": 3}]
       ]
     },
     {
       "category": "ML/DL Frameworks",
       "items": [
-        [{"name": "PyTorch", "stars": 4}, {"name": "TensorFlow", "stars": 3}],
-        [{"name": "Scikit-learn, XGBoost, LightGBM", "stars": 5}],
-        [{"name": "Hugging Face Transformers", "stars": 4}]
+        [{"name": "PyTorch", "years": 2}, {"name": "TensorFlow", "years": 3}],
+        [{"name": "Scikit-learn, XGBoost, LightGBM", "years": 4}],
+        [{"name": "Hugging Face Transformers", "years": 2}]
       ]
     },
     {
       "category": "MLOps & Engineering",
       "items": [
-        [{"name": "Python, SQL, PySpark", "stars": 5}],
-        [{"name": "Docker, CI/CD", "stars": 4}],
-        [{"name": "FastAPI, Streamlit", "stars": 4}],
-        [{"name": "Git, GitHub Actions", "stars": 4}]
+        [{"name": "Python, SQL, PySpark", "years": 7}],
+        [{"name": "Docker, CI/CD", "years": 2}],
+        [{"name": "FastAPI, Streamlit", "years": 3}],
+        [{"name": "Git, GitHub Actions", "years": 4}]
       ]
     }
   ],
