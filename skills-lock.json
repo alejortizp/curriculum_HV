@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "accessibility-a11y": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "computedHash": "3117d5b0302f4fbb90cf7b3b65474aa0ea70eadaf91036ab9e20c912d68f9289"
+    },
+    "html-to-pdf": {
+      "source": "aviz85/claude-skills-library",
+      "sourceType": "github",
+      "computedHash": "2ebc2549a3044ef2a4c24260cde7f2a2c0870e164cef48be178a17075f67f7c2"
+    },
+    "i18n-localization": {
+      "source": "davila7/claude-code-templates",
+      "sourceType": "github",
+      "computedHash": "66da9c3f527c18a87003543882c76ebe5bd179e692fc9bc859752bf6e1a2f1f6"
+    },
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "computedHash": "7075ab30f588019197a2f1518bb4c9d33d69d33352af079b5f9c60303ad3886e"
+    },
+    "responsive-design": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "9df1908623814c4c93cc1fde25caa211b2d28c8ffcdc2b5a12c6b7ae456f0f89"
+    },
+    "tailwind-css-patterns": {
+      "source": "giuseppe-trisciuoglio/developer-kit",
+      "sourceType": "github",
+      "computedHash": "a9d14dbb31901e53f37a33cf4d7495da95c66781dc67fe62b3e70a944bd050e0"
+    }
+  }
+}
