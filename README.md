@@ -6,35 +6,39 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 
 ```text
 ├── data/
-│   ├── cv.json              # Fuente única de datos del CV (editar aquí)
-│   └── cover_letter.json    # Datos de la carta de presentación (editar por empresa)
+│   ├── cv.json                  # Fuente única de datos del CV (editar aquí)
+│   ├── cover_letter.json        # Datos de la carta de presentación (editar por empresa)
+│   └── cover_letter_template.json # Plantilla vacía para nuevas cartas
 ├── templates/
-│   ├── cv.html              # Plantilla Jinja2 para CVs
-│   ├── cover_letter.html    # Plantilla Jinja2 para carta de presentación
-│   ├── portfolio_base.html  # Plantilla base del portfolio (nav, footer, SEO, analytics)
-│   ├── portfolio_index.html # Plantilla página principal (hero, skills, about)
-│   ├── portfolio_projects.html # Plantilla proyectos (iterados desde cv.json)
-│   └── portfolio_contact.html  # Plantilla contacto (formulario Formspree)
+│   ├── cv.html                  # Plantilla Jinja2 para CVs
+│   ├── cover_letter.html        # Plantilla Jinja2 para carta de presentación (bilingüe)
+│   ├── portfolio_base.html      # Plantilla base del portfolio (nav, footer, SEO, analytics)
+│   ├── portfolio_index.html     # Plantilla página principal (hero, skills, about)
+│   ├── portfolio_projects.html  # Plantilla proyectos (iterados desde cv.json)
+│   └── portfolio_contact.html   # Plantilla contacto (formulario Formspree)
 ├── static/
-│   └── profile.jpg          # Foto de perfil (fuente canónica, se copia a docs/)
-├── docs/                    # Portfolio para GitHub Pages (generado, no editar)
-│   ├── index.html           # Página principal
-│   ├── projects.html        # Proyectos (generados desde cv.projects)
-│   ├── contact.html         # Contacto con formulario Formspree
-│   ├── profile.jpg          # Foto de perfil (copiada desde static/)
-│   ├── CV_español.html      # Copia del CV español
-│   ├── CV_english.html      # Copia del CV inglés
-│   └── .nojekyll            # Evita procesamiento Jekyll
-├── build.py                 # Script de generación HTML + PDF + portfolio
-├── Makefile                 # Atajos de comandos (make build, make carta, etc.)
-├── CV_español.html          # HTML generado (no editar directamente)
-├── CV_english.html          # HTML generado (no editar directamente)
-├── CV_español.pdf           # PDF generado
-├── CV_english.pdf           # PDF generado
-├── Carta_Presentacion.html  # HTML generado (no editar directamente)
-├── Carta_Presentacion.pdf   # PDF generado
-├── .env.example             # Plantilla para variables de entorno
-├── pyproject.toml           # Configuración del proyecto (uv)
+│   ├── styles.css               # CSS compartido (layout A4, print, prose)
+│   ├── ai-suite.js              # JS compartido (PDF, modal IA, Gemini API)
+│   └── profile.jpg              # Foto de perfil (fuente canónica)
+├── docs/                        # GitHub Pages (generado, no editar)
+│   ├── index.html               # Página principal del portfolio
+│   ├── projects.html            # Proyectos (desde cv.projects)
+│   ├── contact.html             # Contacto con formulario Formspree
+│   ├── CV_español.html          # CV español (generado directamente aquí)
+│   ├── CV_english.html          # CV inglés (generado directamente aquí)
+│   ├── static/                  # Copia de assets para los CVs
+│   ├── profile.jpg              # Foto de perfil (copiada desde static/)
+│   └── .nojekyll                # Evita procesamiento Jekyll
+├── build.py                     # Script de generación HTML + PDF + portfolio
+├── Makefile                     # Atajos de comandos
+├── CV_español.pdf               # PDF generado
+├── CV_english.pdf               # PDF generado
+├── Carta_Presentacion.html      # Carta ES generada (no editar)
+├── Carta_Presentacion.pdf       # PDF generado
+├── Cover_Letter.html            # Carta EN generada (no editar)
+├── Cover_Letter.pdf             # PDF generado
+├── .env.example                 # Plantilla para variables de entorno
+├── pyproject.toml               # Configuración del proyecto (uv)
 └── README.md
 ```
 
@@ -63,32 +67,50 @@ make build        # Solo CVs (HTML + PDF, ambos idiomas)
 make html         # Solo generar HTMLs (sin PDFs)
 make es           # Solo español (HTML + PDF)
 make en           # Solo inglés (HTML + PDF)
-make carta        # Generar carta de presentación (HTML + PDF)
+make carta        # Carta de presentación (HTML + PDF, ambos idiomas)
+make carta-es     # Carta solo en español
+make carta-en     # Carta solo en inglés
 make portfolio    # Generar portfolio en docs/ (GitHub Pages)
 make clean        # Eliminar archivos generados
 make open-es      # Generar HTML y abrir CV español en navegador
 make open-en      # Generar HTML y abrir CV inglés en navegador
-make open-carta   # Generar y abrir carta de presentación en navegador
+make open-carta   # Generar y abrir carta (ES) en navegador
+make open-carta-en # Generar y abrir carta (EN) en navegador
 make open-portfolio # Generar y abrir portfolio en navegador
 make help         # Mostrar todos los comandos
 ```
+
+### Perfiles customizables
+
+El CV soporta variantes del perfil profesional para adaptarse al rol al que aplicas:
+
+```bash
+make es                        # Perfil por defecto (general)
+make es PROFILE=ai-engineer    # Enfocado en GenAI/RAG/Agentes
+make en PROFILE=ml-engineer    # Enfocado en ML predictivo
+make build PROFILE=mlops       # Enfocado en CI/CD/deployment
+```
+
+Las variantes se definen en `data/cv.json` → `profiles`. Para agregar una nueva, añadir una clave con su texto `{"es": "...", "en": "..."}`.
 
 También se puede usar `build.py` directamente para combinar flags:
 
 ```bash
 uv run python build.py es --html-only
 uv run python build.py carta --html-only
+uv run python build.py en --html-only --profile ai-engineer
 ```
 
 ## Carta de Presentación
 
-Sistema reutilizable para generar cartas de presentación personalizadas por empresa:
+Sistema reutilizable y bilingüe para generar cartas de presentación personalizadas por empresa:
 
-1. Editar `data/cover_letter.json` con los datos de la empresa objetivo (empresa, cargo, contenido)
-2. Ejecutar `make carta`
-3. Se generan `Carta_Presentacion.html` + `Carta_Presentacion.pdf`
+1. Copiar `data/cover_letter_template.json` a `data/cover_letter.json`
+2. Llenar los campos de la empresa objetivo (empresa, cargo, contenido en ES y EN)
+3. Ejecutar `make carta` (genera ambos idiomas) o `make carta-es` / `make carta-en`
+4. Se generan `Carta_Presentacion.html` + `Cover_Letter.html` (+ PDFs)
 
-Los datos personales (nombre, contacto, título) se toman automáticamente de `data/cv.json`.
+Todos los campos soportan i18n con `{"es": "...", "en": "..."}`. Los datos personales (nombre, contacto, título, portfolio) se toman automáticamente de `data/cv.json`.
 
 ## Portfolio (GitHub Pages)
 
