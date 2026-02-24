@@ -1,0 +1,82 @@
+{% extends "portfolio_base.html" %}
+
+{% block title %}Proyectos de IA - {{ cv.personal.name }}{% endblock %}
+
+{% block content %}
+<main class="flex-1 w-full px-4 md:px-6 py-8 pt-28">
+    <div class="mx-auto max-w-[960px] flex flex-col gap-8">
+        <!-- Hero / Intro -->
+        <div class="flex flex-col gap-4 py-6 text-center md:text-left">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-white via-blue-100 to-gray-400 bg-clip-text text-transparent">
+                Portafolio de Proyectos
+            </h1>
+            <p class="text-text-secondary text-lg max-w-2xl leading-relaxed">
+                Proyectos open source enfocados en GenAI, agentes inteligentes con LangChain, sistemas RAG y automatización de workflows empresariales con LLMs.
+            </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-3 pb-4 border-b border-[#282e39]">
+            <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 transition-all shadow-[0_0_10px_rgba(19,91,236,0.3)]">
+                <span class="text-sm font-medium">Todos</span>
+            </button>
+            <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
+                <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                <span class="text-sm font-medium">Agentes IA</span>
+            </button>
+            <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
+                <span class="material-symbols-outlined text-[18px]">chat</span>
+                <span class="text-sm font-medium">GenAI &amp; RAG</span>
+            </button>
+            <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
+                <span class="material-symbols-outlined text-[18px]">analytics</span>
+                <span class="text-sm font-medium">ML Clásico</span>
+            </button>
+        </div>
+
+        <!-- Projects List -->
+        <div class="flex flex-col gap-6">
+            {% set gradients = ['from-purple-900 to-blue-900', 'from-green-900 to-teal-900', 'from-orange-900 to-red-900', 'from-cyan-900 to-indigo-900'] %}
+            {% set icons_map = ['mail', 'database', 'restaurant', 'smart_toy'] %}
+            {% for project in cv.projects %}
+            <article class="@container">
+                <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-[#282e39] hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
+                    <!-- Icon placeholder -->
+                    <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br {{ gradients[loop.index0 % gradients|length] }} flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30">{{ icons_map[loop.index0 % icons_map|length] }}</span>
+                        <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <!-- Content -->
+                    <div class="flex flex-col flex-1 p-6 gap-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-primary text-xs font-bold uppercase tracking-wider">{{ project.emoji }} {{ project.title.es }}</span>
+                                </div>
+                                <h3 class="text-white text-xl font-bold leading-tight group-hover:text-primary transition-colors">{{ project.title.es }}</h3>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-base font-normal leading-relaxed">
+                            {{ project.description.es | striptags }}
+                        </p>
+                        <!-- Tech Stack -->
+                        <div class="flex flex-wrap gap-2 mt-1">
+                            {% for tech in project.stack.split(', ') %}
+                            <span class="px-2 py-1 rounded-md bg-[#282e39] text-xs font-medium text-gray-300">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                        <!-- Actions -->
+                        <div class="flex items-center gap-4 mt-auto pt-4">
+                            <a class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#282e39] text-white text-sm font-medium hover:bg-[#343b49] transition-colors" href="{{ project.url }}" target="_blank">
+                                <span class="material-symbols-outlined text-[18px]">code</span>
+                                Repositorio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

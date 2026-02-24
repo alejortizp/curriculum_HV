@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build script: generates CV HTML files from template + data, then PDFs with Playwright."""
+"""Build script: generates CV, cover letter, and portfolio HTML files from templates + data."""
 
 import json
 import os
@@ -23,6 +23,13 @@ OUTPUTS = {
 COVER_LETTER_OUTPUT = {
     "html": "Carta_Presentacion.html",
     "pdf": "Carta_Presentacion.pdf",
+}
+
+DOCS_DIR = ROOT / "docs"
+PORTFOLIO_TEMPLATES = {
+    "index": {"template": "portfolio_index.html", "output": "index.html"},
+    "projects": {"template": "portfolio_projects.html", "output": "projects.html"},
+    "contact": {"template": "portfolio_contact.html", "output": "contact.html"},
 }
 
 
@@ -131,6 +138,23 @@ def build_cover_letter(cv_data: dict, html_only: bool):
             sys.exit(1)
 
 
+def build_portfolio(cv_data: dict):
+    DOCS_DIR.mkdir(exist_ok=True)
+    env = get_jinja_env()
+    print("Generating portfolio pages...")
+    for page_name, config in PORTFOLIO_TEMPLATES.items():
+        template = env.get_template(config["template"])
+        html = template.render(cv=cv_data, active_page=page_name)
+        output_path = DOCS_DIR / config["output"]
+        output_path.write_text(html, encoding="utf-8")
+        print(f"  HTML: docs/{config['output']}")
+    # Copy profile photo if source exists and target is missing or outdated
+    photo_src = ROOT / "docs" / "profile.jpg"
+    if not photo_src.exists():
+        print("  Note: docs/profile.jpg not found — add it manually")
+    print("Portfolio generated in docs/")
+
+
 def get_api_key() -> str:
     api_key = os.environ.get("GEMINI_API_KEY", "")
     if not api_key:
@@ -152,6 +176,12 @@ def main():
     # uv run python build.py carta
     if "carta" in args:
         build_cover_letter(cv_data, html_only)
+        print("\nDone!")
+        return
+
+    # uv run python build.py portfolio
+    if "portfolio" in args:
+        build_portfolio(cv_data)
         print("\nDone!")
         return
 

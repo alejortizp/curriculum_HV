@@ -1,4 +1,4 @@
-.PHONY: all build html es en carta setup clean open-es open-en open-carta help
+.PHONY: all build html es en carta portfolio setup clean open-es open-en open-carta open-portfolio help
 
 # Default: build everything (HTML + PDF)
 all: build
@@ -23,6 +23,10 @@ en:
 carta:
 	uv run python build.py carta
 
+# Build portfolio pages (GitHub Pages)
+portfolio:
+	uv run python build.py portfolio
+
 # First-time setup
 setup:
 	uv sync
@@ -45,6 +49,10 @@ open-en: html
 open-carta: carta
 	xdg-open Carta_Presentacion.html 2>/dev/null || open Carta_Presentacion.html 2>/dev/null || echo "Open Carta_Presentacion.html manually"
 
+# Open portfolio in default browser
+open-portfolio: portfolio
+	xdg-open docs/index.html 2>/dev/null || open docs/index.html 2>/dev/null || echo "Open docs/index.html manually"
+
 # Show available targets
 help:
 	@echo "Usage: make [target]"
@@ -55,9 +63,11 @@ help:
 	@echo "  es         Build Spanish CV only (HTML + PDF)"
 	@echo "  en         Build English CV only (HTML + PDF)"
 	@echo "  carta      Build cover letter (HTML + PDF)"
+	@echo "  portfolio  Build portfolio pages in docs/ (GitHub Pages)"
 	@echo "  setup      First-time setup (install dependencies)"
 	@echo "  clean      Remove all generated HTML and PDF files"
 	@echo "  open-es    Build HTML and open Spanish CV in browser"
 	@echo "  open-en    Build HTML and open English CV in browser"
 	@echo "  open-carta Build and open cover letter in browser"
+	@echo "  open-portfolio Build and open portfolio in browser"
 	@echo "  help       Show this help"
