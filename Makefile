@@ -1,23 +1,26 @@
 .PHONY: all build html es en carta carta-es carta-en portfolio setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
+# Profile variant for CV (e.g., make es PROFILE=ai-engineer)
+PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
+
 # Default: build everything (CVs HTML + PDF + portfolio)
 all: build portfolio
 
 # Build HTML + PDF for both languages
 build:
-	uv run python build.py
+	uv run python build.py $(PROFILE_FLAG)
 
 # Build HTML only (no PDF)
 html:
-	uv run python build.py --html-only
+	uv run python build.py --html-only $(PROFILE_FLAG)
 
 # Build only Spanish
 es:
-	uv run python build.py es
+	uv run python build.py es $(PROFILE_FLAG)
 
 # Build only English
 en:
-	uv run python build.py en
+	uv run python build.py en $(PROFILE_FLAG)
 
 # Build cover letter (HTML + PDF) - both languages
 carta:
@@ -89,3 +92,7 @@ help:
 	@echo "  open-carta-en Build and open cover letter (EN) in browser"
 	@echo "  open-portfolio Build and open portfolio in browser"
 	@echo "  help       Show this help"
+	@echo ""
+	@echo "Options:"
+	@echo "  PROFILE=name  Use a profile variant for CV (default, ai-engineer, ml-engineer, mlops)"
+	@echo "                Example: make es PROFILE=ai-engineer"

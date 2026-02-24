@@ -196,7 +196,27 @@ def main():
     api_key = get_api_key()
     cv_data = load_json(DATA_FILE)
     html_only = "--html-only" in sys.argv
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    # Extract --profile flag
+    profile_name = "default"
+    if "--profile" in sys.argv:
+        idx = sys.argv.index("--profile")
+        if idx + 1 < len(sys.argv):
+            profile_name = sys.argv[idx + 1]
+
+    # Resolve profile variant: profiles.{name} → profile (template reads cv.profile[lang])
+    if "profiles" in cv_data:
+        if profile_name in cv_data["profiles"]:
+            cv_data["profile"] = cv_data["profiles"][profile_name]
+            if profile_name != "default":
+                print(f"Using profile: {profile_name}")
+        else:
+            available = ", ".join(cv_data["profiles"].keys())
+            print(f"Warning: profile '{profile_name}' not found (available: {available})")
+            print("Using default profile.")
+            cv_data["profile"] = cv_data["profiles"]["default"]
+
+    args = [a for a in sys.argv[1:] if not a.startswith("--") and a != profile_name]
 
     # uv run python build.py carta [carta-es|carta-en]
     if "carta" in args or "carta-es" in args or "carta-en" in args:

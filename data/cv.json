@@ -21,9 +21,23 @@
     "google_analytics_id": ""
   },
 
-  "profile": {
-    "es": "AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
-    "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
+  "profiles": {
+    "default": {
+      "es": "AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
+      "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
+    },
+    "ai-engineer": {
+      "es": "AI Engineer con experiencia productizando soluciones de <strong>GenAI/RAG</strong> en <strong>Azure</strong>. Especializado en diseño e implementación de <strong>agentes inteligentes</strong> con <strong>LangChain</strong> y <strong>Azure OpenAI</strong> para automatización empresarial. Track record procesando <strong>10k+ consultas/mes</strong> con agentes conversacionales y pipelines de matching semántico con <strong>95%</strong> de precisión. Combino Maestría en Ingeniería de Software (en curso) con base en Estadística para diseñar sistemas de IA escalables y listos para producción.",
+      "en": "AI Engineer with proven experience productionizing <strong>GenAI/RAG</strong> solutions on <strong>Azure</strong>. Specialized in designing and deploying <strong>intelligent agents</strong> with <strong>LangChain</strong> and <strong>Azure OpenAI</strong> for enterprise automation. Track record processing <strong>10k+ queries/month</strong> with conversational agents and semantic matching pipelines with <strong>95%</strong> accuracy. Combines Master in Software Engineering (in progress) with a Statistics foundation to design scalable, production-ready AI systems."
+    },
+    "ml-engineer": {
+      "es": "Machine Learning Engineer con experiencia end-to-end desde experimentación hasta producción. Especializado en modelos predictivos (<strong>churn, propensión, NBO</strong>) con impacto cuantificable: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversión, <strong>+60%</strong> contactabilidad. Dominio de <strong>Scikit-learn, LightGBM, PyTorch</strong> y <strong>Databricks + MLflow</strong> para MLOps. Combino base matemática sólida (Estadística) con ingeniería de software moderna para crear pipelines de ML confiables y escalables.",
+      "en": "Machine Learning Engineer with end-to-end experience from experimentation to production. Specialized in predictive models (<strong>churn, propensity, NBO</strong>) with quantifiable impact: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversion, <strong>+60%</strong> contactability. Proficient in <strong>Scikit-learn, LightGBM, PyTorch</strong> and <strong>Databricks + MLflow</strong> for MLOps. Combines strong mathematical foundation (Statistics) with modern software engineering to build reliable and scalable ML pipelines."
+    },
+    "mlops": {
+      "es": "MLOps Engineer especializado en llevar modelos de ML desde experimentación hasta <strong>producción confiable</strong>. Implementé pipelines <strong>CI/CD</strong> con <strong>Databricks + MLflow</strong> que redujeron deployment de 2 semanas a <strong>2 días</strong>. Diseñé sistemas de monitoreo de <strong>data/model drift</strong> con alertas automáticas de reentrenamiento. Dominio de <strong>Docker, Azure AI, FastAPI</strong> y <strong>GitHub Actions</strong> para infraestructura de ML escalable y reproducible.",
+      "en": "MLOps Engineer specialized in taking ML models from experimentation to <strong>reliable production</strong>. Implemented <strong>CI/CD</strong> pipelines with <strong>Databricks + MLflow</strong> reducing deployment from 2 weeks to <strong>2 days</strong>. Designed <strong>data/model drift</strong> monitoring systems with automated retraining alerts. Proficient in <strong>Docker, Azure AI, FastAPI</strong> and <strong>GitHub Actions</strong> for scalable and reproducible ML infrastructure."
+    }
   },
 
   "experience": [
@@ -285,7 +299,7 @@
       "title": {"es": "AWS Cloud Practitioner", "en": "AWS Cloud Practitioner"},
       "detail": null,
       "institution": "Udemy",
-      "date": null
+      "date": {"es": "Feb 2022", "en": "Feb 2022"}
     }
   ]
 }
