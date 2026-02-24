@@ -1,0 +1,279 @@
+{
+  "personal": {
+    "name": "Alejandro Ortiz Perdomo",
+    "title": "AI Engineer | Machine Learning Engineer",
+    "phone": "+57 319 666 3193",
+    "email": "alejortizp@gmail.com",
+    "location": {"es": "Colombia", "en": "Bogotá, Colombia"},
+    "linkedin": {
+      "url": "https://www.linkedin.com/in/alejandro-ortiz-perdomo-a35348116/",
+      "label": "LinkedIn"
+    },
+    "github": {
+      "url": "https://github.com/alejortizp",
+      "label": "alejortizp"
+    }
+  },
+
+  "profile": {
+    "es": "AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
+    "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
+  },
+
+  "experience": [
+    {
+      "current": true,
+      "langs": ["es", "en"],
+      "title": {"es": "Consultor Desarrollador IA", "en": "AI Developer Consultant"},
+      "company": "Periferia IT",
+      "date": {"es": "Jun 2025 - Actualidad", "en": "Jun 2025 - Present"},
+      "items": {
+        "es": [
+          "<strong>Sistema de Matching CV-Oferta:</strong> Desarrollé pipeline completo con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con 95% de precisión en extracción. Búsqueda semántica con embeddings reduce tiempo de screening en <strong>70%</strong>.",
+          "<strong>Automatización Inteligente:</strong> Implementé vectorización y chunking semántico optimizado para matching candidato-oferta, mejorando la calidad de recomendaciones en <strong>40%</strong> vs. keyword search tradicional.",
+          "<strong>Impacto:</strong> Sistema procesando <strong>10k+ búsquedas/mes</strong> con latencia <200ms. Stack: Python, Azure AI Search, Document Intelligence, FastAPI."
+        ],
+        "en": [
+          "<strong>CV-Job Matching System:</strong> Built complete pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> processing 500+ CVs/day with 95% extraction accuracy. Semantic search with embeddings reduced screening time by <strong>70%</strong>.",
+          "<strong>Intelligent Automation:</strong> Implemented vectorization and optimized semantic chunking for candidate-job matching, improving recommendation quality by <strong>40%</strong> vs. traditional keyword search.",
+          "<strong>Impact:</strong> System handling <strong>10k+ searches/month</strong> with <200ms latency. Stack: Python, Azure AI Search, Document Intelligence, FastAPI."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es", "en"],
+      "title": {"es": "Machine Learning Engineer", "en": "Machine Learning Engineer"},
+      "company": "Global Hitss",
+      "date": {"es": "Sep 2023 – Jun 2025", "en": "Sep 2023 – Jun 2025"},
+      "items": {
+        "es": [
+          "<strong>GenAI & RAG:</strong> Diseñé e implementé agente conversacional con RAG que redujo tickets de soporte en <strong>40%</strong>, procesando <strong>10k+ consultas/mes</strong> con 85% de resolución sin escalamiento. Stack: LangChain, Azure OpenAI, FAISS.",
+          "<strong>MLOps:</strong> Implementé pipeline CI/CD en <strong>Databricks + MLflow</strong> que redujo tiempo de deployment de 2 semanas a <strong>2 días</strong>. Modelos en producción con monitoreo automático de drift y reentrenamiento.",
+          "<strong>Reinforcement Learning:</strong> Productivicé sistema <em>Next Best Offer</em> (NBO) con A/B testing que incrementó conversión en <strong>15%</strong> y revenue de <strong>$10k por persona</strong>.",
+          "<strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 3.0</strong> y recall del 82% en top decil, integrado a CRM para retención proactiva. Impactó <strong>30k+ clientes</strong>."
+        ],
+        "en": [
+          "<strong>GenAI & RAG:</strong> Designed and deployed conversational agent with RAG that reduced support tickets by <strong>40%</strong>, processing <strong>10k+ queries/month</strong> with 85% resolution without escalation. Stack: LangChain, Azure OpenAI, FAISS.",
+          "<strong>MLOps:</strong> Implemented CI/CD pipeline in <strong>Databricks + MLflow</strong> reducing deployment time from 2 weeks to <strong>2 days</strong>. Production models with automatic drift monitoring and retraining.",
+          "<strong>Reinforcement Learning:</strong> Productized <em>Next Best Offer</em> (NBO) system with A/B testing that increased conversion by <strong>15%</strong> and revenue by <strong>$10k per person</strong>.",
+          "<strong>Churn Model:</strong> Developed predictive model with <strong>Lift of 3.0</strong> and 82% recall in top decile, integrated to CRM for proactive retention. Impacted <strong>50k+ customers</strong>."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es", "en"],
+      "title": {"es": "Consultor Machine Learning", "en": "Machine Learning Consultant"},
+      "company": "Grupo CINTE",
+      "date": {"es": "Ago 2023 – Sep 2023", "en": "Aug 2023 – Sep 2023"},
+      "items": {
+        "es": [
+          "<strong>Observabilidad:</strong> Metodología para detección de <em>data/model drift</em> con alertas automáticas.",
+          "<strong>Eficiencia:</strong> Optimización de algoritmos LightGBM y Random Forest."
+        ],
+        "en": [
+          "<strong>Observability:</strong> Designed a methodology for <em>data/model drift</em> detection with automated alerts for retraining.",
+          "<strong>Efficiency:</strong> Optimized LightGBM and Random Forest algorithms for better computational performance."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es", "en"],
+      "title": {"es": "Data Scientist", "en": "Data Scientist"},
+      "company": "NAE",
+      "date": {"es": "Mar 2023 – Jul 2023", "en": "Mar 2023 – Jul 2023"},
+      "items": {
+        "es": [
+          "<strong>Modelo de Contactabilidad:</strong> Desarrollé modelo con <strong>LightGBM</strong> que incrementó tasa de contacto efectivo en <strong>60%</strong> (de 25% a 40%), optimizando ventanas horarias y canales. Impactó campañas con <strong>100k+ contactos/mes</strong>."
+        ],
+        "en": [
+          "<strong>Contactability Model:</strong> Developed <strong>LightGBM</strong> model that increased effective contact rate by <strong>60%</strong> (from 25% to 40%), optimizing time windows and channels. Impacted campaigns with <strong>100k+ contacts/month</strong>."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es"],
+      "title": {"es": "Data Scientist II"},
+      "company": "Xolit",
+      "date": {"es": "May 2022 – Ene 2023"},
+      "items": {
+        "es": [
+          "<strong>Modelo de Propensión de Pago:</strong> Desarrollé modelo predictivo de probabilidad de pago y acuerdo de cartera, maximizando el recaudo mediante <strong>focos automáticos</strong> de gestión priorizados por propensión.",
+          "<strong>Sistema de Recomendación:</strong> Implementé motor de recomendación de franja horaria óptima de contacto por titular, incrementando la efectividad de la gestión de cobranza.",
+          "<strong>Segmentación de Clientes:</strong> Diseñé estrategia de marketing basada en clustering de titulares, permitiendo comunicación personalizada por segmento para optimizar tasas de recaudo.",
+          "<strong>Monitoreo:</strong> Construí dashboards en <strong>Power BI</strong> para seguimiento de KPIs de recaudo y métricas de desempeño de modelos en producción."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es"],
+      "title": {"es": "Analista de Datos / BI"},
+      "company": "Savia Salud EPS",
+      "date": {"es": "Ago 2018 – Abr 2021"},
+      "items": {
+        "es": [
+          "<strong>Business Intelligence:</strong> Desarrollé dashboards estratégicos en <strong>Qlik Sense</strong> para toma de decisiones, brindando visibilidad de KPIs operacionales y financieros a stakeholders clave.",
+          "<strong>Pipelines ETL:</strong> Diseñé y construí procesos ETL para consolidar datos de múltiples fuentes, garantizando integridad y trazabilidad de la información.",
+          "<strong>Gestión de Requerimientos:</strong> Lideré levantamiento de requerimientos técnicos y funcionales con usuarios clave, alineando soluciones BI con objetivos organizacionales."
+        ]
+      }
+    }
+  ],
+
+  "projects": [
+    {
+      "emoji": "\ud83e\udd16",
+      "title": {"es": "Agente Email con LangChain", "en": "Email Agent with LangChain"},
+      "url": "https://github.com/alejortizp/email-agent-langchain",
+      "url_label": "github.com/alejortizp/email-agent",
+      "description": {
+        "es": "Agente inteligente que consulta emails vía IMAP, clasifica con LLM y genera respuestas contextuales automáticas. Reduce tiempo de respuesta en <strong>80%</strong>.",
+        "en": "Intelligent agent that queries emails via IMAP, classifies with LLM, and generates contextual automatic responses. Reduces response time by <strong>80%</strong>."
+      },
+      "stack": "LangChain, Azure OpenAI, IMAP, Python, Prompt Engineering"
+    },
+    {
+      "emoji": "\ud83d\udcac",
+      "title": {"es": "NL-to-SQL/Pandas Agent", "en": "NL-to-SQL/Pandas Agent"},
+      "url": "https://github.com/alejortizp/nl-to-code-agent",
+      "url_label": "github.com/alejortizp/nl-to-code",
+      "description": {
+        "es": "Agente que traduce lenguaje natural a queries SQL y operaciones Pandas. Incluye validación de código, ejecución segura en sandbox y visualización automática de resultados.",
+        "en": "Agent that translates natural language to SQL queries and Pandas operations. Includes code validation, secure sandbox execution, and automatic results visualization."
+      },
+      "stack": "LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern"
+    },
+    {
+      "emoji": "\ud83d\uded2",
+      "title": {"es": "RAG Restaurant Ordering System", "en": "RAG Restaurant Ordering System"},
+      "url": "https://github.com/alejortizp/rag-ordering-system",
+      "url_label": "github.com/alejortizp/rag-ordering",
+      "description": {
+        "es": "Sistema de pedidos conversacional con RAG sobre menú de restaurante. Agente procesa selección de productos en lenguaje natural, genera factura y calcula totales. Incluye gestión de inventario.",
+        "en": "Conversational ordering system with RAG over restaurant menu. Agent processes product selection in natural language, generates invoices, and calculates totals. Includes inventory management."
+      },
+      "stack": "LangChain, FAISS, Azure OpenAI, FastAPI, Streamlit"
+    }
+  ],
+
+  "education": {
+    "degrees": [
+      {
+        "title": {"es": "Maestría en Ingeniería de Software", "en": "Master in Software Engineering"},
+        "institution": "Universidad de los Andes",
+        "date": {"es": "2025 - En proceso", "en": "2025 - In Progress"},
+        "current": true
+      },
+      {
+        "title": {"es": "Estadístico", "en": "B.S. in Statistics"},
+        "institution": "Universidad del Valle",
+        "date": "2011 - 2016",
+        "current": false
+      }
+    ],
+    "diplomas": [
+      {
+        "title": {"es": "Diplomado Ciencia de Datos (DS4A)", "en": "Data Science Diploma (DS4A)"},
+        "institution": "Correlation One",
+        "year": "2022"
+      },
+      {
+        "title": {"es": "Diplomado Deep Learning", "en": "Deep Learning Diploma"},
+        "institution": "Univ. Autónoma Occidente",
+        "year": "2023"
+      }
+    ]
+  },
+
+  "tech_stack": [
+    {
+      "category": "GenAI & LLMs",
+      "items": [
+        [{"name": "LangChain", "stars": 5, "detail": "(Agents, RAG)"}],
+        [{"name": "Azure OpenAI", "stars": 5, "detail": "(GPT-4, Embeddings)"}],
+        [{"name": "Prompt Engineering", "stars": 5}],
+        [{"name": "Vector DBs", "stars": 4, "detail": "(FAISS, Pinecone)"}]
+      ]
+    },
+    {
+      "category": "Azure AI & Cloud",
+      "items": [
+        [{"name": "Azure AI Search", "stars": 5}],
+        [{"name": "Document Intelligence", "stars": 4}],
+        [{"name": "Databricks + MLflow", "stars": 5}]
+      ]
+    },
+    {
+      "category": "ML/DL Frameworks",
+      "items": [
+        [{"name": "PyTorch", "stars": 4}, {"name": "TensorFlow", "stars": 3}],
+        [{"name": "Scikit-learn, XGBoost, LightGBM", "stars": 5}],
+        [{"name": "Hugging Face Transformers", "stars": 4}]
+      ]
+    },
+    {
+      "category": "MLOps & Engineering",
+      "items": [
+        [{"name": "Python, SQL, PySpark", "stars": 5}],
+        [{"name": "Docker, CI/CD", "stars": 4}],
+        [{"name": "FastAPI, Streamlit", "stars": 4}],
+        [{"name": "Git, GitHub Actions", "stars": 4}]
+      ]
+    }
+  ],
+
+  "power_skills": {
+    "es": ["Comunicación efectiva", "Resolución de problemas", "Pensamiento analítico", "Trabajo en equipo", "Adaptabilidad", "Aprendizaje continuo", "Gestión del tiempo", "Liderazgo técnico"],
+    "en": ["Effective Communication", "Problem Solving", "Analytical Thinking", "Team Collaboration", "Adaptability", "Continuous Learning", "Time Management", "Technical Leadership"]
+  },
+
+  "languages": [
+    {
+      "flag": "\ud83c\uddea\ud83c\uddf8",
+      "name": {"es": "Español", "en": "Spanish"},
+      "level": {"es": "Nativo", "en": "Native"}
+    },
+    {
+      "flag": "\ud83c\uddec\ud83c\udde7",
+      "name": {"es": "Inglés", "en": "English"},
+      "level": {"es": "Profesional Avanzado (B2/C1)", "en": "Professional Proficiency (B2/C1)"}
+    }
+  ],
+
+  "certifications": [
+    {
+      "title": {"es": "Intro al control de versiones con Git y GitHub", "en": "Intro to Version Control with Git and GitHub"},
+      "detail": null,
+      "institution": {"es": "Univ. de los Andes", "en": "Univ. de los Andes"},
+      "date": {"es": "Sep 2025", "en": "Sep 2025"}
+    },
+    {
+      "title": {"es": "NLP Specialization", "en": "NLP Specialization"},
+      "detail": "(RAG/Transformers)",
+      "institution": "Coursera",
+      "date": {"es": "Jun 2025", "en": "Jun 2025"}
+    },
+    {
+      "title": {"es": "PyTorch Ultimate", "en": "PyTorch Ultimate"},
+      "detail": null,
+      "institution": "Coursera",
+      "date": {"es": "Mar 2025", "en": "Mar 2025"}
+    },
+    {
+      "title": {"es": "MLOps y Databricks", "en": "MLOps and Databricks"},
+      "detail": null,
+      "institution": "Netec",
+      "date": {"es": "Dic 2024", "en": "Dec 2024"}
+    },
+    {
+      "title": {"es": "AWS Cloud Practitioner", "en": "AWS Cloud Practitioner"},
+      "detail": null,
+      "institution": "Udemy",
+      "date": null
+    }
+  ]
+}

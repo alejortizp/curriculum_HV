@@ -8,7 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- HTML2PDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -21,7 +20,7 @@
         .page {
             background: white;
             width: 21cm;
-            min-height: 29.7cm; /* A4 Size */
+            min-height: 29.7cm;
             display: block;
             margin: 0 auto;
             box-shadow: 0 0 0.5cm rgba(0,0,0,0.1);
@@ -29,8 +28,6 @@
             position: relative;
         }
 
-        /* CLAVE: Solo aplicar esto a elementos PEQUEÑOS (Barra lateral) */
-        /* NO aplicar a bloques de texto grandes en la columna principal */
         .item-no-break {
             page-break-inside: avoid;
             break-inside: avoid;
@@ -38,14 +35,12 @@
             position: relative;
         }
 
-        /* Markdown Styles */
         .prose h3 { font-size: 1.1em; font-weight: bold; margin-top: 1em; color: #1e3a8a; }
         .prose ul { list-style-type: disc; padding-left: 1.5em; }
         .prose strong { color: #2563eb; }
         .prose p { margin-bottom: 0.5em; }
 
         @media print {
-            /* Reset básico que funcionaba antes */
             body {
                 background: none;
                 -webkit-print-color-adjust: exact;
@@ -64,33 +59,26 @@
                 display: none !important;
             }
 
-            /* SOLO mejoras que NO afectan el layout */
-
-            /* Forzar colores exactos para badges y fondos */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
-            /* Evitar que títulos queden huérfanos */
             h3, h4 {
                 page-break-after: avoid;
                 break-after: avoid;
             }
 
-            /* Mantener items pequeños juntos (solo sidebar) */
             .item-no-break {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
 
-            /* Fallback para Font Awesome */
             .fa, .fas, .fab {
                 font-family: "Font Awesome 6 Free", sans-serif !important;
                 -webkit-font-smoothing: antialiased;
             }
 
-            /* Links visibles */
             a {
                 color: #2563eb !important;
                 text-decoration: none;
@@ -103,7 +91,7 @@
     <!-- Floating Buttons -->
     <div class="fixed bottom-8 right-8 no-print z-50 flex flex-col gap-3 items-end">
         <button onclick="toggleAIModal()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105 border border-gray-700 group">
-            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i> 
+            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i>
             <span>AI Career Suite (EN)</span>
         </button>
         <button id="btnDownload" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105">
@@ -180,14 +168,14 @@
         </div>
     </div>
 
-    <!-- CV Content (English) -->
+    <!-- CV Content -->
     <article id="cvContent" class="page text-gray-800" role="main" aria-label="Curriculum Vitae of Alejandro Ortiz Perdomo">
-        
+
         <!-- Header -->
         <header class="border-b-2 border-gray-200 pb-6 mb-6">
             <h1 class="text-4xl font-bold text-gray-900 tracking-tight uppercase">Alejandro Ortiz Perdomo</h1>
             <h2 class="text-xl text-blue-700 font-semibold mt-1">AI Engineer | Machine Learning Engineer</h2>
-            
+
             <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4 text-sm text-gray-600">
                 <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> Bogotá, Colombia</div>
                 <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400"></i> +57 319 666 3193</div>
@@ -205,8 +193,8 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <!-- Main Column (Left) -->
+
+            <!-- Main Column -->
             <div class="md:col-span-2 space-y-6">
                 <!-- Profile -->
                 <section>
@@ -217,65 +205,79 @@
                 </section>
 
                 <!-- Experience -->
-                <!-- NOTA: Eliminada clase 'item-no-break' de estos bloques grandes para evitar saltos de página forzados -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">Work Experience</h3>
+                    
                     
                     <div class="mb-6 relative pl-4 border-l-2 border-blue-600">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">AI Developer Consultant</h4>
+                            
                             <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Jun 2025 - Present</span>
+                            
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">Periferia IT</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>CV-Job Matching System:</strong> Built complete pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> processing 500+ CVs/day with 95% extraction accuracy. Semantic search with embeddings reduced screening time by <strong>70%</strong>.</li>
-                            <li><strong>Intelligent Automation:</strong> Implemented vectorization and optimized semantic chunking for candidate-job matching, improving recommendation quality by <strong>40%</strong> vs. traditional keyword search.</li>
-                            <li><strong>Impact:</strong> System handling <strong>10k+ searches/month</strong> with <200ms latency. Stack: Python, Azure AI Search, Document Intelligence, FastAPI.</li>
+                            
                         </ul>
                     </div>
-
+                    
+                    
+                    
                     <div class="mb-5">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">Machine Learning Engineer</h4>
+                            
                             <span class="text-xs text-gray-500 italic">Sep 2023 – Jun 2025</span>
+                            
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">Global Hitss</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>GenAI & RAG:</strong> Designed and deployed conversational agent with RAG that reduced support tickets by <strong>40%</strong>, processing <strong>10k+ queries/month</strong> with 85% resolution without escalation. Stack: LangChain, Azure OpenAI, FAISS.</li>
-                            <li><strong>MLOps:</strong> Implemented CI/CD pipeline in <strong>Databricks + MLflow</strong> reducing deployment time from 2 weeks to <strong>2 days</strong>. Production models with automatic drift monitoring and retraining.</li>
-                            <li><strong>Reinforcement Learning:</strong> Productized <em>Next Best Offer</em> (NBO) system with A/B testing that increased conversion by <strong>15%</strong> and revenue by <strong>$10k per person</strong>.</li>
-                            <li><strong>Churn Model:</strong> Developed predictive model with <strong>Lift of 3.0</strong> and 82% recall in top decile, integrated to CRM for proactive retention. Impacted <strong>50k+ customers</strong>.</li>
+                            
                         </ul>
                     </div>
-
+                    
+                    
+                    
                     <div class="mb-5">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">Machine Learning Consultant</h4>
+                            
                             <span class="text-xs text-gray-500 italic">Aug 2023 – Sep 2023</span>
+                            
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">Grupo CINTE</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>Observability:</strong> Designed a methodology for <em>data/model drift</em> detection with automated alerts for retraining.</li>
-                            <li><strong>Efficiency:</strong> Optimized LightGBM and Random Forest algorithms for better computational performance.</li>
+                            
                         </ul>
                     </div>
-
+                    
+                    
+                    
                     <div class="mb-5">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">Data Scientist</h4>
+                            
                             <span class="text-xs text-gray-500 italic">Mar 2023 – Jul 2023</span>
+                            
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">NAE</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            <li><strong>Contactability Model:</strong> Developed <strong>LightGBM</strong> model that increased effective contact rate by <strong>60%</strong> (from 25% to 40%), optimizing time windows and channels. Impacted campaigns with <strong>100k+ contacts/month</strong>.</li>
+                            
                         </ul>
                     </div>
+                    
+                    
+                    
+                    
+                    
+                    
                 </section>
 
-                <!-- Featured Projects -->
+                <!-- Projects -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">Open Source Projects</h3>
-
+                    
                     <div class="mb-4">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm">🤖 Email Agent with LangChain</h4>
@@ -284,7 +286,7 @@
                         <p class="text-xs text-gray-700 leading-snug mb-1">Intelligent agent that queries emails via IMAP, classifies with LLM, and generates contextual automatic responses. Reduces response time by <strong>80%</strong>.</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, Azure OpenAI, IMAP, Python, Prompt Engineering</p>
                     </div>
-
+                    
                     <div class="mb-4">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm">💬 NL-to-SQL/Pandas Agent</h4>
@@ -293,7 +295,7 @@
                         <p class="text-xs text-gray-700 leading-snug mb-1">Agent that translates natural language to SQL queries and Pandas operations. Includes code validation, secure sandbox execution, and automatic results visualization.</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern</p>
                     </div>
-
+                    
                     <div class="mb-4">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm">🛒 RAG Restaurant Ordering System</h4>
@@ -302,12 +304,13 @@
                         <p class="text-xs text-gray-700 leading-snug mb-1">Conversational ordering system with RAG over restaurant menu. Agent processes product selection in natural language, generates invoices, and calculates totals. Includes inventory management.</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, FAISS, Azure OpenAI, FastAPI, Streamlit</p>
                     </div>
+                    
                 </section>
             </div>
 
-            <!-- Side Column (Right) -->
+            <!-- Side Column -->
             <div class="md:col-span-1 space-y-6">
-                
+
                 <!-- Education -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Education</h3>
@@ -317,23 +320,26 @@
                         <p class="text-sm text-blue-700">Universidad de los Andes</p>
                         <p class="text-xs text-gray-500 font-semibold">2025 - In Progress</p>
                     </div>
-
+                    
                     <div class="mb-3 item-no-break">
                         <h4 class="text-sm font-bold text-gray-900 leading-tight">B.S. in Statistics</h4>
                         <p class="text-sm text-blue-700">Universidad del Valle</p>
                         <p class="text-xs text-gray-500">2011 - 2016</p>
                     </div>
+                    
 
-                    <!-- Diplomas -->
                     <div class="space-y-2 pt-2 border-t border-gray-100">
+                        
                         <div class="item-no-break">
                             <p class="text-xs font-bold text-gray-800">Data Science Diploma (DS4A)</p>
                             <p class="text-xs text-gray-500">Correlation One, 2022</p>
                         </div>
+                        
                         <div class="item-no-break">
                             <p class="text-xs font-bold text-gray-800">Deep Learning Diploma</p>
                             <p class="text-xs text-gray-500">Univ. Autónoma Occidente, 2023</p>
                         </div>
+                        
                     </div>
                 </section>
 
@@ -341,40 +347,136 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Tech Stack</h3>
                     <div class="space-y-3 text-xs">
+                        
                         <div class="item-no-break">
                             <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">GenAI & LLMs</span>
                             <div class="space-y-1">
-                                <div><strong>LangChain</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(Agents, RAG)</span></div>
-                                <div><strong>Azure OpenAI</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(GPT-4, Embeddings)</span></div>
-                                <div><strong>Prompt Engineering</strong> ⭐⭐⭐⭐⭐</div>
-                                <div><strong>Vector DBs</strong> ⭐⭐⭐⭐ <span class="text-gray-500">(FAISS, Pinecone)</span></div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>LangChain</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(Agents, RAG)</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Azure OpenAI</strong> ⭐⭐⭐⭐⭐ <span class="text-gray-500">(GPT-4, Embeddings)</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Prompt Engineering</strong> ⭐⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Vector DBs</strong> ⭐⭐⭐⭐ <span class="text-gray-500">(FAISS, Pinecone)</span>
+                                    
+                                </div>
+                                
                             </div>
                         </div>
+                        
                         <div class="item-no-break">
                             <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">Azure AI & Cloud</span>
                             <div class="space-y-1">
-                                <div><strong>Azure AI Search</strong> ⭐⭐⭐⭐⭐</div>
-                                <div><strong>Document Intelligence</strong> ⭐⭐⭐⭐</div>
-                                <div><strong>Databricks + MLflow</strong> ⭐⭐⭐⭐⭐</div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Azure AI Search</strong> ⭐⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Document Intelligence</strong> ⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Databricks + MLflow</strong> ⭐⭐⭐⭐⭐
+                                    
+                                </div>
+                                
                             </div>
                         </div>
+                        
                         <div class="item-no-break">
                             <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">ML/DL Frameworks</span>
                             <div class="space-y-1">
-                                <div><strong>PyTorch</strong> ⭐⭐⭐⭐ | <strong>TensorFlow</strong> ⭐⭐⭐</div>
-                                <div><strong>Scikit-learn, XGBoost, LightGBM</strong> ⭐⭐⭐⭐⭐</div>
-                                <div><strong>Hugging Face Transformers</strong> ⭐⭐⭐⭐</div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>PyTorch</strong> ⭐⭐⭐⭐
+                                    
+                                     | 
+                                    <strong>TensorFlow</strong> ⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Scikit-learn, XGBoost, LightGBM</strong> ⭐⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Hugging Face Transformers</strong> ⭐⭐⭐⭐
+                                    
+                                </div>
+                                
                             </div>
                         </div>
+                        
                         <div class="item-no-break">
                             <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">MLOps & Engineering</span>
                             <div class="space-y-1">
-                                <div><strong>Python, SQL, PySpark</strong> ⭐⭐⭐⭐⭐</div>
-                                <div><strong>Docker, CI/CD</strong> ⭐⭐⭐⭐</div>
-                                <div><strong>FastAPI, Streamlit</strong> ⭐⭐⭐⭐</div>
-                                <div><strong>Git, GitHub Actions</strong> ⭐⭐⭐⭐</div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Python, SQL, PySpark</strong> ⭐⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Docker, CI/CD</strong> ⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>FastAPI, Streamlit</strong> ⭐⭐⭐⭐
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Git, GitHub Actions</strong> ⭐⭐⭐⭐
+                                    
+                                </div>
+                                
                             </div>
                         </div>
+                        
                     </div>
                 </section>
 
@@ -382,14 +484,23 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Power Skills</h3>
                     <div class="flex flex-wrap gap-1.5 text-xs">
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Effective Communication</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Problem Solving</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Analytical Thinking</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Team Collaboration</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Adaptability</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Continuous Learning</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Time Management</span>
+                        
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">Technical Leadership</span>
+                        
                     </div>
                 </section>
 
@@ -397,6 +508,7 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Languages</h3>
                     <div class="space-y-2 text-sm">
+                        
                         <div class="item-no-break flex items-center gap-2">
                             <span class="text-lg">🇪🇸</span>
                             <div>
@@ -404,6 +516,7 @@
                                 <p class="text-xs text-gray-600">Native</p>
                             </div>
                         </div>
+                        
                         <div class="item-no-break flex items-center gap-2">
                             <span class="text-lg">🇬🇧</span>
                             <div>
@@ -411,6 +524,7 @@
                                 <p class="text-xs text-gray-600">Professional Proficiency (B2/C1)</p>
                             </div>
                         </div>
+                        
                     </div>
                 </section>
 
@@ -418,26 +532,32 @@
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Certifications</h3>
                     <ul class="text-sm text-gray-700 space-y-2">
-                         <li class="item-no-break">
+                        
+                        <li class="item-no-break">
                             <strong class="text-gray-900">Intro to Version Control with Git and GitHub</strong><br>
                             <span class="text-xs text-gray-500">Univ. de los Andes, Sep 2025</span>
                         </li>
+                        
                         <li class="item-no-break">
                             <strong class="text-gray-900">NLP Specialization</strong> (RAG/Transformers)<br>
                             <span class="text-xs text-gray-500">Coursera, Jun 2025</span>
                         </li>
+                        
                         <li class="item-no-break">
                             <strong class="text-gray-900">PyTorch Ultimate</strong><br>
                             <span class="text-xs text-gray-500">Coursera, Mar 2025</span>
                         </li>
+                        
                         <li class="item-no-break">
                             <strong class="text-gray-900">MLOps and Databricks</strong><br>
                             <span class="text-xs text-gray-500">Netec, Dec 2024</span>
                         </li>
-                         <li class="item-no-break">
+                        
+                        <li class="item-no-break">
                             <strong class="text-gray-900">AWS Cloud Practitioner</strong><br>
                             <span class="text-xs text-gray-500">Udemy</span>
                         </li>
+                        
                     </ul>
                 </section>
 
@@ -445,12 +565,11 @@
         </div>
     </article>
 
-    <!-- Script Logic -->
+    <!-- Script -->
     <script>
         const apiKey = "";
-        let currentQuestion = ""; 
+        let currentQuestion = "";
 
-        // -- PDF Config (RESTAURADA A LA VERSIÓN FUNCIONAL) --
         function downloadPDF() {
             const element = document.getElementById('cvContent');
             const btn = document.getElementById('btnDownload');
@@ -464,7 +583,6 @@
                 filename: 'CV_Alejandro_Ortiz_EN.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
-                // Configuración estándar sin forzar saltos agresivos
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
@@ -478,7 +596,6 @@
             });
         }
 
-        // -- UI Helpers --
         function toggleAIModal() {
             const modal = document.getElementById('aiModal');
             modal.classList.toggle('hidden');
@@ -503,12 +620,16 @@
             const title = document.getElementById('inputTitle');
             const btn = document.getElementById('inputActionBtn');
             if (type === 'coverLetter') {
+                
                 title.innerText = "Job Details";
                 container.innerHTML = `<input type="text" id="inputCompany" placeholder="Company Name" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="Job Title" class="w-full border p-2 rounded">`;
+                
                 btn.onclick = () => { if(document.getElementById('inputCompany').value) generateCoverLetter(document.getElementById('inputCompany').value, document.getElementById('inputRole').value); };
             } else if (type === 'gapAnalysis') {
+                
                 title.innerText = "Dream Job";
                 container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="Target Role (e.g., AI Architect)" class="w-full border p-2 rounded">`;
+                
                 btn.onclick = () => { if(document.getElementById('inputDreamJob').value) generateGapAnalysis(document.getElementById('inputDreamJob').value); };
             }
         }
@@ -526,7 +647,6 @@
             if(isInterview) document.getElementById('interviewInputArea').classList.remove('hidden');
         }
 
-        // -- API Calls (English Prompts) --
         async function callGemini(prompt) {
             showLoading();
             try {
@@ -541,28 +661,38 @@
 
         async function generateElevatorPitch() {
             const cv = document.getElementById('cvContent').innerText;
+            
             const prompt = `Act as a Career Coach. Create a 30-40s "Elevator Pitch" for this AI Engineer profile. Highlight: Master's in Software Eng, Azure AI Search, and RAG. Tone: Professional and confident. Language: English. CV: ${cv.substring(0,3000)}`;
+            
             showResult(await callGemini(prompt));
         }
         async function startMockInterview() {
             const cv = document.getElementById('cvContent').innerText;
+            
             const prompt = `Act as a Senior Technical Recruiter. Ask ONE challenging situational technical question about Azure Document Intelligence, MLOps, or RAG based on this CV. DO NOT give the answer yet. Language: English. CV: ${cv.substring(0,3000)}`;
+            
             currentQuestion = await callGemini(prompt);
             showResult(`### 🤖 Interview Question:\n\n${currentQuestion}`, true);
         }
         async function submitAnswer() {
             const ans = document.getElementById('userAnswer').value;
+            
             const prompt = `Evaluate this interview answer (1-10) and give constructive technical feedback. Question: "${currentQuestion}". Candidate Answer: "${ans}". Language: English.`;
+            
             showResult(await callGemini(prompt));
         }
         async function generateCoverLetter(comp, role) {
             const cv = document.getElementById('cvContent').innerText;
+            
             const prompt = `Write a persuasive Cover Letter for the role of "${role}" at "${comp}". Use my CV details to connect my skills (Azure, RAG, Databricks) to the role. Structure: Opening, Why Me, Closing. Language: English. CV: ${cv.substring(0,3000)}`;
+            
             showResult(await callGemini(prompt));
         }
         async function generateGapAnalysis(role) {
             const cv = document.getElementById('cvContent').innerText;
+            
             const prompt = `Act as a Senior Career Mentor. Target Role: "${role}". Analyze my current CV against market standards. Output (Markdown): 1. Strengths, 2. Gaps, 3. Action Plan. Language: English. CV: ${cv.substring(0,3000)}`;
+            
             showResult(await callGemini(prompt));
         }
     </script>

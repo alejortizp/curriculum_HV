@@ -1,7 +1,13 @@
 [project]
 name = "curriculum-hv"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.2.0"
+description = "Bilingual CV (ES/EN) built with HTML + Tailwind CSS, generated from a single data source"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "jinja2>=3.1",
+    "playwright>=1.40",
+]
+
+[project.scripts]
+build-cv = "build:main"

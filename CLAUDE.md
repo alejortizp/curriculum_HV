@@ -4,52 +4,76 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engineer & Machine Learning Engineer). The CVs are standalone HTML files styled with Tailwind CSS via CDN — there is no build step or bundler.
+Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engineer & Machine Learning Engineer). Both CVs are generated from a single data source (`data/cv.json`) using a Jinja2 template, then converted to PDF with Playwright.
 
 ## Key Files
 
-- `CV_español.html` — Spanish CV (self-contained HTML)
-- `CV_english.html` — English CV (self-contained HTML)
-- `CV_español.pdf` / `CV_english.pdf` — Generated PDFs (do not edit directly)
+- `data/cv.json` — **Single source of truth** for all CV content (edit this to update the CV)
+- `templates/cv.html` — Jinja2 template with shared HTML/CSS/JS structure
+- `build.py` — Build script that generates HTMLs + PDFs
+- `CV_español.html` / `CV_english.html` — Generated HTML files (do not edit directly)
+- `CV_español.pdf` / `CV_english.pdf` — Generated PDF files (do not edit directly)
 
 ## Commands
 
-### Generate PDFs from HTML (requires Playwright installed globally)
+### Build everything (HTML + PDF)
 
 ```bash
-npx playwright pdf CV_español.html CV_español.pdf
-npx playwright pdf CV_english.html CV_english.pdf
+uv run python build.py
 ```
 
-If CDN resources fail to load, use the full file path:
+### Build HTML only (skip PDF generation)
 
 ```bash
-npx playwright pdf file://$(pwd)/CV_español.html CV_español.pdf
-npx playwright pdf file://$(pwd)/CV_english.html CV_english.pdf
+uv run python build.py --html-only
 ```
 
-### Python environment (uv, Python 3.13)
+### Build a single language
 
 ```bash
-uv run main.py
+uv run python build.py es
+uv run python build.py en
+```
+
+### Setup (first time only)
+
+```bash
+uv sync
+uv run playwright install chromium
 ```
 
 ## Architecture
 
-Each HTML file is a **fully self-contained** single-page application with no shared code between them. Changes to one must be manually mirrored to the other if they should stay in sync.
+### Data flow
 
-### Structure within each HTML file
+`data/cv.json` + `templates/cv.html` → `build.py` → HTML files → Playwright → PDF files
 
-1. **CDN dependencies** (in `<head>`): Tailwind CSS, Font Awesome 6, Lucide icons, marked.js (Markdown rendering), html2pdf.js
-2. **Print styles** (`@media print`): A4 layout, `page-break-inside: avoid` via `.item-no-break` class, color preservation with `print-color-adjust: exact`
-3. **CV content** (in `<body>`): Two-column layout — left sidebar (contact info, skills, certifications, languages) and main content (experience, education, projects)
-4. **Floating PDF button** (class `no-print`): Uses html2pdf.js for in-browser PDF download
-5. **AI Career Suite modal** (class `no-print`): Interactive tools powered by Gemini API — Elevator Pitch, Technical Interview, Cover Letter, Gap Analysis
+### cv.json structure
 
-### Important conventions
+All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with identical text in both languages use plain strings. Key sections:
+
+- `personal` — Name, contact info, links (location is i18n)
+- `profile` — Professional summary (i18n)
+- `experience` — Work history. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
+- `projects` — Open source projects (i18n for title/description)
+- `education` — Degrees and diplomas
+- `tech_stack` — Skills grouped by category with star ratings (shared between languages)
+- `power_skills`, `languages`, `certifications` — All i18n
+
+### Template conventions
+
+- The `t()` macro resolves i18n fields: `{{ t(entry.title) }}` returns the value for the current language
+- The `stars()` macro generates star emojis from a number
+- Use `cat['items']` (not `cat.items`) for tech_stack items to avoid conflict with Python dict `.items()` method
+- UI strings (section titles, modal labels, AI prompts) are handled with `{% if lang == 'es' %}...{% else %}...{% endif %}` blocks directly in the template
+
+### CSS and print conventions
 
 - The `.page` class defines A4-sized pages (`21cm` wide, `29.7cm` min-height, `2.5cm`/`2cm` padding)
-- Use `.item-no-break` only on small sidebar elements to prevent splitting across pages — do NOT apply it to large main-column content blocks
+- Use `.item-no-break` only on small sidebar elements to prevent splitting across pages
 - Use `.no-print` on UI elements that should not appear in PDFs (buttons, modals)
-- The Gemini API key is stored inline in a `<script>` tag (variable `apiKey`). It is currently empty and must be set by the user
-- Both files use the same visual design and CSS but are independent — keep styling synchronized manually
+- The current/highlighted job entry uses `border-l-2 border-blue-600` and a blue badge for the date
+
+### Gemini API key
+
+Set via environment variable `GEMINI_API_KEY` or in a `.env` file at the project root. Injected into the HTML at build time.

@@ -1,0 +1,488 @@
+{# Macro to resolve i18n fields: if dict with lang keys, return lang value; else return as-is #}
+{%- macro t(value) %}{% if value is mapping and lang in value %}{{ value[lang] }}{% else %}{{ value }}{% endif %}{% endmacro -%}
+{%- macro stars(n) %}{% for _ in range(n) %}⭐{% endfor %}{% endmacro -%}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{ cv.personal.name }}{% if lang == 'en' %} (English){% endif %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .page {
+            background: white;
+            width: 21cm;
+            min-height: 29.7cm;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0 0.5cm rgba(0,0,0,0.1);
+            padding: 2.5cm 2cm;
+            position: relative;
+        }
+
+        .item-no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            display: block;
+            position: relative;
+        }
+
+        .prose h3 { font-size: 1.1em; font-weight: bold; margin-top: 1em; color: #1e3a8a; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; }
+        .prose strong { color: #2563eb; }
+        .prose p { margin-bottom: 0.5em; }
+
+        @media print {
+            body {
+                background: none;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .page {
+                margin: 0;
+                border: initial;
+                width: 100%;
+                box-shadow: initial;
+                page-break-after: always;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            h3, h4 {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            .item-no-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .fa, .fas, .fab {
+                font-family: "Font Awesome 6 Free", sans-serif !important;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            a {
+                color: #2563eb !important;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+<body class="py-10 print:py-0">
+
+    <!-- Floating Buttons -->
+    <div class="fixed bottom-8 right-8 no-print z-50 flex flex-col gap-3 items-end">
+        <button onclick="toggleAIModal()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105 border border-gray-700 group">
+            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i>
+            <span>AI Career Suite{% if lang == 'en' %} (EN){% endif %}</span>
+        </button>
+        <button id="btnDownload" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105">
+            <i class="fas fa-file-pdf"></i> {% if lang == 'es' %}Guardar PDF{% else %}Save PDF{% endif %}
+        </button>
+    </div>
+
+    <!-- AI Modal -->
+    <div id="aiModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center z-50 no-print backdrop-blur-sm transition-all duration-300">
+        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden m-4 flex flex-col max-h-[90vh]">
+            <div class="bg-gray-50 border-b p-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i class="fas fa-robot"></i></div>
+                    <h3 class="font-bold text-gray-800">AI Career Assistant{% if lang == 'en' %} (English Mode){% endif %}</h3>
+                </div>
+                <button onclick="toggleAIModal()" class="hover:bg-gray-200 p-2 rounded-full transition-colors"><i class="fas fa-times text-gray-500"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow bg-white" id="aiContentArea">
+                <div id="aiMenu" class="text-center space-y-6">
+                    <p class="text-gray-600">{% if lang == 'es' %}Selecciona una herramienta:{% else %}Prepare for the international market:{% endif %}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="generateElevatorPitch()" class="border border-gray-200 p-5 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-purple-100 p-2 rounded-lg group-hover:bg-purple-200"><i class="fas fa-bullhorn text-purple-600"></i></div>
+                                <h4 class="font-bold text-gray-800">Elevator Pitch{% if lang == 'en' %} (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Discurso de 30s.{% else %}30s professional intro in English.{% endif %}</p>
+                        </button>
+                        <button onclick="startMockInterview()" class="border border-gray-200 p-5 rounded-xl hover:border-green-500 hover:bg-green-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-green-100 p-2 rounded-lg group-hover:bg-green-200"><i class="fas fa-code-branch text-green-600"></i></div>
+                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Entrevista Técnica{% else %}Tech Interview (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Preguntas Azure/RAG.{% else %}Practice English interview questions.{% endif %}</p>
+                        </button>
+                        <button onclick="showInputView('coverLetter')" class="border border-gray-200 p-5 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-blue-100 p-2 rounded-lg group-hover:bg-blue-200"><i class="fas fa-file-pen text-blue-600"></i></div>
+                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Carta Presentación{% else %}Cover Letter (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Personalizada por empresa.{% else %}Generate a tailored cover letter.{% endif %}</p>
+                        </button>
+                        <button onclick="showInputView('gapAnalysis')" class="border border-gray-200 p-5 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-orange-100 p-2 rounded-lg group-hover:bg-orange-200"><i class="fas fa-chart-pie text-orange-600"></i></div>
+                                <h4 class="font-bold text-gray-800">Gap Analysis</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Comparativa de rol.{% else %}Compare your profile to a target role.{% endif %}</p>
+                        </button>
+                    </div>
+                </div>
+                <div id="aiInputView" class="hidden flex-col space-y-4">
+                    <h4 id="inputTitle" class="font-bold text-lg text-gray-800 text-center mb-2"></h4>
+                    <div id="inputForm" class="space-y-3"></div>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
+                        <button id="inputActionBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Generar{% else %}Generate{% endif %}</button>
+                    </div>
+                </div>
+                <div id="aiLoading" class="hidden flex-col items-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mb-4"></div>
+                    <p class="text-gray-600 font-medium animate-pulse">{% if lang == 'es' %}Consultando a Gemini...{% else %}Consulting Gemini...{% endif %}</p>
+                </div>
+                <div id="aiResult" class="hidden space-y-4">
+                    <div class="prose prose-sm max-w-none text-gray-700 bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-inner" id="aiResponseText"></div>
+                    <div id="interviewInputArea" class="hidden mt-4 pt-4 border-t border-gray-200">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{% if lang == 'es' %}Respuesta:{% else %}Your Answer:{% endif %}</label>
+                        <textarea id="userAnswer" rows="4" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        <button onclick="submitAnswer()" class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Enviar{% else %}Submit Answer{% endif %}</button>
+                    </div>
+                    <button onclick="resetAI()" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2 flex items-center gap-2"><i class="fas fa-arrow-left"></i> {% if lang == 'es' %}Volver{% else %}Back to Menu{% endif %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CV Content -->
+    <article id="cvContent" class="page text-gray-800" role="main" aria-label="Curriculum Vitae {% if lang == 'es' %}de{% else %}of{% endif %} {{ cv.personal.name }}">
+
+        <!-- Header -->
+        <header class="border-b-2 border-gray-200 pb-6 mb-6">
+            <h1 class="text-4xl font-bold text-gray-900 tracking-tight uppercase">{{ cv.personal.name }}</h1>
+            <h2 class="text-xl text-blue-700 font-semibold mt-1">{{ cv.personal.title }}</h2>
+
+            <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4 text-sm text-gray-600">
+                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i>{% if lang == 'es' %}{{ cv.personal.location.es }}{% else %} {{ cv.personal.location.en }}{% endif %}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400"></i> {{ cv.personal.phone }}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400"></i> {{ cv.personal.email }}</div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ cv.personal.linkedin.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
+                        <i class="fab fa-linkedin"></i> {{ cv.personal.linkedin.label }}
+                    </a>
+                    <span class="text-gray-300">|</span>
+                    <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
+                        <i class="fab fa-github"></i> {{ cv.personal.github.label }}
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Main Column -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Profile -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Perfil Profesional{% else %}Professional Profile{% endif %}</h3>
+                    <p class="text-sm text-justify leading-relaxed text-gray-700">
+                        {{ cv.profile[lang] }}
+                    </p>
+                </section>
+
+                <!-- Experience -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Experiencia Laboral{% else %}Work Experience{% endif %}</h3>
+                    {% for exp in cv.experience %}
+                    {% if lang in exp.langs %}
+                    <div class="{% if exp.current %}mb-6 relative pl-4 border-l-2 border-blue-600{% else %}mb-5{% endif %}">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-bold text-gray-900 text-base">{{ t(exp.title) }}</h4>
+                            {% if exp.current %}
+                            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">{{ t(exp.date) }}</span>
+                            {% else %}
+                            <span class="text-xs text-gray-500 italic">{{ t(exp.date) }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-sm font-semibold text-blue-700 mb-2">{{ exp.company }}</div>
+                        <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
+                            {% for item in exp.items[lang] %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </section>
+
+                <!-- Projects -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Proyectos Open Source{% else %}Open Source Projects{% endif %}</h3>
+                    {% for proj in cv.projects %}
+                    <div class="mb-4">
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <h4 class="font-bold text-gray-900 text-sm">{{ proj.emoji }} {{ t(proj.title) }}</h4>
+                            <a href="{{ proj.url }}" target="_blank" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">{{ t(proj.description) }}</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> {{ proj.stack }}</p>
+                    </div>
+                    {% endfor %}
+                </section>
+            </div>
+
+            <!-- Side Column -->
+            <div class="md:col-span-1 space-y-6">
+
+                <!-- Education -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Educación{% else %}Education{% endif %}</h3>
+                    {% for deg in cv.education.degrees %}
+                    <div class="mb-3 item-no-break">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight">{{ t(deg.title) }}</h4>
+                        <p class="text-sm text-blue-700">{{ deg.institution }}</p>
+                        <p class="text-xs text-gray-500{% if deg.current %} font-semibold{% endif %}">{{ t(deg.date) }}</p>
+                    </div>
+                    {% endfor %}
+
+                    <div class="space-y-2 pt-2 border-t border-gray-100">
+                        {% for dip in cv.education.diplomas %}
+                        <div class="item-no-break">
+                            <p class="text-xs font-bold text-gray-800">{{ t(dip.title) }}</p>
+                            <p class="text-xs text-gray-500">{{ t(dip.institution) }}, {{ dip.year }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Tech Stack -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Stack Tecnológico{% else %}Tech Stack{% endif %}</h3>
+                    <div class="space-y-3 text-xs">
+                        {% for cat in cv.tech_stack %}
+                        <div class="item-no-break">
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">{{ cat.category }}</span>
+                            <div class="space-y-1">
+                                {% for line in cat['items'] %}
+                                <div>
+                                    {% for skill in line %}
+                                    {% if not loop.first %} | {% endif %}
+                                    <strong>{{ skill.name }}</strong> {{ stars(skill.stars) }}{% if skill.detail %} <span class="text-gray-500">{{ skill.detail }}</span>{% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Power Skills -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Power Skills</h3>
+                    <div class="flex flex-wrap gap-1.5 text-xs">
+                        {% for skill in cv.power_skills[lang] %}
+                        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Languages -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Idiomas{% else %}Languages{% endif %}</h3>
+                    <div class="space-y-2 text-sm">
+                        {% for lng in cv.languages %}
+                        <div class="item-no-break flex items-center gap-2">
+                            <span class="text-lg">{{ lng.flag }}</span>
+                            <div>
+                                <p class="font-bold text-gray-900">{{ t(lng.name) }}</p>
+                                <p class="text-xs text-gray-600">{{ t(lng.level) }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Certifications -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Certificaciones{% else %}Certifications{% endif %}</h3>
+                    <ul class="text-sm text-gray-700 space-y-2">
+                        {% for cert in cv.certifications %}
+                        <li class="item-no-break">
+                            <strong class="text-gray-900">{{ t(cert.title) }}</strong>{% if cert.detail %} {{ cert.detail }}{% endif %}<br>
+                            <span class="text-xs text-gray-500">{{ t(cert.institution) }}{% if cert.date %}, {{ t(cert.date) }}{% endif %}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+            </div>
+        </div>
+    </article>
+
+    <!-- Script -->
+    <script>
+        const apiKey = "{{ api_key }}";
+        let currentQuestion = "";
+
+        function downloadPDF() {
+            const element = document.getElementById('cvContent');
+            const btn = document.getElementById('btnDownload');
+            const originalContent = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {% if lang == "es" %}Generando...{% else %}Generating...{% endif %}';
+            btn.disabled = true;
+
+            const opt = {
+                margin: 0,
+                filename: '{% if lang == "es" %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }).catch(err => {
+                alert("{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}");
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            });
+        }
+
+        function toggleAIModal() {
+            const modal = document.getElementById('aiModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+            if(!modal.classList.contains('hidden')) resetAI();
+        }
+        function resetAI() {
+            document.getElementById('aiMenu').classList.remove('hidden');
+            document.getElementById('aiLoading').classList.add('hidden');
+            document.getElementById('aiResult').classList.add('hidden');
+            document.getElementById('aiInputView').classList.add('hidden');
+            document.getElementById('interviewInputArea').classList.add('hidden');
+            document.getElementById('userAnswer').value = "";
+            currentQuestion = "";
+        }
+        function showInputView(type) {
+            document.getElementById('aiMenu').classList.add('hidden');
+            document.getElementById('aiInputView').classList.remove('hidden');
+            document.getElementById('aiInputView').classList.add('flex');
+            const container = document.getElementById('inputForm');
+            container.innerHTML = '';
+            const title = document.getElementById('inputTitle');
+            const btn = document.getElementById('inputActionBtn');
+            if (type === 'coverLetter') {
+                {% if lang == 'es' %}
+                title.innerText = "Detalles del Empleo";
+                container.innerHTML = `<input type="text" id="inputCompany" placeholder="Empresa" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="Cargo" class="w-full border p-2 rounded">`;
+                {% else %}
+                title.innerText = "Job Details";
+                container.innerHTML = `<input type="text" id="inputCompany" placeholder="Company Name" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="Job Title" class="w-full border p-2 rounded">`;
+                {% endif %}
+                btn.onclick = () => { if(document.getElementById('inputCompany').value) generateCoverLetter(document.getElementById('inputCompany').value, document.getElementById('inputRole').value); };
+            } else if (type === 'gapAnalysis') {
+                {% if lang == 'es' %}
+                title.innerText = "Rol Soñado";
+                container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="Rol Objetivo" class="w-full border p-2 rounded">`;
+                {% else %}
+                title.innerText = "Dream Job";
+                container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="Target Role (e.g., AI Architect)" class="w-full border p-2 rounded">`;
+                {% endif %}
+                btn.onclick = () => { if(document.getElementById('inputDreamJob').value) generateGapAnalysis(document.getElementById('inputDreamJob').value); };
+            }
+        }
+        function showLoading() {
+            document.getElementById('aiMenu').classList.add('hidden');
+            document.getElementById('aiInputView').classList.add('hidden');
+            document.getElementById('aiLoading').classList.remove('hidden');
+            document.getElementById('aiLoading').classList.add('flex');
+        }
+        function showResult(text, isInterview = false) {
+            document.getElementById('aiLoading').classList.add('hidden');
+            document.getElementById('aiLoading').classList.remove('flex');
+            document.getElementById('aiResult').classList.remove('hidden');
+            document.getElementById('aiResponseText').innerHTML = marked.parse(text);
+            if(isInterview) document.getElementById('interviewInputArea').classList.remove('hidden');
+        }
+
+        async function callGemini(prompt) {
+            showLoading();
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await res.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (e) { return "{% if lang == 'es' %}Error de conexión.{% else %}Connection Error: Unable to reach Gemini.{% endif %}"; }
+        }
+
+        async function generateElevatorPitch() {
+            const cv = document.getElementById('cvContent').innerText;
+            {% if lang == 'es' %}
+            const prompt = `Crea Elevator Pitch (30s) para AI Engineer. Resalta Maestría y Azure. CV: ${cv.substring(0,3000)}`;
+            {% else %}
+            const prompt = `Act as a Career Coach. Create a 30-40s "Elevator Pitch" for this AI Engineer profile. Highlight: Master's in Software Eng, Azure AI Search, and RAG. Tone: Professional and confident. Language: English. CV: ${cv.substring(0,3000)}`;
+            {% endif %}
+            showResult(await callGemini(prompt));
+        }
+        async function startMockInterview() {
+            const cv = document.getElementById('cvContent').innerText;
+            {% if lang == 'es' %}
+            const prompt = `Haz UNA pregunta técnica difícil sobre Azure AI o MLOps basada en CV: ${cv.substring(0,3000)}`;
+            {% else %}
+            const prompt = `Act as a Senior Technical Recruiter. Ask ONE challenging situational technical question about Azure Document Intelligence, MLOps, or RAG based on this CV. DO NOT give the answer yet. Language: English. CV: ${cv.substring(0,3000)}`;
+            {% endif %}
+            currentQuestion = await callGemini(prompt);
+            showResult(`### {% if lang == 'es' %}Pregunta{% else %}🤖 Interview Question{% endif %}:\n\n${currentQuestion}`, true);
+        }
+        async function submitAnswer() {
+            const ans = document.getElementById('userAnswer').value;
+            {% if lang == 'es' %}
+            const prompt = `Evalúa respuesta (1-10). Pregunta: ${currentQuestion}. Respuesta: ${ans}`;
+            {% else %}
+            const prompt = `Evaluate this interview answer (1-10) and give constructive technical feedback. Question: "${currentQuestion}". Candidate Answer: "${ans}". Language: English.`;
+            {% endif %}
+            showResult(await callGemini(prompt));
+        }
+        async function generateCoverLetter(comp, role) {
+            const cv = document.getElementById('cvContent').innerText;
+            {% if lang == 'es' %}
+            const prompt = `Carta Presentación para ${role} en ${comp}. CV: ${cv.substring(0,3000)}`;
+            {% else %}
+            const prompt = `Write a persuasive Cover Letter for the role of "${role}" at "${comp}". Use my CV details to connect my skills (Azure, RAG, Databricks) to the role. Structure: Opening, Why Me, Closing. Language: English. CV: ${cv.substring(0,3000)}`;
+            {% endif %}
+            showResult(await callGemini(prompt));
+        }
+        async function generateGapAnalysis(role) {
+            const cv = document.getElementById('cvContent').innerText;
+            {% if lang == 'es' %}
+            const prompt = `Gap Analysis para rol ${role}. CV: ${cv.substring(0,3000)}`;
+            {% else %}
+            const prompt = `Act as a Senior Career Mentor. Target Role: "${role}". Analyze my current CV against market standards. Output (Markdown): 1. Strengths, 2. Gaps, 3. Action Plan. Language: English. CV: ${cv.substring(0,3000)}`;
+            {% endif %}
+            showResult(await callGemini(prompt));
+        }
+    </script>
+</body>
+</html>
