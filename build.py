@@ -3,6 +3,7 @@
 
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -148,10 +149,16 @@ def build_portfolio(cv_data: dict):
         output_path = DOCS_DIR / config["output"]
         output_path.write_text(html, encoding="utf-8")
         print(f"  HTML: docs/{config['output']}")
-    # Copy profile photo if source exists and target is missing or outdated
-    photo_src = ROOT / "docs" / "profile.jpg"
-    if not photo_src.exists():
-        print("  Note: docs/profile.jpg not found — add it manually")
+    # Copy CV HTMLs to docs/ so "Descargar CV" links work on GitHub Pages
+    for lang, files in OUTPUTS.items():
+        src = ROOT / files["html"]
+        if src.exists():
+            shutil.copy2(src, DOCS_DIR / files["html"])
+            print(f"  Copy: docs/{files['html']}")
+        else:
+            print(f"  Note: {files['html']} not found — run 'make html' first")
+    # Create .nojekyll to prevent GitHub Pages Jekyll processing
+    (DOCS_DIR / ".nojekyll").touch()
     print("Portfolio generated in docs/")
 
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engineer & Machine Learning Engineer). Both CVs are generated from a single data source (`data/cv.json`) using a Jinja2 template, then converted to PDF with Playwright. Also includes a reusable cover letter system.
+Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engineer & Machine Learning Engineer). Both CVs are generated from a single data source (`data/cv.json`) using a Jinja2 template, then converted to PDF with Playwright. Also includes a reusable cover letter system and a portfolio website deployed to GitHub Pages.
 
 ## Key Files
 
@@ -14,9 +14,14 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `templates/cover_letter.html` — Jinja2 template for cover letter (reuses CV header style)
 - `static/styles.css` — Shared CSS (page layout, print styles, markdown prose)
 - `static/ai-suite.js` — Shared JS (PDF download, AI modal logic, Gemini API calls)
-- `build.py` — Build script that generates HTMLs + PDFs (CVs and cover letter)
+- `templates/portfolio_base.html` — Shared base template for portfolio pages (nav + footer)
+- `templates/portfolio_index.html` — Portfolio home page template
+- `templates/portfolio_projects.html` — Portfolio projects page template
+- `templates/portfolio_contact.html` — Portfolio contact page template (Formspree form)
+- `build.py` — Build script that generates HTMLs + PDFs (CVs, cover letter, portfolio)
 - `CV_español.html` / `CV_english.html` — Generated CV files (do not edit directly)
 - `Carta_Presentacion.html` / `Carta_Presentacion.pdf` — Generated cover letter (do not edit directly)
+- `docs/` — Generated portfolio for GitHub Pages (do not edit directly)
 
 ## Commands
 
@@ -26,11 +31,13 @@ make html         # Build HTML only (skip PDF)
 make es           # Build Spanish CV only
 make en           # Build English CV only
 make carta        # Build cover letter (HTML + PDF)
+make portfolio    # Build portfolio in docs/ (GitHub Pages)
 make setup        # First-time setup (uv sync + playwright)
 make clean        # Remove all generated files
 make open-es      # Build HTML and open Spanish CV in browser
 make open-en      # Build HTML and open English CV in browser
 make open-carta   # Build and open cover letter in browser
+make open-portfolio # Build and open portfolio in browser
 make help         # Show all targets
 ```
 
@@ -42,6 +49,7 @@ The Makefile wraps `uv run python build.py` with various flags. You can also cal
 
 - **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → HTML files → Playwright → PDF files
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` → Playwright → `Carta_Presentacion.pdf`
+- **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (index.html, projects.html, contact.html + CV copies)
 
 ### cv.json structure
 
@@ -75,6 +83,16 @@ Edit this file for each company application. Fields: `company`, `recipient`, `ro
 - Use `.item-no-break` on any element that should not split across pages (experience entries, projects, sidebar items)
 - Use `.no-print` on UI elements that should not appear in PDFs (buttons, modals)
 - The current/highlighted job entry uses `border-l-2 border-blue-600` and a blue badge for the date
+
+### Portfolio (GitHub Pages)
+
+- Portfolio templates extend `portfolio_base.html` (shared nav with active page highlight + footer)
+- Data comes from `cv.json` — portfolio stays in sync with the CV automatically
+- `build.py portfolio` generates HTML pages in `docs/` and copies CV HTMLs there
+- `.nojekyll` file is created to prevent GitHub Pages Jekyll processing
+- Contact form uses Formspree (AJAX submit, no redirect). The Formspree ID is in `cv.json` → `personal.formspree_id`
+- GitHub Pages serves from `docs/` folder on `main` branch
+- URL: https://alejortizp.github.io/curriculum_HV/
 
 ### Gemini API key
 

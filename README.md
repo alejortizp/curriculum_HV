@@ -1,6 +1,6 @@
 # Curriculum Vitae - Alejandro Ortiz Perdomo
 
-CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única. Incluye sistema de carta de presentación reutilizable.
+CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única. Incluye sistema de carta de presentación reutilizable y portfolio web publicado en GitHub Pages.
 
 ## Estructura del proyecto
 
@@ -10,8 +10,20 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 │   └── cover_letter.json    # Datos de la carta de presentación (editar por empresa)
 ├── templates/
 │   ├── cv.html              # Plantilla Jinja2 para CVs
-│   └── cover_letter.html    # Plantilla Jinja2 para carta de presentación
-├── build.py                 # Script de generación HTML + PDF
+│   ├── cover_letter.html    # Plantilla Jinja2 para carta de presentación
+│   ├── portfolio_base.html  # Plantilla base del portfolio (nav + footer)
+│   ├── portfolio_index.html # Plantilla página principal
+│   ├── portfolio_projects.html # Plantilla página de proyectos
+│   └── portfolio_contact.html  # Plantilla página de contacto (Formspree)
+├── docs/                    # Portfolio para GitHub Pages (generado)
+│   ├── index.html           # Página principal
+│   ├── projects.html        # Proyectos
+│   ├── contact.html         # Contacto con formulario Formspree
+│   ├── profile.jpg          # Foto de perfil
+│   ├── CV_español.html      # Copia del CV español
+│   ├── CV_english.html      # Copia del CV inglés
+│   └── .nojekyll            # Evita procesamiento Jekyll
+├── build.py                 # Script de generación HTML + PDF + portfolio
 ├── Makefile                 # Atajos de comandos (make build, make carta, etc.)
 ├── CV_español.html          # HTML generado (no editar directamente)
 ├── CV_english.html          # HTML generado (no editar directamente)
@@ -49,10 +61,12 @@ make html         # Solo generar HTMLs (sin PDFs)
 make es           # Solo español (HTML + PDF)
 make en           # Solo inglés (HTML + PDF)
 make carta        # Generar carta de presentación (HTML + PDF)
+make portfolio    # Generar portfolio en docs/ (GitHub Pages)
 make clean        # Eliminar archivos generados
 make open-es      # Generar HTML y abrir CV español en navegador
 make open-en      # Generar HTML y abrir CV inglés en navegador
 make open-carta   # Generar y abrir carta de presentación en navegador
+make open-portfolio # Generar y abrir portfolio en navegador
 make help         # Mostrar todos los comandos
 ```
 
@@ -72,6 +86,39 @@ Sistema reutilizable para generar cartas de presentación personalizadas por emp
 3. Se generan `Carta_Presentacion.html` + `Carta_Presentacion.pdf`
 
 Los datos personales (nombre, contacto, título) se toman automáticamente de `data/cv.json`.
+
+## Portfolio (GitHub Pages)
+
+El proyecto incluye un portfolio web publicado en GitHub Pages desde la carpeta `docs/`.
+
+**URL:** https://alejortizp.github.io/curriculum_HV/
+
+### Generar el portfolio
+
+```bash
+make html         # Primero generar los CVs HTML
+make portfolio    # Generar portfolio + copiar CVs a docs/
+```
+
+El portfolio lee datos de `cv.json`, así que se mantiene sincronizado con el CV. Incluye:
+- Página principal con perfil, habilidades y estadísticas
+- Página de proyectos iterada desde `cv.projects`
+- Página de contacto con formulario funcional (Formspree)
+- Descarga de CV en español e inglés
+
+### Configurar formulario de contacto
+
+1. Crear cuenta en [formspree.io](https://formspree.io) y crear un formulario
+2. Copiar el ID (ej: `xpzvqkdl`) y ponerlo en `data/cv.json` → `personal.formspree_id`
+3. Ejecutar `make portfolio`
+
+### Configurar GitHub Pages
+
+En el repositorio de GitHub:
+1. Ir a **Settings → Pages**
+2. En **Source** seleccionar **Deploy from a branch**
+3. En **Branch** seleccionar `main` y carpeta `/docs`
+4. Guardar — el sitio estará disponible en minutos
 
 ## Tecnologías utilizadas
 
