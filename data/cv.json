@@ -133,7 +133,7 @@
     {
       "emoji": "\ud83e\udd16",
       "title": {"es": "Agente Email con LangChain", "en": "Email Agent with LangChain"},
-      "url": "https://github.com/alejortizp/email-agent-langchain",
+      "url": "https://github.com/alejortizp/email-agent",
       "url_label": "github.com/alejortizp/email-agent",
       "description": {
         "es": "Agente inteligente que consulta emails vía IMAP, clasifica con LLM y genera respuestas contextuales automáticas. Reduce tiempo de respuesta en <strong>80%</strong>.",
@@ -144,7 +144,7 @@
     {
       "emoji": "\ud83d\udcac",
       "title": {"es": "NL-to-SQL/Pandas Agent", "en": "NL-to-SQL/Pandas Agent"},
-      "url": "https://github.com/alejortizp/nl-to-code-agent",
+      "url": "https://github.com/alejortizp/Agente-de-Consultas---High-Garden-Coffee---Agentic-Rag",
       "url_label": "github.com/alejortizp/nl-to-code",
       "description": {
         "es": "Agente que traduce lenguaje natural a queries SQL y operaciones Pandas. Incluye validación de código, ejecución segura en sandbox y visualización automática de resultados.",
@@ -155,7 +155,7 @@
     {
       "emoji": "\ud83d\uded2",
       "title": {"es": "RAG Restaurant Ordering System", "en": "RAG Restaurant Ordering System"},
-      "url": "https://github.com/alejortizp/rag-ordering-system",
+      "url": "https://github.com/alejortizp/rag-ordering",
       "url_label": "github.com/alejortizp/rag-ordering",
       "description": {
         "es": "Sistema de pedidos conversacional con RAG sobre menú de restaurante. Agente procesa selección de productos en lenguaje natural, genera factura y calcula totales. Incluye gestión de inventario.",
