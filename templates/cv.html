@@ -214,7 +214,46 @@
                     </div>
                 </section>
 
-                <!-- Tech Stack -->
+                <!-- Languages -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Idiomas{% else %}Languages{% endif %}</h3>
+                    <div class="space-y-2 text-sm">
+                        {% for lng in cv.languages %}
+                        <div class="item-no-break flex items-center gap-2">
+                            <span class="text-lg">{{ lng.flag }}</span>
+                            <div>
+                                <p class="font-bold text-gray-900">{{ t(lng.name) }}</p>
+                                <p class="text-xs text-gray-600">{{ t(lng.level) }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Power Skills -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Power Skills</h3>
+                    <div class="flex flex-wrap gap-1.5 text-xs">
+                        {% for skill in cv.power_skills[lang] %}
+                        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Certifications -->
+                <section>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Certificaciones{% else %}Certifications{% endif %}</h3>
+                    <ul class="text-sm text-gray-700 space-y-2">
+                        {% for cert in cv.certifications %}
+                        <li class="item-no-break">
+                            <strong class="text-gray-900">{{ t(cert.title) }}</strong>{% if cert.detail %} {{ cert.detail }}{% endif %}<br>
+                            <span class="text-xs text-gray-500">{{ t(cert.institution) }}{% if cert.date %}, {{ t(cert.date) }}{% endif %}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+                <!-- Tech Stack (last: longest section, flows naturally across pages) -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Stack Tecnológico{% else %}Tech Stack{% endif %}</h3>
                     <div class="space-y-3 text-xs">
@@ -234,45 +273,6 @@
                         </div>
                         {% endfor %}
                     </div>
-                </section>
-
-                <!-- Power Skills -->
-                <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Power Skills</h3>
-                    <div class="flex flex-wrap gap-1.5 text-xs">
-                        {% for skill in cv.power_skills[lang] %}
-                        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">{{ skill }}</span>
-                        {% endfor %}
-                    </div>
-                </section>
-
-                <!-- Languages -->
-                <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Idiomas{% else %}Languages{% endif %}</h3>
-                    <div class="space-y-2 text-sm">
-                        {% for lng in cv.languages %}
-                        <div class="item-no-break flex items-center gap-2">
-                            <span class="text-lg">{{ lng.flag }}</span>
-                            <div>
-                                <p class="font-bold text-gray-900">{{ t(lng.name) }}</p>
-                                <p class="text-xs text-gray-600">{{ t(lng.level) }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </section>
-
-                <!-- Certifications -->
-                <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Certificaciones{% else %}Certifications{% endif %}</h3>
-                    <ul class="text-sm text-gray-700 space-y-2">
-                        {% for cert in cv.certifications %}
-                        <li class="item-no-break">
-                            <strong class="text-gray-900">{{ t(cert.title) }}</strong>{% if cert.detail %} {{ cert.detail }}{% endif %}<br>
-                            <span class="text-xs text-gray-500">{{ t(cert.institution) }}{% if cert.date %}, {{ t(cert.date) }}{% endif %}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
                 </section>
 
             </div>
