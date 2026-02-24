@@ -42,17 +42,18 @@ setup:
 
 # Remove generated files
 clean:
-	rm -f CV_español.html CV_english.html CV_español.pdf CV_english.pdf
+	rm -f docs/CV_español.html docs/CV_english.html CV_español.pdf CV_english.pdf
+	rm -rf docs/static
 	rm -f Carta_Presentacion.html Carta_Presentacion.pdf
 	rm -f Cover_Letter.html Cover_Letter.pdf
 
 # Open Spanish CV in default browser
 open-es: html
-	xdg-open CV_español.html 2>/dev/null || open CV_español.html 2>/dev/null || echo "Open CV_español.html manually"
+	xdg-open docs/CV_español.html 2>/dev/null || open docs/CV_español.html 2>/dev/null || echo "Open docs/CV_español.html manually"
 
 # Open English CV in default browser
 open-en: html
-	xdg-open CV_english.html 2>/dev/null || open CV_english.html 2>/dev/null || echo "Open CV_english.html manually"
+	xdg-open docs/CV_english.html 2>/dev/null || open docs/CV_english.html 2>/dev/null || echo "Open docs/CV_english.html manually"
 
 # Open cover letter (Spanish) in default browser
 open-carta: carta
