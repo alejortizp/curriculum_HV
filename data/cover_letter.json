@@ -1,0 +1,20 @@
+{
+  "company": "Periferia IT",
+  "recipient": "Equipo de Talento Humano",
+  "role": "AI Engineer",
+  "date": "24 de febrero de 2026",
+  "subject": "Aplicación al cargo de AI Engineer",
+  "opening": "Me dirijo a ustedes para expresar mi interés en el cargo de <strong>AI Engineer</strong>. Como profesional con experiencia directa en Periferia IT — donde actualmente lidero el desarrollo de un sistema de matching CV-Oferta con Azure AI Search — conozco de primera mano la cultura de innovación y excelencia técnica de la compañía, y deseo consolidar mi trayectoria contribuyendo desde un rol de ingeniería de IA más amplio.",
+  "why_me_title": "¿Por qué soy un buen fit para este rol?",
+  "why_me": [
+    "<strong>Experiencia probada en GenAI y RAG en producción:</strong> He diseñado e implementado agentes conversacionales con LangChain y Azure OpenAI que procesan 10k+ consultas/mes, reduciendo tickets de soporte en un 40%. Esto no es prototipo — son sistemas en producción con usuarios reales.",
+    "<strong>Dominio del ecosistema Azure AI:</strong> Mi stack principal incluye Azure AI Search, Document Intelligence, Azure OpenAI y Databricks. En Periferia IT construí un pipeline que procesa 500+ CVs/día con 95% de precisión, reduciendo tiempos de screening en un 70%.",
+    "<strong>MLOps end-to-end:</strong> Implementé pipelines CI/CD con Databricks + MLflow que redujeron el tiempo de deployment de 2 semanas a 2 días. Entiendo que poner modelos en producción es tan importante como crearlos.",
+    "<strong>Impacto cuantificable en negocio:</strong> Desde sistemas de Reinforcement Learning que incrementaron conversión en 15% y revenue de $10k por persona, hasta modelos de churn con Lift de 3.0 impactando 30k+ clientes — mi enfoque siempre es conectar la IA con resultados medibles."
+  ],
+  "differentiator_title": "¿Qué me diferencia?",
+  "differentiator": "Combino una base matemática sólida (Estadístico, Universidad del Valle) con ingeniería de software moderna (Maestría en Ingeniería de Software, Universidad de los Andes — en curso). Esta combinación me permite no solo construir modelos, sino diseñar sistemas de IA escalables, mantenibles y listos para producción.",
+  "closing": "Estoy convencido de que mi experiencia construyendo soluciones de IA en el ecosistema de Periferia IT, junto con mi trayectoria en empresas como Global Hitss y Grupo CINTE, me posicionan para generar impacto inmediato como AI Engineer.",
+  "farewell": "Quedo atento a conversar sobre cómo puedo aportar al equipo.",
+  "sign_off": "Cordialmente"
+}

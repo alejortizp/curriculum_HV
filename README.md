@@ -1,20 +1,24 @@
 # Curriculum Vitae - Alejandro Ortiz Perdomo
 
-CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única.
+CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única. Incluye sistema de carta de presentación reutilizable.
 
 ## Estructura del proyecto
 
 ```text
 ├── data/
-│   └── cv.json              # Fuente única de datos del CV (editar aquí)
+│   ├── cv.json              # Fuente única de datos del CV (editar aquí)
+│   └── cover_letter.json    # Datos de la carta de presentación (editar por empresa)
 ├── templates/
-│   └── cv.html              # Plantilla Jinja2 compartida
+│   ├── cv.html              # Plantilla Jinja2 para CVs
+│   └── cover_letter.html    # Plantilla Jinja2 para carta de presentación
 ├── build.py                 # Script de generación HTML + PDF
-├── Makefile                 # Atajos de comandos (make build, make html, etc.)
+├── Makefile                 # Atajos de comandos (make build, make carta, etc.)
 ├── CV_español.html          # HTML generado (no editar directamente)
 ├── CV_english.html          # HTML generado (no editar directamente)
 ├── CV_español.pdf           # PDF generado
 ├── CV_english.pdf           # PDF generado
+├── Carta_Presentacion.html  # HTML generado (no editar directamente)
+├── Carta_Presentacion.pdf   # PDF generado
 ├── .env.example             # Plantilla para variables de entorno
 ├── pyproject.toml           # Configuración del proyecto (uv)
 └── README.md
@@ -40,21 +44,34 @@ make setup
 ### Comandos disponibles
 
 ```bash
-make              # Build HTML + PDF (ambos idiomas)
+make              # Build HTML + PDF (ambos idiomas del CV)
 make html         # Solo generar HTMLs (sin PDFs)
 make es           # Solo español (HTML + PDF)
 make en           # Solo inglés (HTML + PDF)
+make carta        # Generar carta de presentación (HTML + PDF)
 make clean        # Eliminar archivos generados
 make open-es      # Generar HTML y abrir CV español en navegador
 make open-en      # Generar HTML y abrir CV inglés en navegador
+make open-carta   # Generar y abrir carta de presentación en navegador
 make help         # Mostrar todos los comandos
 ```
 
-Tambien se puede usar `build.py` directamente para combinar flags:
+También se puede usar `build.py` directamente para combinar flags:
 
 ```bash
 uv run python build.py es --html-only
+uv run python build.py carta --html-only
 ```
+
+## Carta de Presentación
+
+Sistema reutilizable para generar cartas de presentación personalizadas por empresa:
+
+1. Editar `data/cover_letter.json` con los datos de la empresa objetivo (empresa, cargo, contenido)
+2. Ejecutar `make carta`
+3. Se generan `Carta_Presentacion.html` + `Carta_Presentacion.pdf`
+
+Los datos personales (nombre, contacto, título) se toman automáticamente de `data/cv.json`.
 
 ## Tecnologías utilizadas
 
