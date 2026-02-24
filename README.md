@@ -10,11 +10,12 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 ├── templates/
 │   └── cv.html              # Plantilla Jinja2 compartida
 ├── build.py                 # Script de generación HTML + PDF
+├── Makefile                 # Atajos de comandos (make build, make html, etc.)
 ├── CV_español.html          # HTML generado (no editar directamente)
 ├── CV_english.html          # HTML generado (no editar directamente)
 ├── CV_español.pdf           # PDF generado
 ├── CV_english.pdf           # PDF generado
-├── main.py                  # Entry point del proyecto
+├── .env.example             # Plantilla para variables de entorno
 ├── pyproject.toml           # Configuración del proyecto (uv)
 └── README.md
 ```
@@ -25,7 +26,7 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 2. Ejecutar el build:
 
 ```bash
-uv run python build.py
+make
 ```
 
 Esto genera automáticamente los 4 archivos: 2 HTMLs + 2 PDFs.
@@ -33,19 +34,26 @@ Esto genera automáticamente los 4 archivos: 2 HTMLs + 2 PDFs.
 ### Setup inicial (primera vez)
 
 ```bash
-uv sync
-uv run playwright install chromium
+make setup
 ```
 
-### Opciones del build
+### Comandos disponibles
 
 ```bash
-# Solo generar HTMLs (sin PDFs)
-uv run python build.py --html-only
+make              # Build HTML + PDF (ambos idiomas)
+make html         # Solo generar HTMLs (sin PDFs)
+make es           # Solo español (HTML + PDF)
+make en           # Solo inglés (HTML + PDF)
+make clean        # Eliminar archivos generados
+make open-es      # Generar HTML y abrir CV español en navegador
+make open-en      # Generar HTML y abrir CV inglés en navegador
+make help         # Mostrar todos los comandos
+```
 
-# Generar solo un idioma
-uv run python build.py es
-uv run python build.py en
+Tambien se puede usar `build.py` directamente para combinar flags:
+
+```bash
+uv run python build.py es --html-only
 ```
 
 ## Tecnologías utilizadas

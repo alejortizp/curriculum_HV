@@ -18,31 +18,19 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 
 ## Commands
 
-### Build everything (HTML + PDF)
-
 ```bash
-uv run python build.py
+make              # Build HTML + PDF (both languages)
+make html         # Build HTML only (skip PDF)
+make es           # Build Spanish only
+make en           # Build English only
+make setup        # First-time setup (uv sync + playwright)
+make clean        # Remove generated files
+make open-es      # Build HTML and open Spanish CV in browser
+make open-en      # Build HTML and open English CV in browser
+make help         # Show all targets
 ```
 
-### Build HTML only (skip PDF generation)
-
-```bash
-uv run python build.py --html-only
-```
-
-### Build a single language
-
-```bash
-uv run python build.py es
-uv run python build.py en
-```
-
-### Setup (first time only)
-
-```bash
-uv sync
-uv run playwright install chromium
-```
+The Makefile wraps `uv run python build.py` with various flags. You can also call build.py directly for combined flags (e.g., `uv run python build.py es --html-only`).
 
 ## Architecture
 
