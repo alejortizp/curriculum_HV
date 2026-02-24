@@ -14,6 +14,7 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `templates/cover_letter.html` — Jinja2 template for cover letter (reuses CV header style)
 - `static/styles.css` — Shared CSS (page layout, print styles, markdown prose)
 - `static/ai-suite.js` — Shared JS (PDF download, AI modal logic, Gemini API calls)
+- `static/profile.jpg` — Profile photo (canonical source, copied to docs/ during build)
 - `templates/portfolio_base.html` — Shared base template for portfolio pages (nav + footer)
 - `templates/portfolio_index.html` — Portfolio home page template
 - `templates/portfolio_projects.html` — Portfolio projects page template
@@ -26,7 +27,8 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 ## Commands
 
 ```bash
-make              # Build HTML + PDF (both CV languages)
+make              # Build everything: CVs (HTML + PDF) + portfolio in docs/
+make build        # Build CVs only (HTML + PDF, both languages)
 make html         # Build HTML only (skip PDF)
 make es           # Build Spanish CV only
 make en           # Build English CV only
@@ -40,6 +42,8 @@ make open-carta   # Build and open cover letter in browser
 make open-portfolio # Build and open portfolio in browser
 make help         # Show all targets
 ```
+
+`make` (default) runs `build` + `portfolio`, so updating `cv.json` and running `make` regenerates CVs, PDFs, and the portfolio in one step.
 
 The Makefile wraps `uv run python build.py` with various flags. You can also call build.py directly for combined flags (e.g., `uv run python build.py es --html-only`).
 
@@ -55,7 +59,7 @@ The Makefile wraps `uv run python build.py` with various flags. You can also cal
 
 All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with identical text in both languages use plain strings. Key sections:
 
-- `personal` — Name, contact info, links (location is i18n)
+- `personal` — Name, contact info, links, portfolio URL, formspree_id, google_analytics_id (location is i18n)
 - `profile` — Professional summary (i18n)
 - `experience` — Work history. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description)
@@ -86,11 +90,15 @@ Edit this file for each company application. Fields: `company`, `recipient`, `ro
 
 ### Portfolio (GitHub Pages)
 
-- Portfolio templates extend `portfolio_base.html` (shared nav with active page highlight + footer)
-- Data comes from `cv.json` — portfolio stays in sync with the CV automatically
-- `build.py portfolio` generates HTML pages in `docs/` and copies CV HTMLs there
+- Portfolio templates extend `portfolio_base.html` (shared nav with active page highlight + footer + SEO meta tags)
+- Data comes from `cv.json` — portfolio stays in sync with the CV automatically. Projects, skills, contact info, and links are all dynamic
+- `build.py portfolio` generates HTML pages in `docs/`, copies CV HTMLs and `static/profile.jpg` there
 - `.nojekyll` file is created to prevent GitHub Pages Jekyll processing
 - Contact form uses Formspree (AJAX submit, no redirect). The Formspree ID is in `cv.json` → `personal.formspree_id`
+- Google Analytics is optional — set `personal.google_analytics_id` in `cv.json` (gtag.js script is conditionally injected only when the ID has a value)
+- Mobile menu: hamburger button toggles a slide-in panel with overlay (JS in base template)
+- "Descargar CV" button on index page has a dropdown with both language options (ES/EN)
+- `profile.jpg` canonical source is `static/profile.jpg` — build copies it to `docs/`
 - GitHub Pages serves from `docs/` folder on `main` branch
 - URL: https://alejortizp.github.io/curriculum_HV/
 

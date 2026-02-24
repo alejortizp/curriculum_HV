@@ -11,15 +11,17 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 ├── templates/
 │   ├── cv.html              # Plantilla Jinja2 para CVs
 │   ├── cover_letter.html    # Plantilla Jinja2 para carta de presentación
-│   ├── portfolio_base.html  # Plantilla base del portfolio (nav + footer)
-│   ├── portfolio_index.html # Plantilla página principal
-│   ├── portfolio_projects.html # Plantilla página de proyectos
-│   └── portfolio_contact.html  # Plantilla página de contacto (Formspree)
-├── docs/                    # Portfolio para GitHub Pages (generado)
+│   ├── portfolio_base.html  # Plantilla base del portfolio (nav, footer, SEO, analytics)
+│   ├── portfolio_index.html # Plantilla página principal (hero, skills, about)
+│   ├── portfolio_projects.html # Plantilla proyectos (iterados desde cv.json)
+│   └── portfolio_contact.html  # Plantilla contacto (formulario Formspree)
+├── static/
+│   └── profile.jpg          # Foto de perfil (fuente canónica, se copia a docs/)
+├── docs/                    # Portfolio para GitHub Pages (generado, no editar)
 │   ├── index.html           # Página principal
-│   ├── projects.html        # Proyectos
+│   ├── projects.html        # Proyectos (generados desde cv.projects)
 │   ├── contact.html         # Contacto con formulario Formspree
-│   ├── profile.jpg          # Foto de perfil
+│   ├── profile.jpg          # Foto de perfil (copiada desde static/)
 │   ├── CV_español.html      # Copia del CV español
 │   ├── CV_english.html      # Copia del CV inglés
 │   └── .nojekyll            # Evita procesamiento Jekyll
@@ -45,7 +47,7 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 make
 ```
 
-Esto genera automáticamente los 4 archivos: 2 HTMLs + 2 PDFs.
+Esto genera automáticamente los CVs (HTML + PDF) y regenera el portfolio en `docs/`.
 
 ### Setup inicial (primera vez)
 
@@ -56,7 +58,8 @@ make setup
 ### Comandos disponibles
 
 ```bash
-make              # Build HTML + PDF (ambos idiomas del CV)
+make              # Build todo: CVs (HTML + PDF) + portfolio en docs/
+make build        # Solo CVs (HTML + PDF, ambos idiomas)
 make html         # Solo generar HTMLs (sin PDFs)
 make es           # Solo español (HTML + PDF)
 make en           # Solo inglés (HTML + PDF)
@@ -96,21 +99,31 @@ El proyecto incluye un portfolio web publicado en GitHub Pages desde la carpeta 
 ### Generar el portfolio
 
 ```bash
-make html         # Primero generar los CVs HTML
-make portfolio    # Generar portfolio + copiar CVs a docs/
+make              # Genera todo: CVs + PDFs + portfolio
+make portfolio    # Solo regenerar portfolio (requiere CVs HTML existentes)
 ```
 
-El portfolio lee datos de `cv.json`, así que se mantiene sincronizado con el CV. Incluye:
+El portfolio lee datos de `cv.json`, así que se mantiene sincronizado con el CV. Al agregar o editar proyectos, experiencia o datos personales en `cv.json`, el portfolio se actualiza automáticamente con `make`. Incluye:
+
 - Página principal con perfil, habilidades y estadísticas
-- Página de proyectos iterada desde `cv.projects`
+- Página de proyectos generada dinámicamente desde `cv.projects`
 - Página de contacto con formulario funcional (Formspree)
-- Descarga de CV en español e inglés
+- Descarga de CV bilingüe (dropdown español/inglés)
+- Menú móvil responsive
+- Meta tags SEO (Open Graph, Twitter Cards)
+- Google Analytics (opcional)
 
 ### Configurar formulario de contacto
 
 1. Crear cuenta en [formspree.io](https://formspree.io) y crear un formulario
 2. Copiar el ID (ej: `xpzvqkdl`) y ponerlo en `data/cv.json` → `personal.formspree_id`
 3. Ejecutar `make portfolio`
+
+### Configurar Google Analytics (opcional)
+
+1. Crear una propiedad en [analytics.google.com](https://analytics.google.com)
+2. Copiar el Measurement ID (`G-XXXXXXXXXX`) y ponerlo en `data/cv.json` → `personal.google_analytics_id`
+3. Ejecutar `make portfolio` — el script se inyecta solo si el ID tiene valor
 
 ### Configurar GitHub Pages
 
@@ -128,6 +141,10 @@ En el repositorio de GitHub:
 - **Font Awesome 6** para iconografía
 - **html2pdf.js** como opción alternativa de descarga PDF desde el navegador
 - **Gemini API** para funcionalidades de IA integradas (Elevator Pitch, Entrevista Técnica, Carta de Presentación, Gap Analysis)
+- **Formspree** para formulario de contacto funcional (AJAX, sin backend)
+- **Google Analytics** integración opcional para monitoreo de visitas
+- **Material Symbols** para iconografía del portfolio
+- **Space Grotesk** como fuente del portfolio
 
 ## Alternativa: PDF desde el navegador
 
@@ -144,4 +161,6 @@ Ambos CVs incluyen un modal interactivo con herramientas de IA (requiere API key
 
 Para configurar la API key, crear un archivo `.env` en la raíz del proyecto:
 
-
+```
+GEMINI_API_KEY=tu_api_key_aquí
+```
