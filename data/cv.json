@@ -57,7 +57,7 @@
           "<strong>GenAI & RAG:</strong> Diseñé e implementé agente conversacional con RAG que redujo tickets de soporte en <strong>40%</strong>, procesando <strong>10k+ consultas/mes</strong> con 85% de resolución sin escalamiento. Stack: LangChain, Azure OpenAI, FAISS.",
           "<strong>MLOps:</strong> Implementé pipeline CI/CD en <strong>Databricks + MLflow</strong> que redujo tiempo de deployment de 2 semanas a <strong>2 días</strong>. Modelos en producción con monitoreo automático de drift y reentrenamiento.",
           "<strong>Reinforcement Learning:</strong> Productivicé sistema <em>Next Best Offer</em> (NBO) con A/B testing que incrementó conversión en <strong>15%</strong> y revenue de <strong>$10k por persona</strong>.",
-          "<strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 3.0</strong> y recall del 82% en top decil, integrado a CRM para retención proactiva. Impactó <strong>30k+ clientes</strong>."
+          "<strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 3.0</strong> y recall del 82% en top decil, integrado a CRM para retención proactiva. Impactó <strong>50k+ clientes</strong>."
         ],
         "en": [
           "<strong>GenAI & RAG:</strong> Designed and deployed conversational agent with RAG that reduced support tickets by <strong>40%</strong>, processing <strong>10k+ queries/month</strong> with 85% resolution without escalation. Stack: LangChain, Azure OpenAI, FAISS.",
@@ -72,15 +72,15 @@
       "langs": ["es", "en"],
       "title": {"es": "Consultor Machine Learning", "en": "Machine Learning Consultant"},
       "company": "Grupo CINTE",
-      "date": {"es": "Ago 2023 – Sep 2023", "en": "Aug 2023 – Sep 2023"},
+      "date": {"es": "Ago – Sep 2023 (Proyecto puntual)", "en": "Aug – Sep 2023 (Short-term project)"},
       "items": {
         "es": [
-          "<strong>Observabilidad:</strong> Metodología para detección de <em>data/model drift</em> con alertas automáticas.",
-          "<strong>Eficiencia:</strong> Optimización de algoritmos LightGBM y Random Forest."
+          "<strong>Observabilidad ML:</strong> Diseñé metodología integral de monitoreo para detección de <em>data/model drift</em> con alertas automáticas de reentrenamiento, adoptada como estándar del equipo de ciencia de datos.",
+          "<strong>Optimización:</strong> Audité y optimicé algoritmos LightGBM y Random Forest, mejorando eficiencia computacional y reduciendo tiempos de inferencia."
         ],
         "en": [
-          "<strong>Observability:</strong> Designed a methodology for <em>data/model drift</em> detection with automated alerts for retraining.",
-          "<strong>Efficiency:</strong> Optimized LightGBM and Random Forest algorithms for better computational performance."
+          "<strong>ML Observability:</strong> Designed comprehensive monitoring methodology for <em>data/model drift</em> detection with automated retraining alerts, adopted as the data science team's standard.",
+          "<strong>Optimization:</strong> Audited and optimized LightGBM and Random Forest algorithms, improving computational efficiency and reducing inference times."
         ]
       }
     },
@@ -101,16 +101,22 @@
     },
     {
       "current": false,
-      "langs": ["es"],
-      "title": {"es": "Data Scientist II"},
+      "langs": ["es", "en"],
+      "title": {"es": "Data Scientist II", "en": "Data Scientist II"},
       "company": "Xolit",
-      "date": {"es": "May 2022 – Ene 2023"},
+      "date": {"es": "May 2022 – Ene 2023", "en": "May 2022 – Jan 2023"},
       "items": {
         "es": [
           "<strong>Modelo de Propensión de Pago:</strong> Desarrollé modelo predictivo de probabilidad de pago y acuerdo de cartera, maximizando el recaudo mediante <strong>focos automáticos</strong> de gestión priorizados por propensión.",
           "<strong>Sistema de Recomendación:</strong> Implementé motor de recomendación de franja horaria óptima de contacto por titular, incrementando la efectividad de la gestión de cobranza.",
           "<strong>Segmentación de Clientes:</strong> Diseñé estrategia de marketing basada en clustering de titulares, permitiendo comunicación personalizada por segmento para optimizar tasas de recaudo.",
           "<strong>Monitoreo:</strong> Construí dashboards en <strong>Power BI</strong> para seguimiento de KPIs de recaudo y métricas de desempeño de modelos en producción."
+        ],
+        "en": [
+          "<strong>Payment Propensity Model:</strong> Developed predictive model for payment probability and portfolio agreement, maximizing collection through <strong>automated management priorities</strong> based on propensity scores.",
+          "<strong>Recommendation System:</strong> Implemented optimal contact time-slot recommendation engine per account holder, increasing debt collection management effectiveness.",
+          "<strong>Customer Segmentation:</strong> Designed clustering-based marketing strategy for account holders, enabling personalized communication per segment to optimize collection rates.",
+          "<strong>Monitoring:</strong> Built <strong>Power BI</strong> dashboards for tracking collection KPIs and production model performance metrics."
         ]
       }
     },
@@ -256,12 +262,6 @@
       "detail": null,
       "institution": {"es": "Udemy", "en": "Udemy"},
       "date": {"es": "Feb 2026", "en": "Feb 2026"}
-    },
-    {
-      "title": {"es": "Intro al control de versiones con Git y GitHub", "en": "Intro to Version Control with Git and GitHub"},
-      "detail": null,
-      "institution": {"es": "Univ. de los Andes", "en": "Univ. de los Andes"},
-      "date": {"es": "Sep 2025", "en": "Sep 2025"}
     },
     {
       "title": {"es": "NLP Specialization", "en": "NLP Specialization"},

@@ -1,0 +1,22 @@
+{
+  "company": "",
+  "recipient": {"es": "", "en": ""},
+  "role": "",
+  "date": {"es": "", "en": ""},
+  "subject": {"es": "Aplicación al cargo de ", "en": "Application for the position of "},
+  "greeting": {"es": "Estimado/a", "en": "Dear"},
+  "opening": {"es": "", "en": ""},
+  "why_me_title": {"es": "¿Por qué soy un buen fit para este rol?", "en": "Why am I a good fit for this role?"},
+  "why_me": {
+    "es": [],
+    "en": []
+  },
+  "differentiator_title": {"es": "¿Qué me diferencia?", "en": "What sets me apart?"},
+  "differentiator": {"es": "", "en": ""},
+  "closing": {"es": "", "en": ""},
+  "farewell": {
+    "es": "Quedo atento a conversar sobre cómo puedo aportar al equipo.",
+    "en": "I look forward to discussing how I can contribute to the team."
+  },
+  "sign_off": {"es": "Cordialmente", "en": "Sincerely"}
+}

@@ -1,9 +1,10 @@
+{%- macro t(value) %}{% if value is mapping and lang in value %}{{ value[lang] }}{% else %}{{ value }}{% endif %}{% endmacro -%}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carta de Presentación - {{ cv.personal.name }} - {{ letter.company }}</title>
+    <title>{% if lang == 'es' %}Carta de Presentación{% else %}Cover Letter{% endif %} - {{ cv.personal.name }} - {{ letter.company }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/styles.css">
@@ -18,7 +19,7 @@
             <h2 class="text-lg text-blue-700 font-semibold mt-1">{{ cv.personal.title }}</h2>
 
             <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4 text-sm text-gray-600">
-                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> {{ cv.personal.location.es }}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> {{ t(cv.personal.location) }}</div>
                 <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400"></i> {{ cv.personal.phone }}</div>
                 <div class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400"></i> {{ cv.personal.email }}</div>
                 <div class="flex items-center gap-2">
@@ -29,37 +30,42 @@
                     <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
                         <i class="fab fa-github"></i> {{ cv.personal.github.label }}
                     </a>
+                    <span class="text-gray-300">|</span>
+                    <a href="{{ cv.personal.portfolio.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
+                        <i class="fas fa-globe"></i> {{ cv.personal.portfolio.label }}
+                    </a>
                 </div>
             </div>
         </header>
 
         <!-- Date & Recipient -->
         <div class="mb-6 text-sm text-gray-700">
-            <p class="mb-4">{{ letter.date }}</p>
-            <p class="font-semibold">{{ letter.recipient }}</p>
+            <p class="mb-4">{{ t(letter.date) }}</p>
+            <p class="font-semibold">{{ t(letter.recipient) }}</p>
             <p class="font-semibold text-blue-700">{{ letter.company }}</p>
         </div>
 
         <!-- Subject -->
         <div class="mb-6">
-            <p class="text-sm text-gray-700"><strong>Asunto:</strong> {{ letter.subject }}</p>
+            <p class="text-sm text-gray-700"><strong>{% if lang == 'es' %}Asunto:{% else %}Subject:{% endif %}</strong> {{ t(letter.subject) }}</p>
         </div>
 
         <!-- Greeting -->
         <div class="mb-4">
-            <p class="text-sm text-gray-700">Estimado {{ letter.recipient }},</p>
+            <p class="text-sm text-gray-700">{{ t(letter.greeting) }} {{ t(letter.recipient) }},</p>
         </div>
 
         <!-- Opening -->
         <div class="mb-5">
-            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ letter.opening }}</p>
+            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ t(letter.opening) }}</p>
         </div>
 
         <!-- Why Me -->
         <div class="mb-5">
-            <h3 class="text-base font-bold text-gray-900 mb-3">{{ letter.why_me_title }}</h3>
+            <h3 class="text-base font-bold text-gray-900 mb-3">{{ t(letter.why_me_title) }}</h3>
             <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-2.5 leading-relaxed">
-                {% for point in letter.why_me %}
+                {% set why_me_items = letter.why_me[lang] if letter.why_me is mapping else letter.why_me %}
+                {% for point in why_me_items %}
                 <li>{{ point }}</li>
                 {% endfor %}
             </ul>
@@ -67,23 +73,23 @@
 
         <!-- Differentiator -->
         <div class="mb-5">
-            <h3 class="text-base font-bold text-gray-900 mb-3">{{ letter.differentiator_title }}</h3>
-            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ letter.differentiator }}</p>
+            <h3 class="text-base font-bold text-gray-900 mb-3">{{ t(letter.differentiator_title) }}</h3>
+            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ t(letter.differentiator) }}</p>
         </div>
 
         <!-- Closing -->
         <div class="mb-5">
-            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ letter.closing }}</p>
+            <p class="text-sm text-justify leading-relaxed text-gray-700">{{ t(letter.closing) }}</p>
         </div>
 
         <!-- Farewell -->
         <div class="mb-8">
-            <p class="text-sm text-gray-700">{{ letter.farewell }}</p>
+            <p class="text-sm text-gray-700">{{ t(letter.farewell) }}</p>
         </div>
 
         <!-- Signature -->
         <div class="text-sm text-gray-700">
-            <p class="mb-1">{{ letter.sign_off }},</p>
+            <p class="mb-1">{{ t(letter.sign_off) }},</p>
             <p class="font-bold text-gray-900 text-base mt-4">{{ cv.personal.name }}</p>
             <p class="text-blue-700">{{ cv.personal.title }}</p>
         </div>

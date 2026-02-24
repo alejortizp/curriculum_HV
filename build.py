@@ -21,9 +21,9 @@ OUTPUTS = {
     "en": {"html": "CV_english.html", "pdf": "CV_english.pdf"},
 }
 
-COVER_LETTER_OUTPUT = {
-    "html": "Carta_Presentacion.html",
-    "pdf": "Carta_Presentacion.pdf",
+COVER_LETTER_OUTPUTS = {
+    "es": {"html": "Carta_Presentacion.html", "pdf": "Carta_Presentacion.pdf"},
+    "en": {"html": "Cover_Letter.html", "pdf": "Cover_Letter.pdf"},
 }
 
 DOCS_DIR = ROOT / "docs"
@@ -49,10 +49,10 @@ def render_cv(cv_data: dict, lang: str, api_key: str) -> str:
     return template.render(cv=cv_data, lang=lang, api_key=api_key)
 
 
-def render_cover_letter(cv_data: dict, letter_data: dict) -> str:
+def render_cover_letter(cv_data: dict, letter_data: dict, lang: str) -> str:
     env = get_jinja_env()
     template = env.get_template(COVER_LETTER_TEMPLATE)
-    return template.render(cv=cv_data, letter=letter_data)
+    return template.render(cv=cv_data, letter=letter_data, lang=lang)
 
 
 def generate_pdf(html_path: Path, pdf_path: Path, margin: dict):
@@ -113,7 +113,10 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool):
             sys.exit(1)
 
 
-def build_cover_letter(cv_data: dict, html_only: bool):
+def build_cover_letter(cv_data: dict, html_only: bool, langs: list = None):
+    if langs is None:
+        langs = list(COVER_LETTER_OUTPUTS.keys())
+
     if not COVER_LETTER_FILE.exists():
         print(f"  Cover letter data not found: {COVER_LETTER_FILE}")
         sys.exit(1)
@@ -121,22 +124,24 @@ def build_cover_letter(cv_data: dict, html_only: bool):
     letter_data = load_json(COVER_LETTER_FILE)
 
     print("Generating cover letter...")
-    html = render_cover_letter(cv_data, letter_data)
-    html_path = ROOT / COVER_LETTER_OUTPUT["html"]
-    html_path.write_text(html, encoding="utf-8")
-    print(f"  HTML: {html_path.name}")
+    for lang in langs:
+        html = render_cover_letter(cv_data, letter_data, lang)
+        output = COVER_LETTER_OUTPUTS[lang]
+        html_path = ROOT / output["html"]
+        html_path.write_text(html, encoding="utf-8")
+        print(f"  HTML: {html_path.name}")
 
-    if not html_only:
-        pdf_path = ROOT / COVER_LETTER_OUTPUT["pdf"]
-        try:
-            margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
-            generate_pdf(html_path, pdf_path, margin)
-            print(f"  PDF: {pdf_path.name}")
-        except Exception as e:
-            print(f"\n  Error generating PDF: {e}")
-            print("  Make sure Playwright is installed:")
-            print("    uv run playwright install chromium")
-            sys.exit(1)
+        if not html_only:
+            pdf_path = ROOT / output["pdf"]
+            try:
+                margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
+                generate_pdf(html_path, pdf_path, margin)
+                print(f"  PDF: {pdf_path.name}")
+            except Exception as e:
+                print(f"\n  Error generating PDF: {e}")
+                print("  Make sure Playwright is installed:")
+                print("    uv run playwright install chromium")
+                sys.exit(1)
 
 
 def build_portfolio(cv_data: dict):
@@ -188,9 +193,14 @@ def main():
     html_only = "--html-only" in sys.argv
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
 
-    # uv run python build.py carta
-    if "carta" in args:
-        build_cover_letter(cv_data, html_only)
+    # uv run python build.py carta [carta-es|carta-en]
+    if "carta" in args or "carta-es" in args or "carta-en" in args:
+        carta_langs = list(COVER_LETTER_OUTPUTS.keys())
+        if "carta-es" in args:
+            carta_langs = ["es"]
+        elif "carta-en" in args:
+            carta_langs = ["en"]
+        build_cover_letter(cv_data, html_only, carta_langs)
         print("\nDone!")
         return
 
