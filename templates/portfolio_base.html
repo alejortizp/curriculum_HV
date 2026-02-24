@@ -2,6 +2,16 @@
 <html class="dark" lang="es">
 <head>
     <meta charset="utf-8"/>
+    {% if cv.personal.google_analytics_id %}
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ cv.personal.google_analytics_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ cv.personal.google_analytics_id }}');
+    </script>
+    {% endif %}
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>{% block title %}AI Engineer Portfolio{% endblock %}</title>
     <meta name="description" content="{{ cv.personal.name }} — {{ cv.personal.title }}. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
