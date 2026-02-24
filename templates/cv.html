@@ -165,7 +165,7 @@
                         </div>
                         <div class="text-sm font-semibold text-blue-700 mb-2">{{ exp.company }}</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
-                            {% for item in exp.items[lang] %}
+                            {% for item in exp['items'][lang] %}
                             <li>{{ item }}</li>
                             {% endfor %}
                         </ul>
