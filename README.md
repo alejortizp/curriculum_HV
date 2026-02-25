@@ -1,6 +1,6 @@
 # Curriculum Vitae - Alejandro Ortiz Perdomo
 
-CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única. Incluye sistema de carta de presentación reutilizable y portfolio web publicado en GitHub Pages.
+CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning Engineer, construido con HTML + Tailwind CSS y generado desde una fuente de datos única. Incluye sistema de carta de presentación reutilizable y portfolio web bilingüe publicado en GitHub Pages.
 
 ## Estructura del proyecto
 
@@ -21,22 +21,27 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 │   ├── ai-suite.js              # JS compartido (PDF, modal IA, Gemini API)
 │   └── profile.jpg              # Foto de perfil (fuente canónica)
 ├── docs/                        # GitHub Pages (generado, no editar)
-│   ├── index.html               # Página principal del portfolio
-│   ├── projects.html            # Proyectos (desde cv.projects)
-│   ├── contact.html             # Contacto con formulario Formspree
+│   ├── index.html               # Portfolio principal (ES)
+│   ├── index_en.html            # Portfolio principal (EN)
+│   ├── projects.html            # Proyectos (ES)
+│   ├── projects_en.html         # Proyectos (EN)
+│   ├── contact.html             # Contacto (ES)
+│   ├── contact_en.html          # Contacto (EN)
 │   ├── CV_español.html          # CV español - perfil default
 │   ├── CV_english.html          # CV inglés - perfil default
 │   ├── CV_español_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
 │   ├── CV_english_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
-│   ├── *.pdf                    # PDFs copiados para descarga en GitHub Pages
+│   ├── CV-Alejandro-Ortiz-*.pdf # PDFs con nombres ASCII-safe para descarga
+│   ├── sitemap.xml              # Sitemap auto-generado
+│   ├── robots.txt               # Robots.txt auto-generado
 │   ├── static/                  # Copia de assets para los CVs
 │   ├── profile.jpg              # Foto de perfil (copiada desde static/)
 │   └── .nojekyll                # Evita procesamiento Jekyll
-├── build.py                     # Script de generación HTML + PDF + portfolio
+├── build.py                     # Script de generación (argparse CLI): HTML + PDF + portfolio bilingüe
 ├── Makefile                     # Atajos de comandos
-├── CV_español.pdf               # PDF default generado
-├── CV_english.pdf               # PDF default generado
-├── CV_*_<profile>.pdf           # PDFs por perfil (ai-engineer, ml-engineer, mlops)
+├── CV-Alejandro-Ortiz-Perdomo-ES.pdf     # PDF default ES
+├── CV-Alejandro-Ortiz-Perdomo-EN.pdf     # PDF default EN
+├── CV-Alejandro-Ortiz-Perdomo-*-*.pdf    # PDFs por perfil e idioma (ASCII-safe)
 ├── Carta_Presentacion.html      # Carta ES generada (no editar)
 ├── Carta_Presentacion.pdf       # PDF generado
 ├── Cover_Letter.html            # Carta EN generada (no editar)
@@ -66,7 +71,7 @@ make setup
 ### Comandos disponibles
 
 ```bash
-make              # Build todo: todos los perfiles (HTML + PDF) + portfolio
+make              # Build todo: todos los perfiles (HTML + PDF) + portfolio bilingüe
 make build        # Todos los perfiles × ambos idiomas (8 CVs)
 make html         # Solo generar HTMLs (sin PDFs), todos los perfiles
 make es           # Solo español (todos los perfiles)
@@ -74,8 +79,8 @@ make en           # Solo inglés (todos los perfiles)
 make carta        # Carta de presentación (HTML + PDF, ambos idiomas)
 make carta-es     # Carta solo en español
 make carta-en     # Carta solo en inglés
-make portfolio    # Generar portfolio en docs/ (GitHub Pages)
-make clean        # Eliminar todos los archivos generados (todos los perfiles)
+make portfolio    # Generar portfolio bilingüe en docs/ (6 páginas: 3 ES + 3 EN)
+make clean        # Eliminar todos los archivos generados (todos los perfiles + portfolio)
 make open-es      # Generar HTML y abrir CV español en navegador
 make open-en      # Generar HTML y abrir CV inglés en navegador
 make open-carta   # Generar y abrir carta (ES) en navegador
@@ -105,9 +110,10 @@ make build PROFILE=mlops       # Solo MLOps, ambos idiomas (2 CVs)
 
 Las variantes se definen en `data/cv.json` → `profiles`. Para agregar una nueva, añadir una clave con su texto `{"es": "...", "en": "..."}`.
 
-También se puede usar `build.py` directamente para combinar flags:
+También se puede usar `build.py` directamente (usa **argparse**, ejecutar `--help` para ver todas las opciones):
 
 ```bash
+uv run python build.py --help
 uv run python build.py es --html-only
 uv run python build.py carta --html-only
 uv run python build.py en --html-only --profile ai-engineer
@@ -126,25 +132,27 @@ Todos los campos soportan i18n con `{"es": "...", "en": "..."}`. Los datos perso
 
 ## Portfolio (GitHub Pages)
 
-El proyecto incluye un portfolio web publicado en GitHub Pages desde la carpeta `docs/`.
+El proyecto incluye un portfolio web **bilingüe** (ES/EN) publicado en GitHub Pages desde la carpeta `docs/`.
 
 **URL:** https://alejortizp.github.io/curriculum_HV/
 
 ### Generar el portfolio
 
 ```bash
-make              # Genera todo: CVs + PDFs + portfolio
-make portfolio    # Solo regenerar portfolio (requiere CVs HTML existentes)
+make              # Genera todo: CVs + PDFs + portfolio bilingüe
+make portfolio    # Solo regenerar portfolio (6 páginas: 3 ES + 3 EN)
 ```
 
 El portfolio lee datos de `cv.json`, así que se mantiene sincronizado con el CV. Al agregar o editar proyectos, experiencia o datos personales en `cv.json`, el portfolio se actualiza automáticamente con `make`. Incluye:
 
+- **6 páginas bilingües** (3 ES + 3 EN) con selector de idioma en la navegación
 - Página principal con perfil, habilidades y estadísticas
 - Página de proyectos generada dinámicamente desde `cv.projects`
 - Página de contacto con formulario funcional (Formspree)
 - Descarga de CV bilingüe (dropdown español/inglés)
 - Menú móvil responsive
-- Meta tags SEO (Open Graph, Twitter Cards)
+- SEO: Open Graph, Twitter Cards, hreflang, JSON-LD (WebSite + Person + BreadcrumbList), sitemap.xml, robots.txt
+- Accesibilidad (WCAG): skip navigation, aria-live, aria-expanded, aria-pressed, focus management, prefers-reduced-motion
 - Google Analytics (opcional)
 
 ### Configurar formulario de contacto
@@ -170,10 +178,12 @@ En el repositorio de GitHub:
 ## Tecnologías utilizadas
 
 - **Jinja2** para templating desde una fuente de datos única (`data/cv.json`)
-- **Playwright (Python)** para generación automática de PDFs searchables (ATS-compatible)
+- **Playwright (Python)** para generación automática de PDFs searchables, tagged y con outline (ATS-compatible)
+- **pypdf** para inyección de metadatos en PDFs (título, autor, subject)
+- **argparse** para CLI con `--help` y validación de argumentos
 - **HTML5 + Tailwind CSS** (via CDN) para el diseño y maquetación
 - **Font Awesome 6** para iconografía (con `aria-hidden` para accesibilidad)
-- **JSON-LD** structured data (schema.org) para parseo por ATS
+- **JSON-LD** structured data (schema.org `Person`, `WebSite`, `BreadcrumbList`) para ATS y SEO
 - **Gemini API** para funcionalidades de IA integradas (Elevator Pitch, Entrevista Técnica, Carta de Presentación, Gap Analysis)
 - **Formspree** para formulario de contacto funcional (AJAX, sin backend)
 - **Google Analytics** integración opcional para monitoreo de visitas
@@ -182,7 +192,7 @@ En el repositorio de GitHub:
 
 ## Descarga de PDF
 
-Cada CV incluye un botón flotante "Guardar PDF" / "Save PDF" que descarga el PDF pre-generado por Playwright. Los PDFs son searchables (texto extraíble), optimizados para ATS y servicios OCR como Azure Document Intelligence.
+Cada CV incluye un botón flotante "Guardar PDF" / "Save PDF" que descarga el PDF pre-generado por Playwright. Los PDFs son searchables (texto extraíble), tagged y con outline, optimizados para ATS y servicios OCR como Azure Document Intelligence. Los nombres de archivo usan formato ASCII-safe (`CV-Alejandro-Ortiz-Perdomo-ES.pdf`) para máxima compatibilidad. Cada PDF incluye metadatos embebidos (título, autor, subject) inyectados con pypdf.
 
 ## AI Career Suite
 
