@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - {{ cv.personal.name }}{% if lang == 'en' %} (English){% endif %}</title>
+    <title>CV - {{ cv.personal.name }}{% if profile_name != 'default' %} - {{ profile_name }}{% endif %}{% if lang == 'en' %} (English){% endif %}</title>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -307,8 +307,8 @@
         const CV_CONFIG = {
             _buildTimeKey: Boolean("{{ api_key }}"),
             apiKey: "{{ api_key }}" || localStorage.getItem("gemini_api_key") || "",
-            pdfFilename: "{% if lang == 'es' %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}",
-            pdfUrl: "{% if lang == 'es' %}CV_español.pdf{% else %}CV_english.pdf{% endif %}",
+            pdfFilename: "{{ pdf_filename }}",
+            pdfUrl: "{{ pdf_filename }}",
             i18n: {
                 generating: "{% if lang == 'es' %}Generando...{% else %}Generating...{% endif %}",
                 pdfError: "{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}",

@@ -1,24 +1,24 @@
 .PHONY: all build html es en carta carta-es carta-en portfolio setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
-# Profile variant for CV (e.g., make es PROFILE=ai-engineer)
+# Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
 
-# Default: build everything (CVs HTML + PDF + portfolio)
+# Default: build everything (all CV profiles + PDFs + portfolio)
 all: build portfolio
 
-# Build HTML + PDF for both languages
+# Build HTML + PDF for all profiles (or single profile with PROFILE=name)
 build:
 	uv run python build.py $(PROFILE_FLAG)
 
-# Build HTML only (no PDF)
+# Build HTML only (no PDF), all profiles
 html:
 	uv run python build.py --html-only $(PROFILE_FLAG)
 
-# Build only Spanish
+# Build only Spanish (all profiles or PROFILE=name)
 es:
 	uv run python build.py es $(PROFILE_FLAG)
 
-# Build only English
+# Build only English (all profiles or PROFILE=name)
 en:
 	uv run python build.py en $(PROFILE_FLAG)
 
@@ -43,9 +43,11 @@ setup:
 	uv sync
 	uv run playwright install chromium
 
-# Remove generated files
+# Remove generated files (all profiles)
 clean:
-	rm -f docs/CV_español.html docs/CV_english.html CV_español.pdf CV_english.pdf
+	rm -f docs/CV_español*.html docs/CV_english*.html
+	rm -f docs/CV_español*.pdf docs/CV_english*.pdf
+	rm -f CV_español*.pdf CV_english*.pdf
 	rm -rf docs/static
 	rm -f Carta_Presentacion.html Carta_Presentacion.pdf
 	rm -f Cover_Letter.html Cover_Letter.pdf
@@ -72,14 +74,14 @@ open-portfolio: portfolio
 
 # Show available targets
 help:
-	@echo "Usage: make [target]"
+	@echo "Usage: make [target] [PROFILE=name]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all        Build everything: CVs + PDFs + portfolio (default)"
-	@echo "  build      Build HTML + PDF for both CV languages"
-	@echo "  html       Build HTML only (skip PDF)"
-	@echo "  es         Build Spanish CV only (HTML + PDF)"
-	@echo "  en         Build English CV only (HTML + PDF)"
+	@echo "  all        Build everything: all CV profiles + PDFs + portfolio (default)"
+	@echo "  build      Build HTML + PDF for all profiles × both languages"
+	@echo "  html       Build HTML only (skip PDF generation)"
+	@echo "  es         Build Spanish CVs only (HTML + PDF)"
+	@echo "  en         Build English CVs only (HTML + PDF)"
 	@echo "  carta      Build cover letter (HTML + PDF, both languages)"
 	@echo "  carta-es   Build cover letter - Spanish only"
 	@echo "  carta-en   Build cover letter - English only"
@@ -94,5 +96,6 @@ help:
 	@echo "  help       Show this help"
 	@echo ""
 	@echo "Options:"
-	@echo "  PROFILE=name  Use a profile variant for CV (default, ai-engineer, ml-engineer, mlops)"
+	@echo "  PROFILE=name  Build only a specific profile (default, ai-engineer, ml-engineer, mlops)"
 	@echo "                Example: make es PROFILE=ai-engineer"
+	@echo "                Without PROFILE, all profiles are built."

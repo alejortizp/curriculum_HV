@@ -16,6 +16,7 @@ TEMPLATE_DIR = ROOT / "templates"
 TEMPLATE_FILE = "cv.html"
 COVER_LETTER_TEMPLATE = "cover_letter.html"
 
+# Default output paths (also used by portfolio to verify CV files exist)
 OUTPUTS = {
     "es": {"html": "docs/CV_español.html", "pdf": "CV_español.pdf"},
     "en": {"html": "docs/CV_english.html", "pdf": "CV_english.pdf"},
@@ -43,10 +44,23 @@ def get_jinja_env() -> Environment:
     return Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
 
 
-def render_cv(cv_data: dict, lang: str, api_key: str) -> str:
+def get_outputs(profile_name: str) -> dict:
+    """Return output paths for a given profile. Default profile has no suffix."""
+    if profile_name == "default":
+        return OUTPUTS
+    suffix = f"_{profile_name}"
+    return {
+        "es": {"html": f"docs/CV_español{suffix}.html", "pdf": f"CV_español{suffix}.pdf"},
+        "en": {"html": f"docs/CV_english{suffix}.html", "pdf": f"CV_english{suffix}.pdf"},
+    }
+
+
+def render_cv(cv_data: dict, lang: str, api_key: str, pdf_filename: str = "",
+              profile_name: str = "default") -> str:
     env = get_jinja_env()
     template = env.get_template(TEMPLATE_FILE)
-    return template.render(cv=cv_data, lang=lang, api_key=api_key)
+    return template.render(cv=cv_data, lang=lang, api_key=api_key,
+                           pdf_filename=pdf_filename, profile_name=profile_name)
 
 
 def render_cover_letter(cv_data: dict, letter_data: dict, lang: str) -> str:
@@ -72,13 +86,14 @@ def generate_pdf(html_path: Path, pdf_path: Path, margin: dict):
         browser.close()
 
 
-def generate_cv_pdfs():
+def generate_cv_pdfs(jobs: list):
+    """Generate PDFs in a single browser session. jobs: list of {html, pdf} dicts."""
     from playwright.sync_api import sync_playwright
 
     margin = {"top": "1.5cm", "bottom": "1cm", "left": "0", "right": "0"}
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        for lang, files in OUTPUTS.items():
+        for files in jobs:
             html_path = (ROOT / files["html"]).resolve()
             pdf_path = ROOT / files["pdf"]
             page = browser.new_page()
@@ -94,8 +109,10 @@ def generate_cv_pdfs():
         browser.close()
 
 
-def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool):
-    # Ensure docs/ and docs/static/ exist for CV output
+def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
+             profiles_to_build: dict):
+    """Build CVs for the given profiles and languages."""
+    # Ensure docs/ and docs/static/ exist
     DOCS_DIR.mkdir(exist_ok=True)
     docs_static = DOCS_DIR / "static"
     docs_static.mkdir(exist_ok=True)
@@ -103,19 +120,32 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool):
         src = ROOT / "static" / fname
         if src.exists():
             shutil.copy2(src, docs_static / fname)
-    print("Generating CV HTML files...")
-    for lang in langs:
-        html = render_cv(cv_data, lang, api_key)
-        output_path = ROOT / OUTPUTS[lang]["html"]
-        output_path.write_text(html, encoding="utf-8")
-        print(f"  HTML: {output_path.name}")
 
-    if not html_only:
+    all_jobs = []  # Collect {html, pdf} for batch PDF generation
+
+    for profile_name, profile_data in profiles_to_build.items():
+        outputs = get_outputs(profile_name)
+        data = {**cv_data, "profile": profile_data}
+
+        label = f" [{profile_name}]" if profile_name != "default" else ""
+        print(f"Generating CV HTML files...{label}")
+
+        for lang in langs:
+            if lang not in outputs:
+                continue
+            pdf_filename = outputs[lang]["pdf"]
+            html = render_cv(data, lang, api_key, pdf_filename, profile_name)
+            output_path = ROOT / outputs[lang]["html"]
+            output_path.write_text(html, encoding="utf-8")
+            print(f"  HTML: {output_path.name}")
+            all_jobs.append(outputs[lang])
+
+    if not html_only and all_jobs:
         print("Generating CV PDF files...")
         try:
-            generate_cv_pdfs()
+            generate_cv_pdfs(all_jobs)
             # Copy PDFs to docs/ for GitHub Pages download button
-            for lang, files in OUTPUTS.items():
+            for files in all_jobs:
                 pdf_src = ROOT / files["pdf"]
                 pdf_dst = DOCS_DIR / files["pdf"]
                 if pdf_src.exists():
@@ -203,30 +233,32 @@ def main():
     api_key = get_api_key()
     cv_data = load_json(DATA_FILE)
     html_only = "--html-only" in sys.argv
+    all_profiles = cv_data.get("profiles", {})
 
-    # Extract --profile flag
-    profile_name = "default"
+    # Extract --profile flag (None = build all profiles)
+    profile_name = None
     if "--profile" in sys.argv:
         idx = sys.argv.index("--profile")
         if idx + 1 < len(sys.argv):
             profile_name = sys.argv[idx + 1]
 
-    # Resolve profile variant: profiles.{name} → profile (template reads cv.profile[lang])
-    if "profiles" in cv_data:
-        if profile_name in cv_data["profiles"]:
-            cv_data["profile"] = cv_data["profiles"][profile_name]
-            if profile_name != "default":
-                print(f"Using profile: {profile_name}")
-        else:
-            available = ", ".join(cv_data["profiles"].keys())
+    # Determine which profiles to build
+    if profile_name:
+        if profile_name not in all_profiles:
+            available = ", ".join(all_profiles.keys())
             print(f"Warning: profile '{profile_name}' not found (available: {available})")
             print("Using default profile.")
-            cv_data["profile"] = cv_data["profiles"]["default"]
+            profile_name = "default"
+        profiles_to_build = {profile_name: all_profiles[profile_name]}
+        print(f"Using profile: {profile_name}")
+    else:
+        profiles_to_build = all_profiles
 
     args = [a for a in sys.argv[1:] if not a.startswith("--") and a != profile_name]
 
     # uv run python build.py carta [carta-es|carta-en]
     if "carta" in args or "carta-es" in args or "carta-en" in args:
+        cv_data["profile"] = all_profiles.get("default", {})
         carta_langs = list(COVER_LETTER_OUTPUTS.keys())
         if "carta-es" in args:
             carta_langs = ["es"]
@@ -238,16 +270,17 @@ def main():
 
     # uv run python build.py portfolio
     if "portfolio" in args:
+        cv_data["profile"] = all_profiles.get("default", {})
         build_portfolio(cv_data)
         print("\nDone!")
         return
 
-    # uv run python build.py [es|en] [--html-only]
-    langs = list(OUTPUTS.keys())
-    if args and args[0] in OUTPUTS:
+    # uv run python build.py [es|en] [--html-only] [--profile name]
+    langs = ["es", "en"]
+    if args and args[0] in ("es", "en"):
         langs = [args[0]]
 
-    build_cv(cv_data, api_key, langs, html_only)
+    build_cv(cv_data, api_key, langs, html_only, profiles_to_build)
     print("\nDone!")
 
 
