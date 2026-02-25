@@ -51,6 +51,7 @@ clean:
 	rm -rf docs/static
 	rm -f Carta_Presentacion.html Carta_Presentacion.pdf
 	rm -f Cover_Letter.html Cover_Letter.pdf
+	rm -f docs/index*.html docs/projects*.html docs/contact*.html
 	rm -f docs/sitemap.xml docs/robots.txt
 
 # Open Spanish CV in default browser

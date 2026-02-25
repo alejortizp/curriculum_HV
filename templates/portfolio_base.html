@@ -1,5 +1,10 @@
+{# Set default language and compute helper variables #}
+{% set lang = lang | default('es') %}
+{% set page_suffix = page_suffix | default('') %}
+{% set other_page_suffix = other_page_suffix | default('_en' if lang == 'es' else '') %}
+{%- macro t(value) %}{% if value is mapping and lang in value %}{{ value[lang] }}{% else %}{{ value }}{% endif %}{% endmacro -%}
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html class="dark" lang="{{ lang }}">
 <head>
     <meta charset="utf-8"/>
     {% if cv.personal.google_analytics_id %}
@@ -16,26 +21,27 @@
     <meta name="theme-color" content="#101622"/>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>"/>
     <title>{% block title %}AI Engineer Portfolio{% endblock %}</title>
-    <meta name="description" content="{{ cv.personal.name }} — {{ cv.personal.title }}. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
+    <meta name="description" content="{{ cv.personal.name }} — {{ cv.personal.title }}. {% if lang == 'en' %}Professional portfolio with GenAI, RAG, LLMs and intelligent agents projects.{% else %}Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes.{% endif %}"/>
     <meta name="author" content="{{ cv.personal.name }}"/>
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}{{ cv.personal.name }} | AI Engineer Portfolio{% endblock %}"/>
-    <meta property="og:description" content="{% block og_description %}{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% endblock %}"/>
+    <meta property="og:description" content="{% block og_description %}{{ cv.personal.title }}. {% if lang == 'en' %}Specialized in GenAI/RAG, LLMs and intelligent agents with LangChain.{% else %}Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% endif %}{% endblock %}"/>
     <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
     <meta property="og:image:width" content="450"/>
     <meta property="og:image:height" content="450"/>
-    <meta property="og:image:alt" content="Foto de perfil de {{ cv.personal.name }}"/>
+    <meta property="og:image:alt" content="{% if lang == 'en' %}Profile photo of {{ cv.personal.name }}{% else %}Foto de perfil de {{ cv.personal.name }}{% endif %}"/>
     <meta property="og:url" content="{{ cv.personal.portfolio.url }}{% block og_url %}{% endblock %}"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:locale" content="es_CO"/>
+    <meta property="og:locale" content="{% if lang == 'en' %}en_US{% else %}es_CO{% endif %}"/>
     <meta property="og:site_name" content="{{ cv.personal.name }} | AI Engineer"/>
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:title" content="{% block twitter_title %}{{ cv.personal.name }} | AI Engineer{% endblock %}"/>
-    <meta name="twitter:description" content="{% block twitter_description %}{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes.{% endblock %}"/>
+    <meta name="twitter:description" content="{% block twitter_description %}{{ cv.personal.title }}. {% if lang == 'en' %}Specialized in GenAI/RAG, LLMs and intelligent agents.{% else %}Especializado en GenAI/RAG, LLMs y agentes inteligentes.{% endif %}{% endblock %}"/>
     <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
-    <!-- Canonical -->
+    <!-- Canonical & hreflang -->
     <link rel="canonical" href="{{ cv.personal.portfolio.url }}{% block canonical_url %}{% endblock %}"/>
+    {% block hreflang %}{% endblock %}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -95,11 +101,11 @@
     </style>
     {% block head %}{% endblock %}
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden min-h-screen flex flex-col">
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white antialiased overflow-x-hidden min-h-screen flex flex-col">
 
 <!-- Skip Navigation -->
 <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold">
-    Ir al contenido principal
+    {% if lang == 'en' %}Skip to main content{% else %}Ir al contenido principal{% endif %}
 </a>
 
 <!-- Navigation -->
@@ -111,17 +117,22 @@
             </div>
             <span class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</span>
         </div>
-        <nav aria-label="Navegación principal" class="hidden md:flex items-center gap-10">
-            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index.html">Inicio</a>
-            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
-            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
+        <nav aria-label="{% if lang == 'en' %}Main navigation{% else %}Navegación principal{% endif %}" class="hidden md:flex items-center gap-10">
+            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index{{ page_suffix }}.html">{% if lang == 'en' %}Home{% else %}Inicio{% endif %}</a>
+            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects{{ page_suffix }}.html">{% if lang == 'en' %}Projects{% else %}Proyectos{% endif %}</a>
+            <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact{{ page_suffix }}.html">{% if lang == 'en' %}Contact{% else %}Contacto{% endif %}</a>
         </nav>
         <div class="flex items-center gap-4">
-            <a href="contact.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-primary-hover transition-all">
-                Contratar
+            <!-- Language switcher -->
+            <a href="{{ active_page }}{{ other_page_suffix }}.html" class="hidden md:inline-flex items-center gap-1 text-sm text-text-secondary hover:text-white transition-colors" aria-label="{% if lang == 'en' %}Cambiar a español{% else %}Switch to English{% endif %}">
+                <span class="material-symbols-outlined text-lg" aria-hidden="true">translate</span>
+                {% if lang == 'en' %}ES{% else %}EN{% endif %}
+            </a>
+            <a href="contact{{ page_suffix }}.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-primary-hover transition-colors">
+                {% if lang == 'en' %}Hire Me{% else %}Contratar{% endif %}
             </a>
             <!-- Mobile menu button -->
-            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="{% if lang == 'en' %}Open menu{% else %}Abrir menú{% endif %}" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="material-symbols-outlined text-2xl" aria-hidden="true">menu</span>
             </button>
         </div>
@@ -131,12 +142,16 @@
 <!-- Mobile menu panel -->
 <div id="mobile-menu" class="hidden fixed inset-0 z-40 md:hidden">
     <div id="mobile-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <nav aria-label="Menú móvil" class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
-        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index.html">Inicio</a>
-        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
-        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
+    <nav aria-label="{% if lang == 'en' %}Mobile menu{% else %}Menú móvil{% endif %}" class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index{{ page_suffix }}.html">{% if lang == 'en' %}Home{% else %}Inicio{% endif %}</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects{{ page_suffix }}.html">{% if lang == 'en' %}Projects{% else %}Proyectos{% endif %}</a>
+        <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact{{ page_suffix }}.html">{% if lang == 'en' %}Contact{% else %}Contacto{% endif %}</a>
         <hr class="border-slate-800"/>
-        <a href="contact.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-primary-hover transition-all">Contratar</a>
+        <a href="{{ active_page }}{{ other_page_suffix }}.html" class="text-text-secondary hover:text-white transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">translate</span>
+            {% if lang == 'en' %}Español{% else %}English{% endif %}
+        </a>
+        <a href="contact{{ page_suffix }}.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-primary-hover transition-colors">{% if lang == 'en' %}Hire Me{% else %}Contratar{% endif %}</a>
     </nav>
 </div>
 
@@ -166,18 +181,20 @@
 
 <script>
 (function() {
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    const overlay = document.getElementById('mobile-overlay');
-    const icon = btn.querySelector('.material-symbols-outlined');
+    var btn = document.getElementById('mobile-menu-btn');
+    var menu = document.getElementById('mobile-menu');
+    var overlay = document.getElementById('mobile-overlay');
+    var icon = btn.querySelector('.material-symbols-outlined');
+    var openLabel = '{% if lang == "en" %}Open menu{% else %}Abrir menú{% endif %}';
+    var closeLabel = '{% if lang == "en" %}Close menu{% else %}Cerrar menú{% endif %}';
     function toggle() {
-        const isHidden = menu.classList.toggle('hidden');
-        const isOpen = !isHidden;
+        var isHidden = menu.classList.toggle('hidden');
+        var isOpen = !isHidden;
         icon.textContent = isOpen ? 'close' : 'menu';
         btn.setAttribute('aria-expanded', isOpen);
-        btn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+        btn.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
         if (isOpen) {
-            const firstLink = menu.querySelector('a');
+            var firstLink = menu.querySelector('a');
             if (firstLink) firstLink.focus();
         }
     }

@@ -1,12 +1,17 @@
 {% extends "portfolio_base.html" %}
 
-{% block title %}Contacto - {{ cv.personal.name }}{% endblock %}
-{% block og_title %}Contacto | {{ cv.personal.name }}{% endblock %}
-{% block og_description %}Disponible para nuevos retos en AI Engineering y Machine Learning.{% endblock %}
-{% block og_url %}contact.html{% endblock %}
-{% block canonical_url %}contact.html{% endblock %}
-{% block twitter_title %}Contacto | {{ cv.personal.name }}{% endblock %}
-{% block twitter_description %}Disponible para nuevos retos en AI Engineering y ML.{% endblock %}
+{% block title %}{% if lang == 'en' %}Contact{% else %}Contacto{% endif %} - {{ cv.personal.name }}{% endblock %}
+{% block og_title %}{% if lang == 'en' %}Contact{% else %}Contacto{% endif %} | {{ cv.personal.name }}{% endblock %}
+{% block og_description %}{% if lang == 'en' %}Available for new challenges in AI Engineering and Machine Learning.{% else %}Disponible para nuevos retos en AI Engineering y Machine Learning.{% endif %}{% endblock %}
+{% block og_url %}contact{{ page_suffix }}.html{% endblock %}
+{% block canonical_url %}contact{{ page_suffix }}.html{% endblock %}
+{% block twitter_title %}{% if lang == 'en' %}Contact{% else %}Contacto{% endif %} | {{ cv.personal.name }}{% endblock %}
+{% block twitter_description %}{% if lang == 'en' %}Available for new challenges in AI Engineering and ML.{% else %}Disponible para nuevos retos en AI Engineering y ML.{% endif %}{% endblock %}
+{% block hreflang %}
+    <link rel="alternate" hreflang="es" href="{{ cv.personal.portfolio.url }}contact.html"/>
+    <link rel="alternate" hreflang="en" href="{{ cv.personal.portfolio.url }}contact_en.html"/>
+    <link rel="alternate" hreflang="x-default" href="{{ cv.personal.portfolio.url }}contact.html"/>
+{% endblock %}
 
 {% block head %}
 <script type="application/ld+json">
@@ -14,8 +19,8 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Inicio", "item": "{{ cv.personal.portfolio.url }}"},
-        {"@type": "ListItem", "position": 2, "name": "Contacto", "item": "{{ cv.personal.portfolio.url }}contact.html"}
+        {"@type": "ListItem", "position": 1, "name": "{% if lang == 'en' %}Home{% else %}Inicio{% endif %}", "item": "{{ cv.personal.portfolio.url }}index{{ page_suffix }}.html"},
+        {"@type": "ListItem", "position": 2, "name": "{% if lang == 'en' %}Contact{% else %}Contacto{% endif %}", "item": "{{ cv.personal.portfolio.url }}contact{{ page_suffix }}.html"}
     ]
 }
 </script>
@@ -28,12 +33,12 @@
         <div class="flex flex-col gap-8">
             <!-- Page Heading -->
             <div class="flex flex-col gap-4">
-                <span class="text-primary font-bold text-sm uppercase tracking-wider">Contacto</span>
+                <span class="text-primary font-bold text-sm uppercase tracking-wider">{% if lang == 'en' %}Contact{% else %}Contacto{% endif %}</span>
                 <h1 class="text-4xl md:text-5xl font-black leading-tight tracking-tight">
-                    Hablemos de tu próximo proyecto
+                    {% if lang == 'en' %}Let's talk about your next project{% else %}Hablemos de tu próximo proyecto{% endif %}
                 </h1>
                 <p class="text-text-secondary text-lg leading-relaxed max-w-md">
-                    ¿Listo para integrar Inteligencia Artificial en tu negocio? Estoy disponible para consultorías, desarrollo y colaboración técnica.
+                    {% if lang == 'en' %}Ready to integrate Artificial Intelligence into your business? I'm available for consulting, development, and technical collaboration.{% else %}¿Listo para integrar Inteligencia Artificial en tu negocio? Estoy disponible para consultorías, desarrollo y colaboración técnica.{% endif %}
                 </p>
             </div>
             <!-- Contact Info Cards -->
@@ -44,7 +49,7 @@
                         <span class="material-symbols-outlined" aria-hidden="true">mail</span>
                     </div>
                     <div class="flex flex-col">
-                        <h3 class="font-bold text-base">Correo Electrónico</h3>
+                        <h3 class="font-bold text-base">{% if lang == 'en' %}Email{% else %}Correo Electrónico{% endif %}</h3>
                         <a class="text-text-secondary text-sm hover:text-white transition-colors" href="mailto:{{ cv.personal.email }}">{{ cv.personal.email }}</a>
                     </div>
                 </div>
@@ -54,8 +59,8 @@
                         <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
                     </div>
                     <div class="flex flex-col">
-                        <h3 class="font-bold text-base">Ubicación</h3>
-                        <p class="text-text-secondary text-sm">{{ cv.personal.location.es }}</p>
+                        <h3 class="font-bold text-base">{% if lang == 'en' %}Location{% else %}Ubicación{% endif %}</h3>
+                        <p class="text-text-secondary text-sm">{{ cv.personal.location[lang] }}</p>
                     </div>
                 </div>
                 <!-- Socials Card -->
@@ -64,12 +69,12 @@
                         <span class="material-symbols-outlined" aria-hidden="true">share</span>
                     </div>
                     <div class="flex flex-col w-full">
-                        <h3 class="font-bold text-base mb-2">Redes Profesionales</h3>
+                        <h3 class="font-bold text-base mb-2">{% if lang == 'en' %}Professional Networks{% else %}Redes Profesionales{% endif %}</h3>
                         <div class="flex gap-3">
-                            <a class="h-10 w-10 flex items-center justify-center rounded-lg bg-surface-secondary hover:bg-primary hover:text-white transition-all text-text-secondary" href="{{ cv.personal.linkedin.url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <a class="h-10 w-10 flex items-center justify-center rounded-lg bg-surface-secondary hover:bg-primary hover:text-white transition-colors text-text-secondary" href="{{ cv.personal.linkedin.url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                                 <span class="font-bold text-xs" aria-hidden="true">in</span>
                             </a>
-                            <a class="h-10 w-10 flex items-center justify-center rounded-lg bg-surface-secondary hover:bg-primary hover:text-white transition-all text-text-secondary" href="{{ cv.personal.github.url }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                            <a class="h-10 w-10 flex items-center justify-center rounded-lg bg-surface-secondary hover:bg-primary hover:text-white transition-colors text-text-secondary" href="{{ cv.personal.github.url }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                                 <span class="font-bold text-xs" aria-hidden="true">Gh</span>
                             </a>
                         </div>
@@ -82,26 +87,26 @@
             <div class="bg-surface-dark border border-border-dark rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
                 <form id="contact-form" action="https://formspree.io/f/{{ cv.personal.formspree_id }}" method="POST" class="flex flex-col gap-6 relative z-10">
-                    <h3 class="text-2xl font-bold mb-2">Envíame un mensaje</h3>
+                    <h3 class="text-2xl font-bold mb-2">{% if lang == 'en' %}Send me a message{% else %}Envíame un mensaje{% endif %}</h3>
                     <!-- Honeypot anti-spam -->
                     <input type="text" name="_gotcha" style="display:none"/>
                     <label class="flex flex-col gap-2">
-                        <span class="text-sm font-medium text-white">Nombre Completo</span>
-                        <input name="name" required aria-required="true" autocomplete="name" class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="Ej. Juan Pérez" type="text"/>
+                        <span class="text-sm font-medium text-white">{% if lang == 'en' %}Full Name{% else %}Nombre Completo{% endif %}</span>
+                        <input name="name" required aria-required="true" autocomplete="name" class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" placeholder="{% if lang == 'en' %}e.g. John Doe{% else %}Ej. Juan Pérez{% endif %}" type="text"/>
                     </label>
                     <label class="flex flex-col gap-2">
-                        <span class="text-sm font-medium text-white">Correo Electrónico</span>
-                        <input name="email" required aria-required="true" autocomplete="email" class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="juan@empresa.com" type="email"/>
+                        <span class="text-sm font-medium text-white">{% if lang == 'en' %}Email{% else %}Correo Electrónico{% endif %}</span>
+                        <input name="email" required aria-required="true" autocomplete="email" class="w-full h-12 rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors" placeholder="{% if lang == 'en' %}john@company.com{% else %}juan@empresa.com{% endif %}" type="email"/>
                     </label>
                     <label class="flex flex-col gap-2">
-                        <span class="text-sm font-medium text-white">Tipo de Proyecto</span>
+                        <span class="text-sm font-medium text-white">{% if lang == 'en' %}Project Type{% else %}Tipo de Proyecto{% endif %}</span>
                         <div class="relative">
-                            <select name="project_type" required class="w-full h-12 appearance-none rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all pr-10">
-                                <option disabled="" selected="" value="">Selecciona una opción</option>
-                                <option value="Consultoría IA">Consultoría IA</option>
-                                <option value="Desarrollo de ML/LLM">Desarrollo de ML/LLM</option>
-                                <option value="Conferencia / Workshop">Conferencia / Workshop</option>
-                                <option value="Otro">Otro</option>
+                            <select name="project_type" required class="w-full h-12 appearance-none rounded-lg bg-background-dark border border-border-dark px-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors pr-10">
+                                <option disabled="" selected="" value="">{% if lang == 'en' %}Select an option{% else %}Selecciona una opción{% endif %}</option>
+                                <option value="{% if lang == 'en' %}AI Consulting{% else %}Consultoría IA{% endif %}">{% if lang == 'en' %}AI Consulting{% else %}Consultoría IA{% endif %}</option>
+                                <option value="{% if lang == 'en' %}ML/LLM Development{% else %}Desarrollo de ML/LLM{% endif %}">{% if lang == 'en' %}ML/LLM Development{% else %}Desarrollo de ML/LLM{% endif %}</option>
+                                <option value="{% if lang == 'en' %}Conference / Workshop{% else %}Conferencia / Workshop{% endif %}">{% if lang == 'en' %}Conference / Workshop{% else %}Conferencia / Workshop{% endif %}</option>
+                                <option value="{% if lang == 'en' %}Other{% else %}Otro{% endif %}">{% if lang == 'en' %}Other{% else %}Otro{% endif %}</option>
                             </select>
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
                                 <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
@@ -109,25 +114,25 @@
                         </div>
                     </label>
                     <label class="flex flex-col gap-2">
-                        <span class="text-sm font-medium text-white">Mensaje</span>
-                        <textarea name="message" required class="w-full min-h-[140px] rounded-lg bg-background-dark border border-border-dark p-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all resize-y" placeholder="Cuéntame brevemente sobre tu proyecto o consulta..."></textarea>
+                        <span class="text-sm font-medium text-white">{% if lang == 'en' %}Message{% else %}Mensaje{% endif %}</span>
+                        <textarea name="message" required class="w-full min-h-[140px] rounded-lg bg-background-dark border border-border-dark p-4 text-white placeholder-text-secondary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors resize-y" placeholder="{% if lang == 'en' %}Tell me briefly about your project or inquiry...{% else %}Cuéntame brevemente sobre tu proyecto o consulta...{% endif %}"></textarea>
                     </label>
                     <!-- Submit button -->
-                    <button id="submit-btn" class="mt-2 w-full h-12 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 group" type="submit">
-                        <span id="btn-text">Enviar Mensaje</span>
+                    <button id="submit-btn" class="mt-2 w-full h-12 bg-primary hover:bg-primary-hover text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 group" type="submit">
+                        <span id="btn-text">{% if lang == 'en' %}Send Message{% else %}Enviar Mensaje{% endif %}</span>
                         <span id="btn-icon" class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform" aria-hidden="true">send</span>
                     </button>
                     <!-- Success message (hidden by default) -->
                     <div id="form-success" class="hidden text-center py-4" role="status" aria-live="polite">
                         <span class="material-symbols-outlined text-green-400 text-5xl mb-3" aria-hidden="true">check_circle</span>
-                        <p class="text-lg font-bold text-white">Mensaje enviado</p>
-                        <p class="text-text-secondary text-sm mt-1">Gracias por contactarme. Te responderé pronto.</p>
+                        <p class="text-lg font-bold text-white">{% if lang == 'en' %}Message sent{% else %}Mensaje enviado{% endif %}</p>
+                        <p class="text-text-secondary text-sm mt-1">{% if lang == 'en' %}Thanks for reaching out. I'll get back to you soon.{% else %}Gracias por contactarme. Te responderé pronto.{% endif %}</p>
                     </div>
                     <!-- Error message (hidden by default) -->
                     <div id="form-error" class="hidden text-center py-4" role="alert" aria-live="assertive">
                         <span class="material-symbols-outlined text-red-400 text-5xl mb-3" aria-hidden="true">error</span>
-                        <p class="text-lg font-bold text-white">Error al enviar</p>
-                        <p class="text-text-secondary text-sm mt-1">Intenta de nuevo o escríbeme a <a href="mailto:{{ cv.personal.email }}" class="text-primary hover:underline">{{ cv.personal.email }}</a></p>
+                        <p class="text-lg font-bold text-white">{% if lang == 'en' %}Error sending{% else %}Error al enviar{% endif %}</p>
+                        <p class="text-text-secondary text-sm mt-1">{% if lang == 'en' %}Please try again or email me at{% else %}Intenta de nuevo o escríbeme a{% endif %} <a href="mailto:{{ cv.personal.email }}" class="text-primary hover:underline">{{ cv.personal.email }}</a></p>
                     </div>
                 </form>
             </div>
@@ -136,43 +141,49 @@
 </main>
 
 <script>
-document.getElementById('contact-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const form = e.target;
-    const btn = document.getElementById('submit-btn');
-    const btnText = document.getElementById('btn-text');
-    const btnIcon = document.getElementById('btn-icon');
-    const successMsg = document.getElementById('form-success');
-    const errorMsg = document.getElementById('form-error');
+(function() {
+    var LANG = '{{ lang }}';
+    var i18n = {
+        sending: LANG === 'en' ? 'Sending...' : 'Enviando...',
+        sendMessage: LANG === 'en' ? 'Send Message' : 'Enviar Mensaje',
+    };
+    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var form = e.target;
+        var btn = document.getElementById('submit-btn');
+        var btnText = document.getElementById('btn-text');
+        var btnIcon = document.getElementById('btn-icon');
+        var successMsg = document.getElementById('form-success');
+        var errorMsg = document.getElementById('form-error');
 
-    // Loading state
-    btn.disabled = true;
-    btn.setAttribute('aria-busy', 'true');
-    btnText.textContent = 'Enviando...';
-    btnIcon.textContent = 'hourglass_empty';
-    successMsg.classList.add('hidden');
-    errorMsg.classList.add('hidden');
+        btn.disabled = true;
+        btn.setAttribute('aria-busy', 'true');
+        btnText.textContent = i18n.sending;
+        btnIcon.textContent = 'hourglass_empty';
+        successMsg.classList.add('hidden');
+        errorMsg.classList.add('hidden');
 
-    try {
-        const res = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-            form.reset();
-            successMsg.classList.remove('hidden');
-            btn.classList.add('hidden');
-        } else {
-            throw new Error('Form submission failed');
+        try {
+            var res = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                form.reset();
+                successMsg.classList.remove('hidden');
+                btn.classList.add('hidden');
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch(err) {
+            errorMsg.classList.remove('hidden');
+            btn.disabled = false;
+            btn.setAttribute('aria-busy', 'false');
+            btnText.textContent = i18n.sendMessage;
+            btnIcon.textContent = 'send';
         }
-    } catch {
-        errorMsg.classList.remove('hidden');
-        btn.disabled = false;
-        btn.setAttribute('aria-busy', 'false');
-        btnText.textContent = 'Enviar Mensaje';
-        btnIcon.textContent = 'send';
-    }
-});
+    });
+})();
 </script>
 {% endblock %}

@@ -1,12 +1,17 @@
 {% extends "portfolio_base.html" %}
 
-{% block title %}Proyectos de IA - {{ cv.personal.name }}{% endblock %}
-{% block og_title %}Proyectos de IA | {{ cv.personal.name }}{% endblock %}
-{% block og_description %}Proyectos open source de GenAI, RAG, agentes inteligentes y machine learning.{% endblock %}
-{% block og_url %}projects.html{% endblock %}
-{% block canonical_url %}projects.html{% endblock %}
-{% block twitter_title %}Proyectos de IA | {{ cv.personal.name }}{% endblock %}
-{% block twitter_description %}Proyectos open source de GenAI, RAG, agentes inteligentes y ML.{% endblock %}
+{% block title %}{% if lang == 'en' %}AI Projects{% else %}Proyectos de IA{% endif %} - {{ cv.personal.name }}{% endblock %}
+{% block og_title %}{% if lang == 'en' %}AI Projects{% else %}Proyectos de IA{% endif %} | {{ cv.personal.name }}{% endblock %}
+{% block og_description %}{% if lang == 'en' %}Open source projects in GenAI, RAG, intelligent agents and machine learning.{% else %}Proyectos open source de GenAI, RAG, agentes inteligentes y machine learning.{% endif %}{% endblock %}
+{% block og_url %}projects{{ page_suffix }}.html{% endblock %}
+{% block canonical_url %}projects{{ page_suffix }}.html{% endblock %}
+{% block twitter_title %}{% if lang == 'en' %}AI Projects{% else %}Proyectos de IA{% endif %} | {{ cv.personal.name }}{% endblock %}
+{% block twitter_description %}{% if lang == 'en' %}Open source projects in GenAI, RAG, intelligent agents and ML.{% else %}Proyectos open source de GenAI, RAG, agentes inteligentes y ML.{% endif %}{% endblock %}
+{% block hreflang %}
+    <link rel="alternate" hreflang="es" href="{{ cv.personal.portfolio.url }}projects.html"/>
+    <link rel="alternate" hreflang="en" href="{{ cv.personal.portfolio.url }}projects_en.html"/>
+    <link rel="alternate" hreflang="x-default" href="{{ cv.personal.portfolio.url }}projects.html"/>
+{% endblock %}
 
 {% block head %}
 <script type="application/ld+json">
@@ -14,8 +19,8 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Inicio", "item": "{{ cv.personal.portfolio.url }}"},
-        {"@type": "ListItem", "position": 2, "name": "Proyectos", "item": "{{ cv.personal.portfolio.url }}projects.html"}
+        {"@type": "ListItem", "position": 1, "name": "{% if lang == 'en' %}Home{% else %}Inicio{% endif %}", "item": "{{ cv.personal.portfolio.url }}index{{ page_suffix }}.html"},
+        {"@type": "ListItem", "position": 2, "name": "{% if lang == 'en' %}Projects{% else %}Proyectos{% endif %}", "item": "{{ cv.personal.portfolio.url }}projects{{ page_suffix }}.html"}
     ]
 }
 </script>
@@ -27,29 +32,29 @@
         <!-- Hero / Intro -->
         <div class="flex flex-col gap-4 py-6 text-center md:text-left">
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-white via-blue-100 to-gray-400 bg-clip-text text-transparent">
-                Portafolio de Proyectos
+                {% if lang == 'en' %}Project Portfolio{% else %}Portafolio de Proyectos{% endif %}
             </h1>
             <p class="text-text-secondary text-lg max-w-2xl leading-relaxed">
-                Proyectos open source enfocados en GenAI, agentes inteligentes con LangChain, sistemas RAG y automatización de workflows empresariales con LLMs.
+                {% if lang == 'en' %}Open source projects focused on GenAI, intelligent agents with LangChain, RAG systems and enterprise workflow automation with LLMs.{% else %}Proyectos open source enfocados en GenAI, agentes inteligentes con LangChain, sistemas RAG y automatización de workflows empresariales con LLMs.{% endif %}
             </p>
         </div>
 
         <!-- Filters -->
-        <div class="flex flex-wrap gap-3 pb-4 border-b border-surface-secondary" role="group" aria-label="Filtrar proyectos">
-            <button type="button" aria-pressed="true" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 transition-all shadow-[0_0_10px_rgba(19,91,236,0.3)]">
-                <span class="text-sm font-medium">Todos</span>
+        <div class="flex flex-wrap gap-3 pb-4 border-b border-surface-secondary" role="group" aria-label="{% if lang == 'en' %}Filter projects{% else %}Filtrar proyectos{% endif %}">
+            <button type="button" aria-pressed="true" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 transition-colors shadow-[0_0_10px_rgba(19,91,236,0.3)]">
+                <span class="text-sm font-medium">{% if lang == 'en' %}All{% else %}Todos{% endif %}</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-all">
+            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>
-                <span class="text-sm font-medium">Agentes IA</span>
+                <span class="text-sm font-medium">{% if lang == 'en' %}AI Agents{% else %}Agentes IA{% endif %}</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-all">
+            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
                 <span class="text-sm font-medium">GenAI &amp; RAG</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-all">
+            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">analytics</span>
-                <span class="text-sm font-medium">ML Clásico</span>
+                <span class="text-sm font-medium">{% if lang == 'en' %}Classic ML{% else %}ML Clásico{% endif %}</span>
             </button>
         </div>
 
@@ -70,13 +75,13 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-primary text-xs font-bold uppercase tracking-wider"><span aria-hidden="true">{{ project.emoji }}</span> {{ project.title.es }}</span>
+                                    <span class="text-primary text-xs font-bold uppercase tracking-wider"><span aria-hidden="true">{{ project.emoji }}</span> {{ t(project.title) }}</span>
                                 </div>
-                                <h3 class="text-white text-xl font-bold leading-tight group-hover:text-primary transition-colors">{{ project.title.es }}</h3>
+                                <h3 class="text-white text-xl font-bold leading-tight group-hover:text-primary transition-colors">{{ t(project.title) }}</h3>
                             </div>
                         </div>
                         <p class="text-text-secondary text-base font-normal leading-relaxed">
-                            {{ project.description.es | striptags }}
+                            {{ t(project.description) | striptags }}
                         </p>
                         <!-- Tech Stack -->
                         <div class="flex flex-wrap gap-2 mt-1">
@@ -88,7 +93,7 @@
                         <div class="flex items-center gap-4 mt-auto pt-4">
                             <a class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-secondary text-white text-sm font-medium hover:bg-surface-secondary-hover transition-colors" href="{{ project.url }}" target="_blank" rel="noopener noreferrer">
                                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">code</span>
-                                Repositorio
+                                {% if lang == 'en' %}Repository{% else %}Repositorio{% endif %}
                             </a>
                         </div>
                     </div>
