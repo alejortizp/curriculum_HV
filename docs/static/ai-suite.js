@@ -5,6 +5,7 @@
  */
 
 let currentQuestion = "";
+let previouslyFocused = null;
 
 // -- API Key Management --
 function getApiKey() {
@@ -62,9 +63,41 @@ function downloadPDF() {
 // -- Modal Helpers --
 function toggleAIModal() {
     const modal = document.getElementById('aiModal');
+    const isOpening = modal.classList.contains('hidden');
     modal.classList.toggle('hidden');
     modal.classList.toggle('flex');
-    if (!modal.classList.contains('hidden')) resetAI();
+    if (isOpening) {
+        resetAI();
+        previouslyFocused = document.activeElement;
+        const dialog = modal.querySelector('[role="dialog"]');
+        const firstFocusable = dialog ? dialog.querySelector('button, [href], input, select, textarea') : null;
+        if (firstFocusable) firstFocusable.focus();
+        document.addEventListener('keydown', modalKeyHandler);
+    } else {
+        document.removeEventListener('keydown', modalKeyHandler);
+        if (previouslyFocused) previouslyFocused.focus();
+    }
+}
+
+function modalKeyHandler(e) {
+    const modal = document.getElementById('aiModal');
+    if (e.key === 'Escape') {
+        toggleAIModal();
+        return;
+    }
+    if (e.key === 'Tab') {
+        const dialog = modal.querySelector('[role="dialog"]');
+        if (!dialog) return;
+        const focusable = dialog.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    }
 }
 
 function resetAI() {
@@ -104,7 +137,7 @@ function showInputView(type) {
     if (type === 'coverLetter') {
         const cfg = CV_CONFIG.i18n.coverLetter;
         title.innerText = cfg.title;
-        container.innerHTML = `<input type="text" id="inputCompany" placeholder="${cfg.companyPlaceholder}" class="w-full border p-2 rounded"><input type="text" id="inputRole" placeholder="${cfg.rolePlaceholder}" class="w-full border p-2 rounded">`;
+        container.innerHTML = `<label for="inputCompany" class="block text-sm font-medium text-gray-700 mb-1">${cfg.companyPlaceholder}</label><input type="text" id="inputCompany" placeholder="${cfg.companyPlaceholder}" aria-required="true" class="w-full border p-2 rounded"><label for="inputRole" class="block text-sm font-medium text-gray-700 mb-1 mt-3">${cfg.rolePlaceholder}</label><input type="text" id="inputRole" placeholder="${cfg.rolePlaceholder}" class="w-full border p-2 rounded">`;
         btn.onclick = () => {
             if (document.getElementById('inputCompany').value)
                 generateCoverLetter(document.getElementById('inputCompany').value, document.getElementById('inputRole').value);
@@ -112,7 +145,7 @@ function showInputView(type) {
     } else if (type === 'gapAnalysis') {
         const cfg = CV_CONFIG.i18n.gapAnalysis;
         title.innerText = cfg.title;
-        container.innerHTML = `<input type="text" id="inputDreamJob" placeholder="${cfg.placeholder}" class="w-full border p-2 rounded">`;
+        container.innerHTML = `<label for="inputDreamJob" class="block text-sm font-medium text-gray-700 mb-1">${cfg.placeholder}</label><input type="text" id="inputDreamJob" placeholder="${cfg.placeholder}" aria-required="true" class="w-full border p-2 rounded">`;
         btn.onclick = () => {
             if (document.getElementById('inputDreamJob').value)
                 generateGapAnalysis(document.getElementById('inputDreamJob').value);

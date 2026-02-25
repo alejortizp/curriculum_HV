@@ -12,6 +12,27 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="static/styles.css">
+    <!-- Meta description -->
+    <meta name="description" content="{% if lang == 'es' %}CV de {{ cv.personal.name }} — {{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs, Azure AI y MLOps.{% else %}Resume of {{ cv.personal.name }} — {{ cv.personal.title }}. Specialized in GenAI/RAG, LLMs, Azure AI, and MLOps.{% endif %}"/>
+    <meta name="author" content="{{ cv.personal.name }}"/>
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ cv.personal.name }} — {% if lang == 'es' %}CV{% else %}Resume{% endif %}{% if profile_name != 'default' %} ({{ profile_name }}){% endif %}"/>
+    <meta property="og:description" content="{{ cv.personal.title }}{% if lang == 'es' %}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% else %}. Specialized in GenAI/RAG, LLMs and intelligent agents with LangChain.{% endif %}"/>
+    <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <meta property="og:url" content="{{ cv.personal.portfolio.url }}{% if lang == 'es' %}CV_español{% else %}CV_english{% endif %}{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
+    <meta property="og:type" content="profile"/>
+    <meta property="og:locale" content="{% if lang == 'es' %}es_CO{% else %}en_US{% endif %}"/>
+    <meta property="og:site_name" content="{{ cv.personal.name }} | AI Engineer"/>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{{ cv.personal.name }} — {% if lang == 'es' %}CV{% else %}Resume{% endif %}"/>
+    <meta name="twitter:description" content="{{ cv.personal.title }}"/>
+    <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <!-- Canonical & hreflang -->
+    <link rel="canonical" href="{{ cv.personal.portfolio.url }}{% if lang == 'es' %}CV_español{% else %}CV_english{% endif %}{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
+    <link rel="alternate" hreflang="es" href="{{ cv.personal.portfolio.url }}CV_español{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
+    <link rel="alternate" hreflang="en" href="{{ cv.personal.portfolio.url }}CV_english{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
+    <link rel="alternate" hreflang="x-default" href="{{ cv.personal.portfolio.url }}CV_english{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -35,8 +56,14 @@
 </head>
 <body class="py-10 print:py-0">
 
+    <!-- Skip Navigation -->
+    <a href="#cvContent" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:text-blue-700 focus:font-bold focus:rounded no-print">
+        {% if lang == 'es' %}Ir al contenido{% else %}Skip to content{% endif %}
+    </a>
+
     <!-- CV Content -->
-    <article id="cvContent" class="page text-gray-800" role="main" aria-label="Curriculum Vitae {% if lang == 'es' %}de{% else %}of{% endif %} {{ cv.personal.name }}">
+    <main>
+    <article id="cvContent" class="page text-gray-800" aria-label="Curriculum Vitae {% if lang == 'es' %}de{% else %}of{% endif %} {{ cv.personal.name }}">
 
         <!-- Header -->
         <header class="border-b-2 border-gray-200 pb-6 mb-6">
@@ -51,11 +78,11 @@
                     <a href="{{ cv.personal.linkedin.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
                         <i class="fab fa-linkedin" aria-hidden="true"></i> {{ cv.personal.linkedin.display_url }}
                     </a>
-                    <span class="text-gray-300">|</span>
+                    <span class="text-gray-300" aria-hidden="true">|</span>
                     <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
                         <i class="fab fa-github" aria-hidden="true"></i> {{ cv.personal.github.display_url }}
                     </a>
-                    <span class="text-gray-300">|</span>
+                    <span class="text-gray-300" aria-hidden="true">|</span>
                     <a href="{{ cv.personal.portfolio.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
                         <i class="fas fa-globe" aria-hidden="true"></i> {{ cv.personal.portfolio.display_url }}
                     </a>
@@ -69,7 +96,7 @@
             <div class="md:col-span-2 space-y-6">
                 <!-- Profile -->
                 <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Perfil Profesional{% else %}Professional Profile{% endif %}</h3>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Resumen Profesional{% else %}Professional Summary{% endif %}</h3>
                     <p class="text-sm text-justify leading-relaxed text-gray-700">
                         {{ cv.profile[lang] }}
                     </p>
@@ -159,7 +186,7 @@
 
                 <!-- Power Skills -->
                 <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Power Skills</h3>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Habilidades Clave{% else %}Key Skills{% endif %}</h3>
                     <div class="flex flex-wrap gap-1.5 text-xs">
                         {% for skill in cv.power_skills[lang] %}
                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded font-medium">{{ skill }}</span>
@@ -182,7 +209,7 @@
 
                 <!-- Tech Stack (last: longest section, flows naturally across pages) -->
                 <section>
-                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Stack Tecnológico{% else %}Tech Stack{% endif %} <span class="text-[10px] font-normal text-gray-400 normal-case tracking-normal">{% if lang == 'es' %}(años exp.){% else %}(years exp.){% endif %}</span></h3>
+                    <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">{% if lang == 'es' %}Habilidades Técnicas{% else %}Technical Skills{% endif %} <span class="text-[10px] font-normal text-gray-400 normal-case tracking-normal">{% if lang == 'es' %}(años exp.){% else %}(years exp.){% endif %}</span></h3>
                     <div class="space-y-3 text-xs">
                         {% for cat in cv.tech_stack %}
                         <div class="item-no-break">
@@ -205,27 +232,28 @@
             </div>
         </div>
     </article>
+    </main>
 
     <!-- Floating Buttons (placed after article so ATS parsers read CV content first) -->
     <div class="fixed bottom-8 right-8 no-print z-50 flex flex-col gap-3 items-end">
         <button onclick="toggleAIModal()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105 border border-gray-700 group">
-            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i>
+            <i class="fas fa-sparkles text-yellow-400" aria-hidden="true"></i>
             <span>AI Career Suite{% if lang == 'en' %} (EN){% endif %}</span>
         </button>
         <button id="btnDownload" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105">
-            <i class="fas fa-file-pdf"></i> {% if lang == 'es' %}Guardar PDF{% else %}Save PDF{% endif %}
+            <i class="fas fa-file-pdf" aria-hidden="true"></i> {% if lang == 'es' %}Guardar PDF{% else %}Save PDF{% endif %}
         </button>
     </div>
 
     <!-- AI Modal (placed after article so ATS parsers read CV content first) -->
     <div id="aiModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center z-50 no-print backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden m-4 flex flex-col max-h-[90vh]">
+        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden m-4 flex flex-col max-h-[90vh]" role="dialog" aria-modal="true" aria-labelledby="aiModalTitle">
             <div class="bg-gray-50 border-b p-4 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i class="fas fa-robot"></i></div>
-                    <h3 class="font-bold text-gray-800">AI Career Assistant{% if lang == 'en' %} (English Mode){% endif %}</h3>
+                    <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i class="fas fa-robot" aria-hidden="true"></i></div>
+                    <h3 id="aiModalTitle" class="font-bold text-gray-800">AI Career Assistant{% if lang == 'en' %} (English Mode){% endif %}</h3>
                 </div>
-                <button onclick="toggleAIModal()" class="hover:bg-gray-200 p-2 rounded-full transition-colors"><i class="fas fa-times text-gray-500"></i></button>
+                <button onclick="toggleAIModal()" class="hover:bg-gray-200 p-2 rounded-full transition-colors" aria-label="{% if lang == 'es' %}Cerrar{% else %}Close{% endif %}"><i class="fas fa-times text-gray-500" aria-hidden="true"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-grow bg-white" id="aiContentArea">
                 <div id="aiMenu" class="text-center space-y-6">
@@ -277,7 +305,8 @@
                             <h4 class="font-bold text-gray-800 mb-1">{% if lang == 'es' %}Configurar API Key{% else %}Configure API Key{% endif %}</h4>
                             <p class="text-sm text-gray-600">{% if lang == 'es' %}Se requiere una API key de Gemini. Se guardará en tu navegador (localStorage).{% else %}A Gemini API key is required. It will be saved in your browser (localStorage).{% endif %}</p>
                         </div>
-                        <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        <label for="apiKeyInput" class="sr-only">Gemini API Key</label>
+                        <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
                     </div>
                     <div class="flex gap-3 pt-2">

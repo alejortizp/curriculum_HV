@@ -8,16 +8,20 @@
     <meta name="description" content="Alejandro Ortiz Perdomo — AI Engineer | Machine Learning Engineer. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
     <meta name="author" content="Alejandro Ortiz Perdomo"/>
     <!-- Open Graph -->
-    <meta property="og:title" content="Alejandro Ortiz Perdomo | AI Engineer Portfolio"/>
-    <meta property="og:description" content="AI Engineer | Machine Learning Engineer. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain."/>
+    <meta property="og:title" content="Proyectos de IA | Alejandro Ortiz Perdomo"/>
+    <meta property="og:description" content="Proyectos open source de GenAI, RAG, agentes inteligentes y machine learning."/>
     <meta property="og:image" content="https://alejortizp.github.io/curriculum_HV/profile.jpg"/>
-    <meta property="og:url" content="https://alejortizp.github.io/curriculum_HV/"/>
+    <meta property="og:url" content="https://alejortizp.github.io/curriculum_HV/projects.html"/>
     <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="es_CO"/>
+    <meta property="og:site_name" content="Alejandro Ortiz Perdomo | AI Engineer"/>
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="Alejandro Ortiz Perdomo | AI Engineer"/>
-    <meta name="twitter:description" content="AI Engineer | Machine Learning Engineer. Especializado en GenAI/RAG, LLMs y agentes inteligentes."/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="Proyectos de IA | Alejandro Ortiz Perdomo"/>
+    <meta name="twitter:description" content="Proyectos open source de GenAI, RAG, agentes inteligentes y ML."/>
     <meta name="twitter:image" content="https://alejortizp.github.io/curriculum_HV/profile.jpg"/>
+    <!-- Canonical -->
+    <link rel="canonical" href="https://alejortizp.github.io/curriculum_HV/projects.html"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -34,7 +38,7 @@
                         "background-dark": "#101622",
                         "surface-dark": "#1c1f27",
                         "border-dark": "#3b4354",
-                        "text-secondary": "#9da6b9",
+                        "text-secondary": "#b0b8ca",
                     },
                     fontFamily: {
                         "display": ["Space Grotesk", "sans-serif"],
@@ -54,16 +58,21 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden min-h-screen flex flex-col">
 
+<!-- Skip Navigation -->
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold">
+    Ir al contenido principal
+</a>
+
 <!-- Navigation -->
 <header class="fixed top-0 w-full z-50 border-b border-slate-200 dark:border-slate-800 glass-nav">
     <div class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="bg-primary p-1.5 rounded-lg text-white">
-                <span class="material-symbols-outlined text-2xl">neurology</span>
+                <span class="material-symbols-outlined text-2xl" aria-hidden="true">neurology</span>
             </div>
-            <h2 class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</h2>
+            <span class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</span>
         </div>
-        <nav class="hidden md:flex items-center gap-10">
+        <nav aria-label="Navegación principal" class="hidden md:flex items-center gap-10">
             <a class="text-sm font-medium hover:text-primary transition-colors " href="index.html">Inicio</a>
             <a class="text-sm font-medium hover:text-primary transition-colors text-primary" href="projects.html">Proyectos</a>
             <a class="text-sm font-medium hover:text-primary transition-colors " href="contact.html">Contacto</a>
@@ -73,8 +82,8 @@
                 Contratar
             </a>
             <!-- Mobile menu button -->
-            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú">
-                <span class="material-symbols-outlined text-2xl">menu</span>
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+                <span class="material-symbols-outlined text-2xl" aria-hidden="true">menu</span>
             </button>
         </div>
     </div>
@@ -83,7 +92,7 @@
 <!-- Mobile menu panel -->
 <div id="mobile-menu" class="hidden fixed inset-0 z-40 md:hidden">
     <div id="mobile-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <nav class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
+    <nav aria-label="Menú móvil" class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
         <a class="text-lg font-medium hover:text-primary transition-colors " href="index.html">Inicio</a>
         <a class="text-lg font-medium hover:text-primary transition-colors text-primary" href="projects.html">Proyectos</a>
         <a class="text-lg font-medium hover:text-primary transition-colors " href="contact.html">Contacto</a>
@@ -93,7 +102,7 @@
 </div>
 
 
-<main class="flex-1 w-full px-4 md:px-6 py-8 pt-28">
+<main id="main-content" class="flex-1 w-full px-4 md:px-6 py-8 pt-28">
     <div class="mx-auto max-w-[960px] flex flex-col gap-8">
         <!-- Hero / Intro -->
         <div class="flex flex-col gap-4 py-6 text-center md:text-left">
@@ -111,15 +120,15 @@
                 <span class="text-sm font-medium">Todos</span>
             </button>
             <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
-                <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>
                 <span class="text-sm font-medium">Agentes IA</span>
             </button>
             <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
-                <span class="material-symbols-outlined text-[18px]">chat</span>
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
                 <span class="text-sm font-medium">GenAI &amp; RAG</span>
             </button>
             <button class="group flex h-9 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-[#282e39] hover:border-primary/50 hover:bg-[#282e39] text-text-secondary hover:text-white px-5 transition-all">
-                <span class="material-symbols-outlined text-[18px]">analytics</span>
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">analytics</span>
                 <span class="text-sm font-medium">ML Clásico</span>
             </button>
         </div>
@@ -133,7 +142,7 @@
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-[#282e39] hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30">mail</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">mail</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -166,7 +175,7 @@
                         <!-- Actions -->
                         <div class="flex items-center gap-4 mt-auto pt-4">
                             <a class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#282e39] text-white text-sm font-medium hover:bg-[#343b49] transition-colors" href="https://github.com/alejortizp/email-agent" target="_blank">
-                                <span class="material-symbols-outlined text-[18px]">code</span>
+                                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">code</span>
                                 Repositorio
                             </a>
                         </div>
@@ -178,7 +187,7 @@
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-[#282e39] hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-green-900 to-teal-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30">database</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">database</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -211,7 +220,7 @@
                         <!-- Actions -->
                         <div class="flex items-center gap-4 mt-auto pt-4">
                             <a class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#282e39] text-white text-sm font-medium hover:bg-[#343b49] transition-colors" href="https://github.com/alejortizp/Agente-de-Consultas---High-Garden-Coffee---Agentic-Rag" target="_blank">
-                                <span class="material-symbols-outlined text-[18px]">code</span>
+                                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">code</span>
                                 Repositorio
                             </a>
                         </div>
@@ -223,7 +232,7 @@
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-[#282e39] hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-orange-900 to-red-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30">restaurant</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">restaurant</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -256,7 +265,7 @@
                         <!-- Actions -->
                         <div class="flex items-center gap-4 mt-auto pt-4">
                             <a class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#282e39] text-white text-sm font-medium hover:bg-[#343b49] transition-colors" href="https://github.com/alejortizp/rag-ordering" target="_blank">
-                                <span class="material-symbols-outlined text-[18px]">code</span>
+                                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">code</span>
                                 Repositorio
                             </a>
                         </div>
@@ -275,14 +284,14 @@
         <div class="flex flex-col md:flex-row justify-between items-center gap-10">
             <div class="flex items-center gap-3">
                 <div class="bg-primary p-1.5 rounded-lg text-white">
-                    <span class="material-symbols-outlined text-2xl">neurology</span>
+                    <span class="material-symbols-outlined text-2xl" aria-hidden="true">neurology</span>
                 </div>
-                <h2 class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</h2>
+                <span class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</span>
             </div>
             <div class="flex gap-8">
-                <a class="text-slate-500 hover:text-primary transition-colors" href="https://www.linkedin.com/in/alejandro-ortiz-perdomo-a35348116/" target="_blank">LinkedIn</a>
-                <a class="text-slate-500 hover:text-primary transition-colors" href="https://github.com/alejortizp" target="_blank">GitHub</a>
-                <a class="text-slate-500 hover:text-primary transition-colors" href="mailto:alejortizp@gmail.com">Email</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="https://www.linkedin.com/in/alejandro-ortiz-perdomo-a35348116/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="https://github.com/alejortizp" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="mailto:alejortizp@gmail.com">Email</a>
             </div>
             <div class="text-slate-500 text-sm">
                 &copy; 2025 Alejandro Ortiz Perdomo. AI Engineer.
@@ -298,11 +307,21 @@
     const overlay = document.getElementById('mobile-overlay');
     const icon = btn.querySelector('.material-symbols-outlined');
     function toggle() {
-        const open = menu.classList.toggle('hidden');
-        icon.textContent = open ? 'menu' : 'close';
+        const isHidden = menu.classList.toggle('hidden');
+        const isOpen = !isHidden;
+        icon.textContent = isOpen ? 'close' : 'menu';
+        btn.setAttribute('aria-expanded', isOpen);
+        btn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+        if (isOpen) {
+            const firstLink = menu.querySelector('a');
+            if (firstLink) firstLink.focus();
+        }
     }
     btn.addEventListener('click', toggle);
     overlay.addEventListener('click', toggle);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !menu.classList.contains('hidden')) toggle();
+    });
 })();
 </script>
 </body>

@@ -46,8 +46,8 @@ setup:
 # Remove generated files (all profiles)
 clean:
 	rm -f docs/CV_español*.html docs/CV_english*.html
-	rm -f docs/CV_español*.pdf docs/CV_english*.pdf
-	rm -f CV_español*.pdf CV_english*.pdf
+	rm -f docs/CV_español*.pdf docs/CV_english*.pdf docs/CV-*.pdf
+	rm -f CV_español*.pdf CV_english*.pdf CV-*.pdf
 	rm -rf docs/static
 	rm -f Carta_Presentacion.html Carta_Presentacion.pdf
 	rm -f Cover_Letter.html Cover_Letter.pdf

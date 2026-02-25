@@ -18,15 +18,19 @@
     <meta name="author" content="{{ cv.personal.name }}"/>
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}{{ cv.personal.name }} | AI Engineer Portfolio{% endblock %}"/>
-    <meta property="og:description" content="{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain."/>
+    <meta property="og:description" content="{% block og_description %}{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% endblock %}"/>
     <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
-    <meta property="og:url" content="{{ cv.personal.portfolio.url }}"/>
+    <meta property="og:url" content="{{ cv.personal.portfolio.url }}{% block og_url %}{% endblock %}"/>
     <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="es_CO"/>
+    <meta property="og:site_name" content="{{ cv.personal.name }} | AI Engineer"/>
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="{{ cv.personal.name }} | AI Engineer"/>
-    <meta name="twitter:description" content="{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes."/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="{% block twitter_title %}{{ cv.personal.name }} | AI Engineer{% endblock %}"/>
+    <meta name="twitter:description" content="{% block twitter_description %}{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes.{% endblock %}"/>
     <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <!-- Canonical -->
+    <link rel="canonical" href="{{ cv.personal.portfolio.url }}{% block canonical_url %}{% endblock %}"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -43,7 +47,7 @@
                         "background-dark": "#101622",
                         "surface-dark": "#1c1f27",
                         "border-dark": "#3b4354",
-                        "text-secondary": "#9da6b9",
+                        "text-secondary": "#b0b8ca",
                     },
                     fontFamily: {
                         "display": ["Space Grotesk", "sans-serif"],
@@ -63,16 +67,21 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden min-h-screen flex flex-col">
 
+<!-- Skip Navigation -->
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold">
+    Ir al contenido principal
+</a>
+
 <!-- Navigation -->
 <header class="fixed top-0 w-full z-50 border-b border-slate-200 dark:border-slate-800 glass-nav">
     <div class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="bg-primary p-1.5 rounded-lg text-white">
-                <span class="material-symbols-outlined text-2xl">neurology</span>
+                <span class="material-symbols-outlined text-2xl" aria-hidden="true">neurology</span>
             </div>
-            <h2 class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</h2>
+            <span class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</span>
         </div>
-        <nav class="hidden md:flex items-center gap-10">
+        <nav aria-label="Navegación principal" class="hidden md:flex items-center gap-10">
             <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index.html">Inicio</a>
             <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
             <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
@@ -82,8 +91,8 @@
                 Contratar
             </a>
             <!-- Mobile menu button -->
-            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú">
-                <span class="material-symbols-outlined text-2xl">menu</span>
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+                <span class="material-symbols-outlined text-2xl" aria-hidden="true">menu</span>
             </button>
         </div>
     </div>
@@ -92,7 +101,7 @@
 <!-- Mobile menu panel -->
 <div id="mobile-menu" class="hidden fixed inset-0 z-40 md:hidden">
     <div id="mobile-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <nav class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
+    <nav aria-label="Menú móvil" class="absolute top-0 right-0 w-64 h-full bg-background-dark border-l border-slate-800 p-6 pt-24 flex flex-col gap-6">
         <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'index' %}text-primary{% endif %}" href="index.html">Inicio</a>
         <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
         <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
@@ -109,14 +118,14 @@
         <div class="flex flex-col md:flex-row justify-between items-center gap-10">
             <div class="flex items-center gap-3">
                 <div class="bg-primary p-1.5 rounded-lg text-white">
-                    <span class="material-symbols-outlined text-2xl">neurology</span>
+                    <span class="material-symbols-outlined text-2xl" aria-hidden="true">neurology</span>
                 </div>
-                <h2 class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</h2>
+                <span class="text-xl font-bold tracking-tight">AI<span class="text-primary">.</span>Lab</span>
             </div>
             <div class="flex gap-8">
-                <a class="text-slate-500 hover:text-primary transition-colors" href="{{ cv.personal.linkedin.url }}" target="_blank">LinkedIn</a>
-                <a class="text-slate-500 hover:text-primary transition-colors" href="{{ cv.personal.github.url }}" target="_blank">GitHub</a>
-                <a class="text-slate-500 hover:text-primary transition-colors" href="mailto:{{ cv.personal.email }}">Email</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="{{ cv.personal.linkedin.url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="{{ cv.personal.github.url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="text-slate-400 hover:text-primary transition-colors" href="mailto:{{ cv.personal.email }}">Email</a>
             </div>
             <div class="text-slate-500 text-sm">
                 &copy; 2025 {{ cv.personal.name }}. AI Engineer.
@@ -132,11 +141,21 @@
     const overlay = document.getElementById('mobile-overlay');
     const icon = btn.querySelector('.material-symbols-outlined');
     function toggle() {
-        const open = menu.classList.toggle('hidden');
-        icon.textContent = open ? 'menu' : 'close';
+        const isHidden = menu.classList.toggle('hidden');
+        const isOpen = !isHidden;
+        icon.textContent = isOpen ? 'close' : 'menu';
+        btn.setAttribute('aria-expanded', isOpen);
+        btn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+        if (isOpen) {
+            const firstLink = menu.querySelector('a');
+            if (firstLink) firstLink.focus();
+        }
     }
     btn.addEventListener('click', toggle);
     overlay.addEventListener('click', toggle);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !menu.classList.contains('hidden')) toggle();
+    });
 })();
 </script>
 </body>

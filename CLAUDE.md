@@ -19,7 +19,7 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `build.py` — Build script that generates HTMLs + PDFs (CVs, cover letter, portfolio). Supports multi-profile builds
 - `docs/CV_español.html` / `docs/CV_english.html` — Generated CV files, default profile (in docs/, do not edit)
 - `docs/CV_español_<profile>.html` / `docs/CV_english_<profile>.html` — Profile variant CVs (ai-engineer, ml-engineer, mlops)
-- `docs/*.pdf` — PDF copies for GitHub Pages download button
+- `docs/CV-Alejandro-Ortiz-Perdomo-*.pdf` — ASCII-safe PDF copies for GitHub Pages download button
 - `Carta_Presentacion.html` / `Cover_Letter.html` — Generated cover letters ES/EN (do not edit)
 - `docs/` — Generated portfolio + CVs + PDFs for GitHub Pages (do not edit directly)
 - `docs/static/` — Copy of styles.css + ai-suite.js (needed by CVs in docs/)
@@ -48,7 +48,7 @@ make help         # Show all targets
 
 CV targets accept a `PROFILE` variable to build a single profile: `make es PROFILE=ai-engineer`. Without `PROFILE`, **all profiles are built** (default, ai-engineer, ml-engineer, mlops). Available profiles are defined in `cv.json` → `profiles`.
 
-Output naming: default profile uses `CV_español.html` / `CV_english.html`. Profile variants use `CV_español_<profile>.html` / `CV_english_<profile>.html` (e.g., `CV_español_ai-engineer.html`).
+Output naming: default profile uses `CV_español.html` / `CV_english.html`. Profile variants use `CV_español_<profile>.html` / `CV_english_<profile>.html` (e.g., `CV_español_ai-engineer.html`). PDFs use ASCII-safe names: `CV-Alejandro-Ortiz-Perdomo-ES.pdf`, `CV-Alejandro-Ortiz-Perdomo-AI-Engineer-EN.pdf`, etc.
 
 `make` (default) runs `build` + `portfolio`, so updating `cv.json` and running `make` regenerates all 8 CVs, PDFs, and the portfolio in one step.
 
@@ -94,11 +94,15 @@ The CV template is optimized for Applicant Tracking Systems and OCR extraction:
 - **JSON-LD** structured data (schema.org `Person`) in `<head>` for ATS that parse metadata
 - **Visible URLs** in header: `display_url` fields in cv.json shown as link text (e.g., `linkedin.com/in/...`) so PDF extractors capture the URLs
 - **Modal after article**: floating buttons and AI modal are placed after `</article>` so ATS parsers read CV content first
+- **Tagged PDFs**: Playwright generates tagged (`tagged=True`) and outlined (`outline=True`) PDFs for accessibility and ATS parsing
+- **ASCII-safe PDF filenames**: `CV-Alejandro-Ortiz-Perdomo-ES.pdf` (no accented characters; ATS-friendly)
 - **Searchable PDFs**: the "Save PDF" button downloads the Playwright-generated PDF (searchable text), not an html2pdf.js image-based PDF
+- **ATS section headers**: standard titles (Professional Summary, Technical Skills, Key Skills) instead of creative names
 - **Project title/URL separator**: `—` between project name and URL prevents text concatenation in PDF extraction
 - **Font fallback chain**: `Inter` → system fonts (`-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, ...`) for reliable rendering
 - **Consistent dates**: all date ranges use en-dash `–` (not hyphen `-`)
 - Font Awesome icons have `aria-hidden="true"` for accessibility
+- **Page margins**: CSS is the single source of truth — `.page` print styles handle all padding, Playwright margins are zero
 
 ### Static files
 

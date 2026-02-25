@@ -2,8 +2,11 @@
 
 {% block title %}AI Engineer Portfolio | {{ cv.personal.name }}{% endblock %}
 
+{% block og_url %}index.html{% endblock %}
+{% block canonical_url %}index.html{% endblock %}
+
 {% block content %}
-<main class="pt-20 flex-1">
+<main id="main-content" class="pt-20 flex-1">
     <!-- Hero Section -->
     <section class="max-w-[1200px] mx-auto px-6 py-20 lg:py-32">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -25,19 +28,22 @@
                 <div class="flex flex-wrap gap-4">
                     <a href="projects.html" class="bg-primary text-white px-8 py-4 rounded-lg font-bold flex items-center gap-2 group hover:gap-3 transition-all">
                         Ver Proyectos
-                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        <span class="material-symbols-outlined text-lg" aria-hidden="true">arrow_forward</span>
                     </a>
-                    <div class="relative group/cv">
-                        <button class="border border-slate-300 dark:border-slate-700 px-8 py-4 rounded-lg font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-2">
+                    <div class="relative" id="cv-dropdown">
+                        <button onclick="document.getElementById('cv-dropdown').classList.toggle('open')"
+                                class="border border-slate-300 dark:border-slate-700 px-8 py-4 rounded-lg font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
+                                aria-haspopup="true" aria-expanded="false">
                             Descargar CV
-                            <span class="material-symbols-outlined text-lg">expand_more</span>
+                            <span class="material-symbols-outlined text-lg" aria-hidden="true">expand_more</span>
                         </button>
-                        <div class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover/cv:opacity-100 group-hover/cv:visible transition-all z-10">
+                        <div class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl opacity-0 invisible transition-all z-10
+                                    [.open_&]:opacity-100 [.open_&]:visible">
                             <a href="CV_español.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg transition-colors">
-                                <span>🇪🇸</span> Español
+                                <span aria-hidden="true">🇪🇸</span> Español
                             </a>
                             <a href="CV_english.html" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-b-lg transition-colors">
-                                <span>🇬🇧</span> English
+                                <span aria-hidden="true">🇬🇧</span> English
                             </a>
                         </div>
                     </div>
@@ -47,13 +53,13 @@
                 <div class="relative group">
                     <div class="absolute -inset-4 bg-primary/20 rounded-2xl blur-2xl group-hover:bg-primary/30 transition-all"></div>
                     <div class="relative w-72 h-72 lg:w-[450px] lg:h-[450px] bg-slate-800 rounded-2xl overflow-hidden border-2 border-slate-700">
-                        <div class="w-full h-full bg-cover bg-center" data-alt="Foto de perfil de {{ cv.personal.name }}, AI Engineer" style='background-image: url("profile.jpg");'></div>
+                        <img src="profile.jpg" alt="Foto de perfil de {{ cv.personal.name }}, AI Engineer" class="w-full h-full object-cover object-center" loading="lazy" width="450" height="450"/>
                     </div>
                     <!-- Floating Badge -->
                     <div class="absolute -bottom-6 -left-6 bg-background-light dark:bg-background-dark p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl">
                         <div class="flex items-center gap-4">
                             <div class="text-primary">
-                                <span class="material-symbols-outlined text-4xl">terminal</span>
+                                <span class="material-symbols-outlined text-4xl" aria-hidden="true">terminal</span>
                             </div>
                             <div>
                                 <div class="text-2xl font-bold">10k+</div>
@@ -97,7 +103,7 @@
                 </div>
                 <div class="lg:col-span-7">
                     <div class="bg-white dark:bg-background-dark p-8 lg:p-12 rounded-2xl border border-slate-200 dark:border-slate-800">
-                        <span class="material-symbols-outlined text-primary text-4xl mb-6">format_quote</span>
+                        <span class="material-symbols-outlined text-primary text-4xl mb-6" aria-hidden="true">format_quote</span>
                         <h3 class="text-2xl lg:text-3xl font-medium leading-snug italic mb-8">
                             "Mi misión es crear sistemas de IA escalables y confiables que transformen datos en decisiones inteligentes, combinando rigor estadístico con ingeniería de software moderna."
                         </h3>
@@ -128,7 +134,7 @@
             {% for cat in cv.tech_stack[:3] %}
             <div class="skill-card p-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all group">
                 <div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6 group-hover:bg-primary/10 transition-colors">
-                    <span class="material-symbols-outlined text-primary">{{ icons[loop.index0] }}</span>
+                    <span class="material-symbols-outlined text-primary" aria-hidden="true">{{ icons[loop.index0] }}</span>
                 </div>
                 <h4 class="text-xl font-bold mb-4">{{ cat.category }}</h4>
                 <ul class="space-y-3 text-slate-500">
@@ -146,12 +152,18 @@
     <!-- Technical Stack Logos -->
     <section class="border-y border-slate-200 dark:border-slate-800 py-12 bg-slate-50/50 dark:bg-slate-900/10 overflow-hidden">
         <div class="max-w-[1200px] mx-auto px-6 flex flex-wrap justify-center gap-12 lg:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all">
-            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined">terminal</span> Python</div>
-            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined">bolt</span> LangChain</div>
-            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined">cloud</span> Azure</div>
-            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined">layers</span> PyTorch</div>
-            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined">memory</span> Databricks</div>
+            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined" aria-hidden="true">terminal</span> Python</div>
+            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined" aria-hidden="true">bolt</span> LangChain</div>
+            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined" aria-hidden="true">cloud</span> Azure</div>
+            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined" aria-hidden="true">layers</span> PyTorch</div>
+            <div class="flex items-center gap-2 font-bold text-xl"><span class="material-symbols-outlined" aria-hidden="true">memory</span> Databricks</div>
         </div>
     </section>
 </main>
+<script>
+document.addEventListener('click', function(e) {
+    var dd = document.getElementById('cv-dropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+});
+</script>
 {% endblock %}

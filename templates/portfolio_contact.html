@@ -1,9 +1,15 @@
 {% extends "portfolio_base.html" %}
 
 {% block title %}Contacto - {{ cv.personal.name }}{% endblock %}
+{% block og_title %}Contacto | {{ cv.personal.name }}{% endblock %}
+{% block og_description %}Disponible para nuevos retos en AI Engineering y Machine Learning.{% endblock %}
+{% block og_url %}contact.html{% endblock %}
+{% block canonical_url %}contact.html{% endblock %}
+{% block twitter_title %}Contacto | {{ cv.personal.name }}{% endblock %}
+{% block twitter_description %}Disponible para nuevos retos en AI Engineering y ML.{% endblock %}
 
 {% block content %}
-<main class="flex-grow flex flex-col items-center py-12 px-6 sm:px-12 lg:px-24 pt-28">
+<main id="main-content" class="flex-grow flex flex-col items-center py-12 px-6 sm:px-12 lg:px-24 pt-28">
     <div class="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <!-- Left Column: Heading & Contact Info -->
         <div class="flex flex-col gap-8">
@@ -22,7 +28,7 @@
                 <!-- Email Card -->
                 <div class="group flex items-start gap-4 rounded-xl border border-border-dark bg-surface-dark p-5 hover:border-primary/50 transition-colors">
                     <div class="bg-primary/10 p-3 rounded-lg text-primary">
-                        <span class="material-symbols-outlined">mail</span>
+                        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
                     </div>
                     <div class="flex flex-col">
                         <h3 class="font-bold text-base">Correo Electrónico</h3>
@@ -32,7 +38,7 @@
                 <!-- Location Card -->
                 <div class="group flex items-start gap-4 rounded-xl border border-border-dark bg-surface-dark p-5 hover:border-primary/50 transition-colors">
                     <div class="bg-primary/10 p-3 rounded-lg text-primary">
-                        <span class="material-symbols-outlined">location_on</span>
+                        <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
                     </div>
                     <div class="flex flex-col">
                         <h3 class="font-bold text-base">Ubicación</h3>
@@ -42,7 +48,7 @@
                 <!-- Socials Card -->
                 <div class="group flex items-start gap-4 rounded-xl border border-border-dark bg-surface-dark p-5 hover:border-primary/50 transition-colors">
                     <div class="bg-primary/10 p-3 rounded-lg text-primary">
-                        <span class="material-symbols-outlined">share</span>
+                        <span class="material-symbols-outlined" aria-hidden="true">share</span>
                     </div>
                     <div class="flex flex-col w-full">
                         <h3 class="font-bold text-base mb-2">Redes Profesionales</h3>
@@ -85,7 +91,7 @@
                                 <option value="Otro">Otro</option>
                             </select>
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
-                                <span class="material-symbols-outlined">expand_more</span>
+                                <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
                             </div>
                         </div>
                     </label>
@@ -96,17 +102,17 @@
                     <!-- Submit button -->
                     <button id="submit-btn" class="mt-2 w-full h-12 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 group" type="submit">
                         <span id="btn-text">Enviar Mensaje</span>
-                        <span id="btn-icon" class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">send</span>
+                        <span id="btn-icon" class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform" aria-hidden="true">send</span>
                     </button>
                     <!-- Success message (hidden by default) -->
-                    <div id="form-success" class="hidden text-center py-4">
-                        <span class="material-symbols-outlined text-green-400 text-5xl mb-3">check_circle</span>
+                    <div id="form-success" class="hidden text-center py-4" role="status" aria-live="polite">
+                        <span class="material-symbols-outlined text-green-400 text-5xl mb-3" aria-hidden="true">check_circle</span>
                         <p class="text-lg font-bold text-white">Mensaje enviado</p>
                         <p class="text-text-secondary text-sm mt-1">Gracias por contactarme. Te responderé pronto.</p>
                     </div>
                     <!-- Error message (hidden by default) -->
-                    <div id="form-error" class="hidden text-center py-4">
-                        <span class="material-symbols-outlined text-red-400 text-5xl mb-3">error</span>
+                    <div id="form-error" class="hidden text-center py-4" role="alert" aria-live="assertive">
+                        <span class="material-symbols-outlined text-red-400 text-5xl mb-3" aria-hidden="true">error</span>
                         <p class="text-lg font-bold text-white">Error al enviar</p>
                         <p class="text-text-secondary text-sm mt-1">Intenta de nuevo o escríbeme a <a href="mailto:{{ cv.personal.email }}" class="text-primary hover:underline">{{ cv.personal.email }}</a></p>
                     </div>

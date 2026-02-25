@@ -18,8 +18,8 @@ COVER_LETTER_TEMPLATE = "cover_letter.html"
 
 # Default output paths (also used by portfolio to verify CV files exist)
 OUTPUTS = {
-    "es": {"html": "docs/CV_español.html", "pdf": "CV_español.pdf"},
-    "en": {"html": "docs/CV_english.html", "pdf": "CV_english.pdf"},
+    "es": {"html": "docs/CV_español.html", "pdf": "CV-Alejandro-Ortiz-Perdomo-ES.pdf"},
+    "en": {"html": "docs/CV_english.html", "pdf": "CV-Alejandro-Ortiz-Perdomo-EN.pdf"},
 }
 
 COVER_LETTER_OUTPUTS = {
@@ -49,9 +49,15 @@ def get_outputs(profile_name: str) -> dict:
     if profile_name == "default":
         return OUTPUTS
     suffix = f"_{profile_name}"
+    # ASCII-safe PDF name: profile name with known acronyms uppercased
+    _acronyms = {"ai", "ml", "mlops"}
+    profile_label = "-".join(
+        w.upper() if w.lower() in _acronyms else w.capitalize()
+        for w in profile_name.split("-")
+    )
     return {
-        "es": {"html": f"docs/CV_español{suffix}.html", "pdf": f"CV_español{suffix}.pdf"},
-        "en": {"html": f"docs/CV_english{suffix}.html", "pdf": f"CV_english{suffix}.pdf"},
+        "es": {"html": f"docs/CV_español{suffix}.html", "pdf": f"CV-Alejandro-Ortiz-Perdomo-{profile_label}-ES.pdf"},
+        "en": {"html": f"docs/CV_english{suffix}.html", "pdf": f"CV-Alejandro-Ortiz-Perdomo-{profile_label}-EN.pdf"},
     }
 
 
@@ -69,28 +75,14 @@ def render_cover_letter(cv_data: dict, letter_data: dict, lang: str) -> str:
     return template.render(cv=cv_data, letter=letter_data, lang=lang)
 
 
-def generate_pdf(html_path: Path, pdf_path: Path, margin: dict):
+def generate_pdfs(jobs: list, margin: dict):
+    """Generate PDFs in a single browser session.
+
+    jobs: list of {"html": str, "pdf": str} dicts (paths relative to ROOT).
+    margin: dict with top/bottom/left/right CSS values.
+    """
     from playwright.sync_api import sync_playwright
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page()
-        page.goto(f"file://{html_path.resolve()}", wait_until="networkidle")
-        page.pdf(
-            path=str(pdf_path),
-            format="A4",
-            print_background=True,
-            margin=margin,
-        )
-        page.close()
-        browser.close()
-
-
-def generate_cv_pdfs(jobs: list):
-    """Generate PDFs in a single browser session. jobs: list of {html, pdf} dicts."""
-    from playwright.sync_api import sync_playwright
-
-    margin = {"top": "1.5cm", "bottom": "1cm", "left": "0", "right": "0"}
     with sync_playwright() as p:
         browser = p.chromium.launch()
         for files in jobs:
@@ -98,11 +90,14 @@ def generate_cv_pdfs(jobs: list):
             pdf_path = ROOT / files["pdf"]
             page = browser.new_page()
             page.goto(f"file://{html_path}", wait_until="networkidle")
+            page.evaluate("() => document.fonts.ready")
             page.pdf(
                 path=str(pdf_path),
                 format="A4",
                 print_background=True,
                 margin=margin,
+                tagged=True,
+                outline=True,
             )
             page.close()
             print(f"  PDF: {pdf_path.name}")
@@ -142,8 +137,9 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
 
     if not html_only and all_jobs:
         print("Generating CV PDF files...")
+        cv_margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
         try:
-            generate_cv_pdfs(all_jobs)
+            generate_pdfs(all_jobs, cv_margin)
             # Copy PDFs to docs/ for GitHub Pages download button
             for files in all_jobs:
                 pdf_src = ROOT / files["pdf"]
@@ -176,17 +172,19 @@ def build_cover_letter(cv_data: dict, html_only: bool, langs: list = None):
         html_path.write_text(html, encoding="utf-8")
         print(f"  HTML: {html_path.name}")
 
-        if not html_only:
-            pdf_path = ROOT / output["pdf"]
-            try:
-                margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
-                generate_pdf(html_path, pdf_path, margin)
-                print(f"  PDF: {pdf_path.name}")
-            except Exception as e:
-                print(f"\n  Error generating PDF: {e}")
-                print("  Make sure Playwright is installed:")
-                print("    uv run playwright install chromium")
-                sys.exit(1)
+    if not html_only:
+        letter_margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
+        letter_jobs = [
+            {"html": COVER_LETTER_OUTPUTS[l]["html"], "pdf": COVER_LETTER_OUTPUTS[l]["pdf"]}
+            for l in langs
+        ]
+        try:
+            generate_pdfs(letter_jobs, letter_margin)
+        except Exception as e:
+            print(f"\n  Error generating PDF: {e}")
+            print("  Make sure Playwright is installed:")
+            print("    uv run playwright install chromium")
+            sys.exit(1)
 
 
 def build_portfolio(cv_data: dict):

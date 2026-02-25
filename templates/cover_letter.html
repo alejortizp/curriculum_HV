@@ -19,20 +19,20 @@
             <h2 class="text-lg text-blue-700 font-semibold mt-1">{{ cv.personal.title }}</h2>
 
             <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4 text-sm text-gray-600">
-                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i> {{ t(cv.personal.location) }}</div>
-                <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400"></i> {{ cv.personal.phone }}</div>
-                <div class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400"></i> {{ cv.personal.email }}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400" aria-hidden="true"></i> {{ t(cv.personal.location) }}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400" aria-hidden="true"></i> {{ cv.personal.phone }}</div>
+                <div class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400" aria-hidden="true"></i> {{ cv.personal.email }}</div>
                 <div class="flex items-center gap-2">
-                    <a href="{{ cv.personal.linkedin.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
-                        <i class="fab fa-linkedin"></i> {{ cv.personal.linkedin.label }}
+                    <a href="{{ cv.personal.linkedin.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-blue-600 hover:underline">
+                        <i class="fab fa-linkedin" aria-hidden="true"></i> {{ cv.personal.linkedin.label }}
                     </a>
-                    <span class="text-gray-300">|</span>
-                    <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
-                        <i class="fab fa-github"></i> {{ cv.personal.github.label }}
+                    <span class="text-gray-300" aria-hidden="true">|</span>
+                    <a href="{{ cv.personal.github.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
+                        <i class="fab fa-github" aria-hidden="true"></i> {{ cv.personal.github.label }}
                     </a>
-                    <span class="text-gray-300">|</span>
-                    <a href="{{ cv.personal.portfolio.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
-                        <i class="fas fa-globe"></i> {{ cv.personal.portfolio.label }}
+                    <span class="text-gray-300" aria-hidden="true">|</span>
+                    <a href="{{ cv.personal.portfolio.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-blue-600 hover:underline">
+                        <i class="fas fa-globe" aria-hidden="true"></i> {{ cv.personal.portfolio.label }}
                     </a>
                 </div>
             </div>
