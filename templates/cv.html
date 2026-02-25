@@ -5,8 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - {{ cv.personal.name }}{% if profile_name != 'default' %} - {{ profile_name }}{% endif %}{% if lang == 'en' %} (English){% endif %}</title>
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
+    <title>{{ cv.personal.name }} — {% if lang == 'es' %}Hoja de Vida{% else %}Resume{% endif %}{% if profile_name != 'default' %} — {{ profile_name | replace('ai-engineer','AI Engineer') | replace('ml-engineer','ML Engineer') | replace('mlops','MLOps') }}{% endif %}</title>
+    <!-- Preconnect hints for CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" crossorigin="anonymous">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,15 +24,22 @@
     <meta property="og:title" content="{{ cv.personal.name }} — {% if lang == 'es' %}CV{% else %}Resume{% endif %}{% if profile_name != 'default' %} ({{ profile_name }}){% endif %}"/>
     <meta property="og:description" content="{{ cv.personal.title }}{% if lang == 'es' %}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% else %}. Specialized in GenAI/RAG, LLMs and intelligent agents with LangChain.{% endif %}"/>
     <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <meta property="og:image:width" content="450"/>
+    <meta property="og:image:height" content="450"/>
+    <meta property="og:image:alt" content="{% if lang == 'es' %}Foto de perfil de {{ cv.personal.name }}{% else %}Profile photo of {{ cv.personal.name }}{% endif %}"/>
     <meta property="og:url" content="{{ cv.personal.portfolio.url }}{% if lang == 'es' %}CV_español{% else %}CV_english{% endif %}{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
     <meta property="og:type" content="profile"/>
     <meta property="og:locale" content="{% if lang == 'es' %}es_CO{% else %}en_US{% endif %}"/>
     <meta property="og:site_name" content="{{ cv.personal.name }} | AI Engineer"/>
+    <meta property="profile:first_name" content="{{ cv.personal.name.split(' ')[0] }}"/>
+    <meta property="profile:last_name" content="{{ cv.personal.name.split(' ')[-1] }}"/>
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:title" content="{{ cv.personal.name }} — {% if lang == 'es' %}CV{% else %}Resume{% endif %}"/>
     <meta name="twitter:description" content="{{ cv.personal.title }}"/>
     <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <!-- Meta keywords -->
+    <meta name="keywords" content="{% if lang == 'es' %}AI Engineer, Machine Learning, GenAI, RAG, LLMs, Azure AI, MLOps, LangChain, Python, Deep Learning, {{ cv.personal.name }}{% else %}AI Engineer, Machine Learning, GenAI, RAG, LLMs, Azure AI, MLOps, LangChain, Python, Deep Learning, {{ cv.personal.name }}{% endif %}"/>
     <!-- Canonical & hreflang -->
     <link rel="canonical" href="{{ cv.personal.portfolio.url }}{% if lang == 'es' %}CV_español{% else %}CV_english{% endif %}{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
     <link rel="alternate" hreflang="es" href="{{ cv.personal.portfolio.url }}CV_español{% if profile_name != 'default' %}_{{ profile_name }}{% endif %}.html"/>
@@ -39,8 +51,10 @@
         "@type": "Person",
         "name": "{{ cv.personal.name }}",
         "jobTitle": "{{ cv.personal.title }}",
+        "description": "{{ cv.profile[lang] | striptags | truncate(200, True, '...') }}",
         "email": "{{ cv.personal.email }}",
         "telephone": "{{ cv.personal.phone }}",
+        "image": "{{ cv.personal.portfolio.url }}profile.jpg",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Bogotá",
@@ -50,7 +64,20 @@
         "sameAs": [
             "{{ cv.personal.linkedin.url }}",
             "{{ cv.personal.github.url }}"
-        ]
+        ],
+        "knowsAbout": ["Artificial Intelligence", "Machine Learning", "GenAI", "RAG", "LLMs", "Azure AI", "MLOps", "LangChain", "Deep Learning"],
+        "alumniOf": [
+            {% for deg in cv.education.degrees %}
+            {
+                "@type": "EducationalOrganization",
+                "name": "{{ deg.institution }}"
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ],
+        "worksFor": {
+            "@type": "Organization",
+            "name": "{{ cv.experience[0].company }}"
+        }
     }
     </script>
 </head>
@@ -75,15 +102,15 @@
                 <span class="flex items-center gap-1.5"><i class="fas fa-phone text-gray-400" aria-hidden="true"></i> {{ cv.personal.phone }}</span>
                 <a href="mailto:{{ cv.personal.email }}" class="flex items-center gap-1.5 hover:underline"><i class="fas fa-envelope text-gray-400" aria-hidden="true"></i> {{ cv.personal.email }}</a>
                 <div class="flex items-center gap-1.5 flex-wrap">
-                    <a href="{{ cv.personal.linkedin.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
+                    <a href="{{ cv.personal.linkedin.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-blue-600 hover:underline">
                         <i class="fab fa-linkedin" aria-hidden="true"></i> {{ cv.personal.linkedin.display_url }}
                     </a>
                     <span class="text-gray-300" aria-hidden="true">|</span>
-                    <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
+                    <a href="{{ cv.personal.github.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
                         <i class="fab fa-github" aria-hidden="true"></i> {{ cv.personal.github.display_url }}
                     </a>
                     <span class="text-gray-300" aria-hidden="true">|</span>
-                    <a href="{{ cv.personal.portfolio.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
+                    <a href="{{ cv.personal.portfolio.url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-blue-600 hover:underline">
                         <i class="fas fa-globe" aria-hidden="true"></i> {{ cv.personal.portfolio.display_url }}
                     </a>
                 </div>
@@ -133,9 +160,9 @@
                     {% for proj in cv.projects %}
                     <div class="mb-4 item-no-break">
                         <div class="flex items-baseline gap-2 mb-1">
-                            <h4 class="font-bold text-gray-900 text-sm">{{ proj.emoji }} {{ t(proj.title) }}</h4>
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">{{ proj.emoji }}</span> {{ t(proj.title) }}</h4>
                             <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
-                            <a href="{{ proj.url }}" target="_blank" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>
+                            <a href="{{ proj.url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>
                         </div>
                         <p class="text-xs text-gray-700 leading-snug mb-1">{{ t(proj.description) }}</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> {{ proj.stack }}</p>
@@ -174,7 +201,7 @@
                     <div class="space-y-2 text-sm">
                         {% for lng in cv.languages %}
                         <div class="item-no-break flex items-center gap-2">
-                            <span class="text-lg">{{ lng.flag }}</span>
+                            <span class="text-lg" aria-hidden="true">{{ lng.flag }}</span>
                             <div>
                                 <p class="font-bold text-gray-900">{{ t(lng.name) }}</p>
                                 <p class="text-xs text-gray-600">{{ t(lng.level) }}</p>
@@ -307,18 +334,18 @@
                         </div>
                         <label for="apiKeyInput" class="sr-only">Gemini API Key</label>
                         <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
+                        <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
                     </div>
                     <div class="flex gap-3 pt-2">
                         <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
                         <button id="saveApiKeyBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Guardar{% else %}Save{% endif %}</button>
                     </div>
                 </div>
-                <div id="aiLoading" class="hidden flex-col items-center py-12">
+                <div id="aiLoading" class="hidden flex-col items-center py-12" aria-live="polite">
                     <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mb-4"></div>
                     <p class="text-gray-600 font-medium animate-pulse">{% if lang == 'es' %}Consultando a Gemini...{% else %}Consulting Gemini...{% endif %}</p>
                 </div>
-                <div id="aiResult" class="hidden space-y-4">
+                <div id="aiResult" class="hidden space-y-4" aria-live="polite">
                     <div class="prose prose-sm max-w-none text-gray-700 bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-inner" id="aiResponseText"></div>
                     <div id="interviewInputArea" class="hidden mt-4 pt-4 border-t border-gray-200">
                         <label class="block text-sm font-medium text-gray-700 mb-2">{% if lang == 'es' %}Respuesta:{% else %}Your Answer:{% endif %}</label>

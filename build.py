@@ -40,8 +40,14 @@ def load_json(path: Path) -> dict:
         return json.load(f)
 
 
+_jinja_env: Environment | None = None
+
+
 def get_jinja_env() -> Environment:
-    return Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+    global _jinja_env
+    if _jinja_env is None:
+        _jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+    return _jinja_env
 
 
 def get_outputs(profile_name: str) -> dict:
@@ -75,6 +81,14 @@ def render_cover_letter(cv_data: dict, letter_data: dict, lang: str) -> str:
     return template.render(cv=cv_data, letter=letter_data, lang=lang)
 
 
+def _handle_pdf_error(e: Exception) -> None:
+    """Print PDF generation error and exit."""
+    print(f"\n  Error generating PDFs: {e}")
+    print("  Make sure Playwright is installed:")
+    print("    uv run playwright install chromium")
+    sys.exit(1)
+
+
 def generate_pdfs(jobs: list, margin: dict):
     """Generate PDFs in a single browser session.
 
@@ -90,7 +104,7 @@ def generate_pdfs(jobs: list, margin: dict):
             pdf_path = ROOT / files["pdf"]
             page = browser.new_page()
             page.goto(f"file://{html_path}", wait_until="networkidle")
-            page.evaluate("() => document.fonts.ready")
+            page.evaluate("async () => { await document.fonts.ready; }")
             page.pdf(
                 path=str(pdf_path),
                 format="A4",
@@ -148,10 +162,7 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
                     shutil.copy2(pdf_src, pdf_dst)
                     print(f"  Copy: docs/{files['pdf']}")
         except Exception as e:
-            print(f"\n  Error generating PDFs: {e}")
-            print("  Make sure Playwright is installed:")
-            print("    uv run playwright install chromium")
-            sys.exit(1)
+            _handle_pdf_error(e)
 
 
 def build_cover_letter(cv_data: dict, html_only: bool, langs: list = None):
@@ -181,10 +192,7 @@ def build_cover_letter(cv_data: dict, html_only: bool, langs: list = None):
         try:
             generate_pdfs(letter_jobs, letter_margin)
         except Exception as e:
-            print(f"\n  Error generating PDF: {e}")
-            print("  Make sure Playwright is installed:")
-            print("    uv run playwright install chromium")
-            sys.exit(1)
+            _handle_pdf_error(e)
 
 
 def build_portfolio(cv_data: dict):
@@ -212,6 +220,23 @@ def build_portfolio(cv_data: dict):
         print("  Note: profile.jpg not found in static/ or docs/")
     # Create .nojekyll to prevent GitHub Pages Jekyll processing
     (DOCS_DIR / ".nojekyll").touch()
+    # Generate sitemap.xml and robots.txt for SEO
+    base_url = cv_data.get("personal", {}).get("portfolio", {}).get("url", "")
+    if base_url:
+        pages = ["index.html", "projects.html", "contact.html",
+                 "CV_español.html", "CV_english.html"]
+        sitemap_entries = "\n".join(
+            f"  <url><loc>{base_url}{page}</loc></url>" for page in pages
+        )
+        sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{sitemap_entries}
+</urlset>"""
+        (DOCS_DIR / "sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+        print("  Generated: docs/sitemap.xml")
+        robots_txt = f"User-agent: *\nAllow: /\nSitemap: {base_url}sitemap.xml\n"
+        (DOCS_DIR / "robots.txt").write_text(robots_txt, encoding="utf-8")
+        print("  Generated: docs/robots.txt")
     print("Portfolio generated in docs/")
 
 

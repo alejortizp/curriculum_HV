@@ -13,6 +13,8 @@
     </script>
     {% endif %}
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="theme-color" content="#101622"/>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>"/>
     <title>{% block title %}AI Engineer Portfolio{% endblock %}</title>
     <meta name="description" content="{{ cv.personal.name }} — {{ cv.personal.title }}. Portfolio profesional con proyectos de GenAI, RAG, LLMs y agentes inteligentes."/>
     <meta name="author" content="{{ cv.personal.name }}"/>
@@ -20,6 +22,9 @@
     <meta property="og:title" content="{% block og_title %}{{ cv.personal.name }} | AI Engineer Portfolio{% endblock %}"/>
     <meta property="og:description" content="{% block og_description %}{{ cv.personal.title }}. Especializado en GenAI/RAG, LLMs y agentes inteligentes con LangChain.{% endblock %}"/>
     <meta property="og:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
+    <meta property="og:image:width" content="450"/>
+    <meta property="og:image:height" content="450"/>
+    <meta property="og:image:alt" content="Foto de perfil de {{ cv.personal.name }}"/>
     <meta property="og:url" content="{{ cv.personal.portfolio.url }}{% block og_url %}{% endblock %}"/>
     <meta property="og:type" content="website"/>
     <meta property="og:locale" content="es_CO"/>
@@ -31,6 +36,30 @@
     <meta name="twitter:image" content="{{ cv.personal.portfolio.url }}profile.jpg"/>
     <!-- Canonical -->
     <link rel="canonical" href="{{ cv.personal.portfolio.url }}{% block canonical_url %}{% endblock %}"/>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "name": "{{ cv.personal.name }} | AI Engineer",
+                "url": "{{ cv.personal.portfolio.url }}"
+            },
+            {
+                "@type": "Person",
+                "name": "{{ cv.personal.name }}",
+                "jobTitle": "{{ cv.personal.title }}",
+                "email": "{{ cv.personal.email }}",
+                "image": "{{ cv.personal.portfolio.url }}profile.jpg",
+                "url": "{{ cv.personal.portfolio.url }}",
+                "sameAs": [
+                    "{{ cv.personal.linkedin.url }}",
+                    "{{ cv.personal.github.url }}"
+                ]
+            }
+        ]
+    }
+    </script>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -43,14 +72,16 @@
                 extend: {
                     colors: {
                         "primary": "#135bec",
+                        "primary-hover": "#1048c0",
                         "background-light": "#f6f6f8",
                         "background-dark": "#101622",
                         "surface-dark": "#1c1f27",
+                        "surface-secondary": "#282e39",
+                        "surface-secondary-hover": "#343b49",
                         "border-dark": "#3b4354",
                         "text-secondary": "#b0b8ca",
                     },
                     fontFamily: {
-                        "display": ["Space Grotesk", "sans-serif"],
                         "sans": ["Space Grotesk", "sans-serif"],
                     },
                     borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
@@ -59,7 +90,6 @@
         }
     </script>
     <style>
-        body { font-family: 'Space Grotesk', sans-serif; }
         .glass-nav { background: rgba(16, 22, 34, 0.8); backdrop-filter: blur(12px); }
         .skill-card:hover { border-color: #135bec; box-shadow: 0 0 15px rgba(19, 91, 236, 0.2); }
     </style>
@@ -87,7 +117,7 @@
             <a class="text-sm font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
         </nav>
         <div class="flex items-center gap-4">
-            <a href="contact.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all">
+            <a href="contact.html" class="hidden md:inline-flex bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-primary-hover transition-all">
                 Contratar
             </a>
             <!-- Mobile menu button -->
@@ -106,7 +136,7 @@
         <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'projects' %}text-primary{% endif %}" href="projects.html">Proyectos</a>
         <a class="text-lg font-medium hover:text-primary transition-colors {% if active_page == 'contact' %}text-primary{% endif %}" href="contact.html">Contacto</a>
         <hr class="border-slate-800"/>
-        <a href="contact.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-blue-700 transition-all">Contratar</a>
+        <a href="contact.html" class="bg-primary text-white px-6 py-3 rounded-lg text-sm font-bold text-center hover:bg-primary-hover transition-all">Contratar</a>
     </nav>
 </div>
 

@@ -166,6 +166,10 @@ function showResult(text, isInterview = false) {
     document.getElementById('aiResult').classList.remove('hidden');
     document.getElementById('aiResponseText').innerHTML = marked.parse(text);
     if (isInterview) document.getElementById('interviewInputArea').classList.remove('hidden');
+    // Focus result area for screen readers
+    const resultEl = document.getElementById('aiResponseText');
+    resultEl.setAttribute('tabindex', '-1');
+    resultEl.focus();
 }
 
 // -- Gemini API --

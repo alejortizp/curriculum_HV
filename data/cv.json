@@ -27,7 +27,7 @@
   "profiles": {
     "default": {
       "es": "AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
-      "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
+      "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing <strong>machine learning</strong> solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
     },
     "ai-engineer": {
       "es": "AI Engineer con experiencia productizando soluciones de <strong>GenAI/RAG</strong> en <strong>Azure</strong>. Especializado en diseño e implementación de <strong>agentes inteligentes</strong> con <strong>LangChain</strong> y <strong>Azure OpenAI</strong> para automatización empresarial. Track record procesando <strong>10k+ consultas/mes</strong> con agentes conversacionales y pipelines de matching semántico con <strong>95%</strong> de precisión. Combino Maestría en Ingeniería de Software (en curso) con base en Estadística para diseñar sistemas de IA escalables y listos para producción.",
@@ -35,7 +35,7 @@
     },
     "ml-engineer": {
       "es": "Machine Learning Engineer con experiencia end-to-end desde experimentación hasta producción. Especializado en modelos predictivos (<strong>churn, propensión, NBO</strong>) con impacto cuantificable: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversión, <strong>+60%</strong> contactabilidad. Dominio de <strong>Scikit-learn, LightGBM, PyTorch</strong> y <strong>Databricks + MLflow</strong> para MLOps. Combino base matemática sólida (Estadística) con ingeniería de software moderna para crear pipelines de ML confiables y escalables.",
-      "en": "Machine Learning Engineer with end-to-end experience from experimentation to production. Specialized in predictive models (<strong>churn, propensity, NBO</strong>) with quantifiable impact: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversion, <strong>+60%</strong> contactability. Proficient in <strong>Scikit-learn, LightGBM, PyTorch</strong> and <strong>Databricks + MLflow</strong> for MLOps. Combines strong mathematical foundation (Statistics) with modern software engineering to build reliable and scalable ML pipelines."
+      "en": "Machine Learning Engineer with end-to-end experience from experimentation to production. Specialized in predictive models (<strong>churn, propensity, NBO</strong>) with quantifiable impact: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversion, <strong>+60%</strong> contactability. Proficient in <strong>Scikit-learn, LightGBM, PyTorch</strong> and <strong>Databricks + MLflow</strong> for MLOps. Extensive <strong>deep learning</strong> experience with Transformers and NLP. Combines strong mathematical foundation (Statistics) with modern software engineering to build reliable and scalable ML pipelines."
     },
     "mlops": {
       "es": "MLOps Engineer especializado en llevar modelos de ML desde experimentación hasta <strong>producción confiable</strong>. Implementé pipelines <strong>CI/CD</strong> con <strong>Databricks + MLflow</strong> que redujeron deployment de 2 semanas a <strong>2 días</strong>. Diseñé sistemas de monitoreo de <strong>data/model drift</strong> con alertas automáticas de reentrenamiento. Dominio de <strong>Docker, Azure AI, FastAPI</strong> y <strong>GitHub Actions</strong> para infraestructura de ML escalable y reproducible.",
@@ -89,7 +89,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Consultor Machine Learning", "en": "Machine Learning Consultant"},
       "company": "Grupo CINTE",
-      "date": {"es": "Ago – Sep 2023 (Proyecto puntual)", "en": "Aug – Sep 2023 (Short-term project)"},
+      "date": {"es": "Ago – Sep 2023", "en": "Aug – Sep 2023"},
       "items": {
         "es": [
           "<strong>Observabilidad ML:</strong> Diseñé metodología integral de monitoreo para detección de <em>data/model drift</em> con alertas automáticas de reentrenamiento, adoptada como estándar del equipo de ciencia de datos.",
@@ -240,17 +240,17 @@
       "category": "ML/DL Frameworks",
       "items": [
         [{"name": "PyTorch", "years": 2}, {"name": "TensorFlow", "years": 3}],
-        [{"name": "Scikit-learn, XGBoost, LightGBM", "years": 4}],
+        [{"name": "Scikit-learn", "years": 4}, {"name": "XGBoost", "years": 4}, {"name": "LightGBM", "years": 4}],
         [{"name": "Hugging Face Transformers", "years": 2}]
       ]
     },
     {
       "category": "MLOps & Engineering",
       "items": [
-        [{"name": "Python, SQL, PySpark", "years": 7}],
-        [{"name": "Docker, CI/CD", "years": 2}],
-        [{"name": "FastAPI, Streamlit", "years": 3}],
-        [{"name": "Git, GitHub Actions", "years": 4}]
+        [{"name": "Python", "years": 7}, {"name": "SQL", "years": 7}, {"name": "PySpark", "years": 3}],
+        [{"name": "Docker", "years": 2}, {"name": "CI/CD", "years": 2}],
+        [{"name": "FastAPI", "years": 3}, {"name": "Streamlit", "years": 3}],
+        [{"name": "Git", "years": 4}, {"name": "GitHub Actions", "years": 2}]
       ]
     }
   ],
@@ -277,7 +277,7 @@
     {
       "title": {"es": "AI-102: Microsoft Certified Azure AI Engineer Associate", "en": "AI-102: Microsoft Certified Azure AI Engineer Associate"},
       "detail": null,
-      "institution": {"es": "Udemy", "en": "Udemy"},
+      "institution": "Microsoft",
       "date": {"es": "Feb 2026", "en": "Feb 2026"}
     },
     {

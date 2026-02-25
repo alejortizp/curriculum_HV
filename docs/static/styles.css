@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -16,6 +16,16 @@ body {
     position: relative;
 }
 
+/* CV mobile responsive */
+@media screen and (max-width: 850px) {
+    .page {
+        width: 100%;
+        min-height: unset;
+        padding: 1.5rem 1rem;
+        box-shadow: none;
+    }
+}
+
 .item-no-break {
     page-break-inside: avoid;
     break-inside: avoid;
@@ -28,6 +38,22 @@ body {
 .prose ul { list-style-type: disc; padding-left: 1.5em; }
 .prose strong { color: #2563eb; }
 .prose p { margin-bottom: 0.5em; }
+
+/* Focus-visible for CV modal and floating buttons */
+#aiModal button:focus-visible,
+.fixed.bottom-8 button:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
 
 @page {
     size: A4;
@@ -46,9 +72,12 @@ body {
         border: initial;
         width: 100%;
         box-shadow: initial;
-        padding-top: 2.5cm;
-        padding-bottom: 2.5cm;
+        padding: 2.5cm 2cm;
         page-break-after: always;
+    }
+
+    .page:last-of-type {
+        page-break-after: auto;
     }
 
     .no-print {
@@ -63,6 +92,12 @@ body {
     h3, h4 {
         page-break-after: avoid;
         break-after: avoid;
+    }
+
+    /* Prevent section heading orphans */
+    section > h3 + * {
+        break-before: avoid;
+        page-break-before: avoid;
     }
 
     .item-no-break {
