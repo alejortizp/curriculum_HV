@@ -11,3 +11,9 @@ wheels/
 
 # Environment variables
 .env
+
+# Agents Skills
+/.agent
+/.agents
+/.claude
+/.agents/skills/i18n-localization/SKILL.md

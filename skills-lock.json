@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "GithubPages": {
+      "source": "julianobarbosa/claude-code-skills",
+      "sourceType": "github",
+      "computedHash": "df7b0e7d0d496ded39a38bd4d0184192857ee29072914fd3ef3015e89201533b"
+    },
     "accessibility-a11y": {
       "source": "mindrally/skills",
       "sourceType": "github",
@@ -12,14 +17,34 @@
       "computedHash": "2ebc2549a3044ef2a4c24260cde7f2a2c0870e164cef48be178a17075f67f7c2"
     },
     "i18n-localization": {
-      "source": "davila7/claude-code-templates",
+      "source": "sickn33/antigravity-awesome-skills",
       "sourceType": "github",
-      "computedHash": "66da9c3f527c18a87003543882c76ebe5bd179e692fc9bc859752bf6e1a2f1f6"
+      "computedHash": "9c7ca4f693646e861b53bd0b1fc217e3eaaae0bb2e47aed921afded591c60bce"
+    },
+    "meta-tags-optimizer": {
+      "source": "aaron-he-zhu/seo-geo-claude-skills",
+      "sourceType": "github",
+      "computedHash": "f71d54bab9c22e9961ef3092a62f73bd5d13481ae9ecd200efc39944498e4b00"
+    },
+    "og-image-design": {
+      "source": "inference-sh-8/skills",
+      "sourceType": "github",
+      "computedHash": "539ff549cd9a33e90144effbd37d2691dd0ba44018cf6df40a17ade33c9857cd"
     },
     "playwright-cli": {
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "computedHash": "7075ab30f588019197a2f1518bb4c9d33d69d33352af079b5f9c60303ad3886e"
+    },
+    "playwright-visual-testing": {
+      "source": "manutej/luxor-claude-marketplace",
+      "sourceType": "github",
+      "computedHash": "c942ebb478c672f41d4dbf673d0a6b04584ba8bd7bdf2c5b1f42e0d2f59bc249"
+    },
+    "python-best-practices": {
+      "source": "0xbigboss/claude-code",
+      "sourceType": "github",
+      "computedHash": "908129d87bc8e2e32492154ef38c319a846d8e6ad12e1ed2476d25a67b74677b"
     },
     "responsive-design": {
       "source": "wshobson/agents",
