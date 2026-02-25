@@ -114,6 +114,13 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool):
         print("Generating CV PDF files...")
         try:
             generate_cv_pdfs()
+            # Copy PDFs to docs/ for GitHub Pages download button
+            for lang, files in OUTPUTS.items():
+                pdf_src = ROOT / files["pdf"]
+                pdf_dst = DOCS_DIR / files["pdf"]
+                if pdf_src.exists():
+                    shutil.copy2(pdf_src, pdf_dst)
+                    print(f"  Copy: docs/{files['pdf']}")
         except Exception as e:
             print(f"\n  Error generating PDFs: {e}")
             print("  Make sure Playwright is installed:")

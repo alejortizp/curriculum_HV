@@ -49,31 +49,14 @@ function requireApiKey(callback) {
     }
 }
 
-// -- PDF Download --
+// -- PDF Download (serves pre-generated Playwright PDF for ATS compatibility) --
 function downloadPDF() {
-    const element = document.getElementById('cvContent');
-    const btn = document.getElementById('btnDownload');
-    const originalContent = btn.innerHTML;
-
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${CV_CONFIG.i18n.generating}`;
-    btn.disabled = true;
-
-    const opt = {
-        margin: 0,
-        filename: CV_CONFIG.pdfFilename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save().then(() => {
-        btn.innerHTML = originalContent;
-        btn.disabled = false;
-    }).catch(() => {
-        alert(CV_CONFIG.i18n.pdfError);
-        btn.innerHTML = originalContent;
-        btn.disabled = false;
-    });
+    const link = document.createElement('a');
+    link.href = CV_CONFIG.pdfUrl;
+    link.download = CV_CONFIG.pdfFilename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // -- Modal Helpers --

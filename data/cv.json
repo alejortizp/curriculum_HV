@@ -4,18 +4,21 @@
     "title": "AI Engineer | Machine Learning Engineer",
     "phone": "+57 319 666 3193",
     "email": "alejortizp@gmail.com",
-    "location": {"es": "Colombia", "en": "Bogotá, Colombia"},
+    "location": {"es": "Bogotá, Colombia", "en": "Bogotá, Colombia"},
     "linkedin": {
       "url": "https://www.linkedin.com/in/alejandro-ortiz-perdomo-a35348116/",
-      "label": "LinkedIn"
+      "label": "LinkedIn",
+      "display_url": "linkedin.com/in/alejandro-ortiz-perdomo"
     },
     "github": {
       "url": "https://github.com/alejortizp",
-      "label": "alejortizp"
+      "label": "alejortizp",
+      "display_url": "github.com/alejortizp"
     },
     "portfolio": {
       "url": "https://alejortizp.github.io/curriculum_HV/",
-      "label": "Portfolio"
+      "label": "Portfolio",
+      "display_url": "alejortizp.github.io/curriculum_HV"
     },
     "formspree_id": "xzdaygrk",
     "google_analytics_id": ""
@@ -46,7 +49,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Consultor Desarrollador IA", "en": "AI Developer Consultant"},
       "company": "Periferia IT",
-      "date": {"es": "Jun 2025 - Actualidad", "en": "Jun 2025 - Present"},
+      "date": {"es": "Jun 2025 – Actualidad", "en": "Jun 2025 – Present"},
       "items": {
         "es": [
           "<strong>Sistema de Matching CV-Oferta:</strong> Desarrollé pipeline completo con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con 95% de precisión en extracción. Búsqueda semántica con embeddings reduce tiempo de screening en <strong>70%</strong>.",
@@ -191,13 +194,13 @@
       {
         "title": {"es": "Maestría en Ingeniería de Software", "en": "Master in Software Engineering"},
         "institution": "Universidad de los Andes",
-        "date": {"es": "2025 - En proceso", "en": "2025 - In Progress"},
+        "date": {"es": "2025 – En proceso", "en": "2025 – In Progress"},
         "current": true
       },
       {
         "title": {"es": "Estadístico", "en": "B.S. in Statistics"},
         "institution": "Universidad del Valle",
-        "date": "2011 - 2016",
+        "date": "2011 – 2016",
         "current": false
       }
     ],

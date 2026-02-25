@@ -11,106 +11,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="static/styles.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "{{ cv.personal.name }}",
+        "jobTitle": "{{ cv.personal.title }}",
+        "email": "{{ cv.personal.email }}",
+        "telephone": "{{ cv.personal.phone }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bogotá",
+            "addressCountry": "Colombia"
+        },
+        "url": "{{ cv.personal.portfolio.url }}",
+        "sameAs": [
+            "{{ cv.personal.linkedin.url }}",
+            "{{ cv.personal.github.url }}"
+        ]
+    }
+    </script>
 </head>
 <body class="py-10 print:py-0">
-
-    <!-- Floating Buttons -->
-    <div class="fixed bottom-8 right-8 no-print z-50 flex flex-col gap-3 items-end">
-        <button onclick="toggleAIModal()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105 border border-gray-700 group">
-            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i>
-            <span>AI Career Suite{% if lang == 'en' %} (EN){% endif %}</span>
-        </button>
-        <button id="btnDownload" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105">
-            <i class="fas fa-file-pdf"></i> {% if lang == 'es' %}Guardar PDF{% else %}Save PDF{% endif %}
-        </button>
-    </div>
-
-    <!-- AI Modal -->
-    <div id="aiModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center z-50 no-print backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden m-4 flex flex-col max-h-[90vh]">
-            <div class="bg-gray-50 border-b p-4 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i class="fas fa-robot"></i></div>
-                    <h3 class="font-bold text-gray-800">AI Career Assistant{% if lang == 'en' %} (English Mode){% endif %}</h3>
-                </div>
-                <button onclick="toggleAIModal()" class="hover:bg-gray-200 p-2 rounded-full transition-colors"><i class="fas fa-times text-gray-500"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto flex-grow bg-white" id="aiContentArea">
-                <div id="aiMenu" class="text-center space-y-6">
-                    <div id="apiKeyStatus" class="text-xs"></div>
-                    <p class="text-gray-600">{% if lang == 'es' %}Selecciona una herramienta:{% else %}Prepare for the international market:{% endif %}</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button onclick="generateElevatorPitch()" class="border border-gray-200 p-5 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="bg-purple-100 p-2 rounded-lg group-hover:bg-purple-200"><i class="fas fa-bullhorn text-purple-600"></i></div>
-                                <h4 class="font-bold text-gray-800">Elevator Pitch{% if lang == 'en' %} (EN){% endif %}</h4>
-                            </div>
-                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Discurso de 30s.{% else %}30s professional intro in English.{% endif %}</p>
-                        </button>
-                        <button onclick="startMockInterview()" class="border border-gray-200 p-5 rounded-xl hover:border-green-500 hover:bg-green-50 transition text-left group">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="bg-green-100 p-2 rounded-lg group-hover:bg-green-200"><i class="fas fa-code-branch text-green-600"></i></div>
-                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Entrevista Técnica{% else %}Tech Interview (EN){% endif %}</h4>
-                            </div>
-                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Preguntas Azure/RAG.{% else %}Practice English interview questions.{% endif %}</p>
-                        </button>
-                        <button onclick="showInputView('coverLetter')" class="border border-gray-200 p-5 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition text-left group">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="bg-blue-100 p-2 rounded-lg group-hover:bg-blue-200"><i class="fas fa-file-pen text-blue-600"></i></div>
-                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Carta Presentación{% else %}Cover Letter (EN){% endif %}</h4>
-                            </div>
-                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Personalizada por empresa.{% else %}Generate a tailored cover letter.{% endif %}</p>
-                        </button>
-                        <button onclick="showInputView('gapAnalysis')" class="border border-gray-200 p-5 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition text-left group">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="bg-orange-100 p-2 rounded-lg group-hover:bg-orange-200"><i class="fas fa-chart-pie text-orange-600"></i></div>
-                                <h4 class="font-bold text-gray-800">Gap Analysis</h4>
-                            </div>
-                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Comparativa de rol.{% else %}Compare your profile to a target role.{% endif %}</p>
-                        </button>
-                    </div>
-                </div>
-                <div id="aiInputView" class="hidden flex-col space-y-4">
-                    <h4 id="inputTitle" class="font-bold text-lg text-gray-800 text-center mb-2"></h4>
-                    <div id="inputForm" class="space-y-3"></div>
-                    <div class="flex gap-3 pt-2">
-                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
-                        <button id="inputActionBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Generar{% else %}Generate{% endif %}</button>
-                    </div>
-                </div>
-                <div id="aiKeySetup" class="hidden space-y-4">
-                    <div class="text-center">
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-                            <i class="fas fa-key text-amber-500 text-2xl mb-2"></i>
-                            <h4 class="font-bold text-gray-800 mb-1">{% if lang == 'es' %}Configurar API Key{% else %}Configure API Key{% endif %}</h4>
-                            <p class="text-sm text-gray-600">{% if lang == 'es' %}Se requiere una API key de Gemini. Se guardará en tu navegador (localStorage).{% else %}A Gemini API key is required. It will be saved in your browser (localStorage).{% endif %}</p>
-                        </div>
-                        <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
-                    </div>
-                    <div class="flex gap-3 pt-2">
-                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
-                        <button id="saveApiKeyBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Guardar{% else %}Save{% endif %}</button>
-                    </div>
-                </div>
-                <div id="aiLoading" class="hidden flex-col items-center py-12">
-                    <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mb-4"></div>
-                    <p class="text-gray-600 font-medium animate-pulse">{% if lang == 'es' %}Consultando a Gemini...{% else %}Consulting Gemini...{% endif %}</p>
-                </div>
-                <div id="aiResult" class="hidden space-y-4">
-                    <div class="prose prose-sm max-w-none text-gray-700 bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-inner" id="aiResponseText"></div>
-                    <div id="interviewInputArea" class="hidden mt-4 pt-4 border-t border-gray-200">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">{% if lang == 'es' %}Respuesta:{% else %}Your Answer:{% endif %}</label>
-                        <textarea id="userAnswer" rows="4" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-                        <button onclick="submitAnswer()" class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Enviar{% else %}Submit Answer{% endif %}</button>
-                    </div>
-                    <button onclick="resetAI()" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2 flex items-center gap-2"><i class="fas fa-arrow-left"></i> {% if lang == 'es' %}Volver{% else %}Back to Menu{% endif %}</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- CV Content -->
     <article id="cvContent" class="page text-gray-800" role="main" aria-label="Curriculum Vitae {% if lang == 'es' %}de{% else %}of{% endif %} {{ cv.personal.name }}">
@@ -121,20 +44,20 @@
             <h2 class="text-xl text-blue-700 font-semibold mt-1">{{ cv.personal.title }}</h2>
 
             <div class="flex flex-wrap gap-y-2 gap-x-6 mt-4 text-sm text-gray-600">
-                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-400"></i>{% if lang == 'es' %}{{ cv.personal.location.es }}{% else %} {{ cv.personal.location.en }}{% endif %}</div>
-                <div class="flex items-center gap-2"><i class="fas fa-phone text-gray-400"></i> {{ cv.personal.phone }}</div>
-                <div class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400"></i> {{ cv.personal.email }}</div>
-                <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1.5"><i class="fas fa-map-marker-alt text-gray-400" aria-hidden="true"></i> {% if lang == 'es' %}{{ cv.personal.location.es }}{% else %}{{ cv.personal.location.en }}{% endif %}</span>
+                <span class="flex items-center gap-1.5"><i class="fas fa-phone text-gray-400" aria-hidden="true"></i> {{ cv.personal.phone }}</span>
+                <a href="mailto:{{ cv.personal.email }}" class="flex items-center gap-1.5 hover:underline"><i class="fas fa-envelope text-gray-400" aria-hidden="true"></i> {{ cv.personal.email }}</a>
+                <div class="flex items-center gap-1.5 flex-wrap">
                     <a href="{{ cv.personal.linkedin.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
-                        <i class="fab fa-linkedin"></i> {{ cv.personal.linkedin.label }}
+                        <i class="fab fa-linkedin" aria-hidden="true"></i> {{ cv.personal.linkedin.display_url }}
                     </a>
                     <span class="text-gray-300">|</span>
                     <a href="{{ cv.personal.github.url }}" target="_blank" class="flex items-center gap-1 text-gray-800 hover:text-black hover:underline">
-                        <i class="fab fa-github"></i> {{ cv.personal.github.label }}
+                        <i class="fab fa-github" aria-hidden="true"></i> {{ cv.personal.github.display_url }}
                     </a>
                     <span class="text-gray-300">|</span>
                     <a href="{{ cv.personal.portfolio.url }}" target="_blank" class="flex items-center gap-1 text-blue-600 hover:underline">
-                        <i class="fas fa-globe"></i> {{ cv.personal.portfolio.label }}
+                        <i class="fas fa-globe" aria-hidden="true"></i> {{ cv.personal.portfolio.display_url }}
                     </a>
                 </div>
             </div>
@@ -184,6 +107,7 @@
                     <div class="mb-4 item-no-break">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm">{{ proj.emoji }} {{ t(proj.title) }}</h4>
+                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
                             <a href="{{ proj.url }}" target="_blank" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>
                         </div>
                         <p class="text-xs text-gray-700 leading-snug mb-1">{{ t(proj.description) }}</p>
@@ -282,12 +206,109 @@
         </div>
     </article>
 
+    <!-- Floating Buttons (placed after article so ATS parsers read CV content first) -->
+    <div class="fixed bottom-8 right-8 no-print z-50 flex flex-col gap-3 items-end">
+        <button onclick="toggleAIModal()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105 border border-gray-700 group">
+            <i class="fas fa-sparkles text-yellow-400 group-hover:animate-spin"></i>
+            <span>AI Career Suite{% if lang == 'en' %} (EN){% endif %}</span>
+        </button>
+        <button id="btnDownload" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all transform hover:scale-105">
+            <i class="fas fa-file-pdf"></i> {% if lang == 'es' %}Guardar PDF{% else %}Save PDF{% endif %}
+        </button>
+    </div>
+
+    <!-- AI Modal (placed after article so ATS parsers read CV content first) -->
+    <div id="aiModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center z-50 no-print backdrop-blur-sm transition-all duration-300">
+        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden m-4 flex flex-col max-h-[90vh]">
+            <div class="bg-gray-50 border-b p-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i class="fas fa-robot"></i></div>
+                    <h3 class="font-bold text-gray-800">AI Career Assistant{% if lang == 'en' %} (English Mode){% endif %}</h3>
+                </div>
+                <button onclick="toggleAIModal()" class="hover:bg-gray-200 p-2 rounded-full transition-colors"><i class="fas fa-times text-gray-500"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow bg-white" id="aiContentArea">
+                <div id="aiMenu" class="text-center space-y-6">
+                    <div id="apiKeyStatus" class="text-xs"></div>
+                    <p class="text-gray-600">{% if lang == 'es' %}Selecciona una herramienta:{% else %}Prepare for the international market:{% endif %}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="generateElevatorPitch()" class="border border-gray-200 p-5 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-purple-100 p-2 rounded-lg group-hover:bg-purple-200"><i class="fas fa-bullhorn text-purple-600"></i></div>
+                                <h4 class="font-bold text-gray-800">Elevator Pitch{% if lang == 'en' %} (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Discurso de 30s.{% else %}30s professional intro in English.{% endif %}</p>
+                        </button>
+                        <button onclick="startMockInterview()" class="border border-gray-200 p-5 rounded-xl hover:border-green-500 hover:bg-green-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-green-100 p-2 rounded-lg group-hover:bg-green-200"><i class="fas fa-code-branch text-green-600"></i></div>
+                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Entrevista Técnica{% else %}Tech Interview (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Preguntas Azure/RAG.{% else %}Practice English interview questions.{% endif %}</p>
+                        </button>
+                        <button onclick="showInputView('coverLetter')" class="border border-gray-200 p-5 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-blue-100 p-2 rounded-lg group-hover:bg-blue-200"><i class="fas fa-file-pen text-blue-600"></i></div>
+                                <h4 class="font-bold text-gray-800">{% if lang == 'es' %}Carta Presentación{% else %}Cover Letter (EN){% endif %}</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Personalizada por empresa.{% else %}Generate a tailored cover letter.{% endif %}</p>
+                        </button>
+                        <button onclick="showInputView('gapAnalysis')" class="border border-gray-200 p-5 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition text-left group">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="bg-orange-100 p-2 rounded-lg group-hover:bg-orange-200"><i class="fas fa-chart-pie text-orange-600"></i></div>
+                                <h4 class="font-bold text-gray-800">Gap Analysis</h4>
+                            </div>
+                            <p class="text-xs text-gray-500">{% if lang == 'es' %}Comparativa de rol.{% else %}Compare your profile to a target role.{% endif %}</p>
+                        </button>
+                    </div>
+                </div>
+                <div id="aiInputView" class="hidden flex-col space-y-4">
+                    <h4 id="inputTitle" class="font-bold text-lg text-gray-800 text-center mb-2"></h4>
+                    <div id="inputForm" class="space-y-3"></div>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
+                        <button id="inputActionBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Generar{% else %}Generate{% endif %}</button>
+                    </div>
+                </div>
+                <div id="aiKeySetup" class="hidden space-y-4">
+                    <div class="text-center">
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                            <i class="fas fa-key text-amber-500 text-2xl mb-2"></i>
+                            <h4 class="font-bold text-gray-800 mb-1">{% if lang == 'es' %}Configurar API Key{% else %}Configure API Key{% endif %}</h4>
+                            <p class="text-sm text-gray-600">{% if lang == 'es' %}Se requiere una API key de Gemini. Se guardará en tu navegador (localStorage).{% else %}A Gemini API key is required. It will be saved in your browser (localStorage).{% endif %}</p>
+                        </div>
+                        <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full border border-gray-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        <p class="text-xs text-gray-400 mt-2">{% if lang == 'es' %}Obtén tu key en: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% else %}Get your key at: <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline">aistudio.google.com</a>{% endif %}</p>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="resetAI()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">{% if lang == 'es' %}Cancelar{% else %}Cancel{% endif %}</button>
+                        <button id="saveApiKeyBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Guardar{% else %}Save{% endif %}</button>
+                    </div>
+                </div>
+                <div id="aiLoading" class="hidden flex-col items-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mb-4"></div>
+                    <p class="text-gray-600 font-medium animate-pulse">{% if lang == 'es' %}Consultando a Gemini...{% else %}Consulting Gemini...{% endif %}</p>
+                </div>
+                <div id="aiResult" class="hidden space-y-4">
+                    <div class="prose prose-sm max-w-none text-gray-700 bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-inner" id="aiResponseText"></div>
+                    <div id="interviewInputArea" class="hidden mt-4 pt-4 border-t border-gray-200">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{% if lang == 'es' %}Respuesta:{% else %}Your Answer:{% endif %}</label>
+                        <textarea id="userAnswer" rows="4" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        <button onclick="submitAnswer()" class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">{% if lang == 'es' %}Enviar{% else %}Submit Answer{% endif %}</button>
+                    </div>
+                    <button onclick="resetAI()" class="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2 flex items-center gap-2"><i class="fas fa-arrow-left"></i> {% if lang == 'es' %}Volver{% else %}Back to Menu{% endif %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Language-specific config for AI Suite -->
     <script>
         const CV_CONFIG = {
             _buildTimeKey: Boolean("{{ api_key }}"),
             apiKey: "{{ api_key }}" || localStorage.getItem("gemini_api_key") || "",
             pdfFilename: "{% if lang == 'es' %}CV_Alejandro_Ortiz.pdf{% else %}CV_Alejandro_Ortiz_EN.pdf{% endif %}",
+            pdfUrl: "{% if lang == 'es' %}CV_español.pdf{% else %}CV_english.pdf{% endif %}",
             i18n: {
                 generating: "{% if lang == 'es' %}Generando...{% else %}Generating...{% endif %}",
                 pdfError: "{% if lang == 'es' %}Hubo un error. Usa Ctrl + P como alternativa.{% else %}Error generating PDF. Please use Ctrl + P as a backup.{% endif %}",
@@ -297,7 +318,7 @@
                 noKey: "{% if lang == 'es' %}API key no configurada{% else %}API key not configured{% endif %}",
                 configureKey: "{% if lang == 'es' %}Configurar{% else %}Configure{% endif %}",
                 clearKey: "{% if lang == 'es' %}Borrar{% else %}Clear{% endif %}",
-                interviewQuestionLabel: "{% if lang == 'es' %}Pregunta{% else %}\ud83e\udd16 Interview Question{% endif %}",
+                interviewQuestionLabel: "{% if lang == 'es' %}Pregunta{% else %}🤖 Interview Question{% endif %}",
                 coverLetter: {
                     title: "{% if lang == 'es' %}Detalles del Empleo{% else %}Job Details{% endif %}",
                     companyPlaceholder: "{% if lang == 'es' %}Empresa{% else %}Company Name{% endif %}",
