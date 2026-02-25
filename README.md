@@ -24,15 +24,19 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 │   ├── index.html               # Página principal del portfolio
 │   ├── projects.html            # Proyectos (desde cv.projects)
 │   ├── contact.html             # Contacto con formulario Formspree
-│   ├── CV_español.html          # CV español (generado directamente aquí)
-│   ├── CV_english.html          # CV inglés (generado directamente aquí)
+│   ├── CV_español.html          # CV español - perfil default
+│   ├── CV_english.html          # CV inglés - perfil default
+│   ├── CV_español_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
+│   ├── CV_english_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
+│   ├── *.pdf                    # PDFs copiados para descarga en GitHub Pages
 │   ├── static/                  # Copia de assets para los CVs
 │   ├── profile.jpg              # Foto de perfil (copiada desde static/)
 │   └── .nojekyll                # Evita procesamiento Jekyll
 ├── build.py                     # Script de generación HTML + PDF + portfolio
 ├── Makefile                     # Atajos de comandos
-├── CV_español.pdf               # PDF generado
-├── CV_english.pdf               # PDF generado
+├── CV_español.pdf               # PDF default generado
+├── CV_english.pdf               # PDF default generado
+├── CV_*_<profile>.pdf           # PDFs por perfil (ai-engineer, ml-engineer, mlops)
 ├── Carta_Presentacion.html      # Carta ES generada (no editar)
 ├── Carta_Presentacion.pdf       # PDF generado
 ├── Cover_Letter.html            # Carta EN generada (no editar)
@@ -62,16 +66,16 @@ make setup
 ### Comandos disponibles
 
 ```bash
-make              # Build todo: CVs (HTML + PDF) + portfolio en docs/
-make build        # Solo CVs (HTML + PDF, ambos idiomas)
-make html         # Solo generar HTMLs (sin PDFs)
-make es           # Solo español (HTML + PDF)
-make en           # Solo inglés (HTML + PDF)
+make              # Build todo: todos los perfiles (HTML + PDF) + portfolio
+make build        # Todos los perfiles × ambos idiomas (8 CVs)
+make html         # Solo generar HTMLs (sin PDFs), todos los perfiles
+make es           # Solo español (todos los perfiles)
+make en           # Solo inglés (todos los perfiles)
 make carta        # Carta de presentación (HTML + PDF, ambos idiomas)
 make carta-es     # Carta solo en español
 make carta-en     # Carta solo en inglés
 make portfolio    # Generar portfolio en docs/ (GitHub Pages)
-make clean        # Eliminar archivos generados
+make clean        # Eliminar todos los archivos generados (todos los perfiles)
 make open-es      # Generar HTML y abrir CV español en navegador
 make open-en      # Generar HTML y abrir CV inglés en navegador
 make open-carta   # Generar y abrir carta (ES) en navegador
@@ -82,13 +86,21 @@ make help         # Mostrar todos los comandos
 
 ### Perfiles customizables
 
-El CV soporta variantes del perfil profesional para adaptarse al rol al que aplicas:
+El CV soporta variantes del perfil profesional para adaptarse al rol al que aplicas. **Por defecto, `make` genera todos los perfiles** (4 perfiles × 2 idiomas = 8 CVs):
+
+| Perfil | Enfoque | Archivo generado (ejemplo ES) |
+|--------|---------|-------------------------------|
+| `default` | General AI/ML | `CV_español.html` |
+| `ai-engineer` | GenAI/RAG/Agentes | `CV_español_ai-engineer.html` |
+| `ml-engineer` | ML predictivo | `CV_español_ml-engineer.html` |
+| `mlops` | CI/CD/deployment | `CV_español_mlops.html` |
+
+Para generar solo un perfil específico, usar `PROFILE=`:
 
 ```bash
-make es                        # Perfil por defecto (general)
-make es PROFILE=ai-engineer    # Enfocado en GenAI/RAG/Agentes
-make en PROFILE=ml-engineer    # Enfocado en ML predictivo
-make build PROFILE=mlops       # Enfocado en CI/CD/deployment
+make build                     # Todos los perfiles (8 CVs)
+make es PROFILE=ai-engineer    # Solo AI Engineer en español (1 CV)
+make build PROFILE=mlops       # Solo MLOps, ambos idiomas (2 CVs)
 ```
 
 Las variantes se definen en `data/cv.json` → `profiles`. Para agregar una nueva, añadir una clave con su texto `{"es": "...", "en": "..."}`.
@@ -158,19 +170,19 @@ En el repositorio de GitHub:
 ## Tecnologías utilizadas
 
 - **Jinja2** para templating desde una fuente de datos única (`data/cv.json`)
-- **Playwright (Python)** para generación automática de PDFs
+- **Playwright (Python)** para generación automática de PDFs searchables (ATS-compatible)
 - **HTML5 + Tailwind CSS** (via CDN) para el diseño y maquetación
-- **Font Awesome 6** para iconografía
-- **html2pdf.js** como opción alternativa de descarga PDF desde el navegador
+- **Font Awesome 6** para iconografía (con `aria-hidden` para accesibilidad)
+- **JSON-LD** structured data (schema.org) para parseo por ATS
 - **Gemini API** para funcionalidades de IA integradas (Elevator Pitch, Entrevista Técnica, Carta de Presentación, Gap Analysis)
 - **Formspree** para formulario de contacto funcional (AJAX, sin backend)
 - **Google Analytics** integración opcional para monitoreo de visitas
 - **Material Symbols** para iconografía del portfolio
 - **Space Grotesk** como fuente del portfolio
 
-## Alternativa: PDF desde el navegador
+## Descarga de PDF
 
-Cada CV incluye un botón flotante "Guardar PDF" / "Save PDF" que usa la librería html2pdf.js para descargar directamente desde el navegador.
+Cada CV incluye un botón flotante "Guardar PDF" / "Save PDF" que descarga el PDF pre-generado por Playwright. Los PDFs son searchables (texto extraíble), optimizados para ATS y servicios OCR como Azure Document Intelligence.
 
 ## AI Career Suite
 

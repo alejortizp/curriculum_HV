@@ -11,31 +11,33 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `data/cv.json` — **Single source of truth** for all CV content (edit this to update the CV)
 - `data/cover_letter.json` — Cover letter content, bilingual (edit per company)
 - `data/cover_letter_template.json` — Blank cover letter template (copy to create new letters)
-- `templates/cv.html` — Jinja2 template for CVs (HTML structure + modal markup)
+- `templates/cv.html` — Jinja2 template for CVs (HTML structure, JSON-LD, modal after article)
 - `templates/cover_letter.html` — Jinja2 template for cover letter (bilingual, reuses CV header)
-- `static/styles.css` — Shared CSS (page layout, print styles, markdown prose)
-- `static/ai-suite.js` — Shared JS (PDF download, AI modal logic, Gemini API calls)
+- `static/styles.css` — Shared CSS (page layout, print styles, markdown prose, system font fallback)
+- `static/ai-suite.js` — Shared JS (PDF download via pre-generated file, AI modal logic, Gemini API calls)
 - `static/profile.jpg` — Profile photo (canonical source, copied to docs/ during build)
-- `build.py` — Build script that generates HTMLs + PDFs (CVs, cover letter, portfolio)
-- `docs/CV_español.html` / `docs/CV_english.html` — Generated CV files (in docs/, do not edit)
+- `build.py` — Build script that generates HTMLs + PDFs (CVs, cover letter, portfolio). Supports multi-profile builds
+- `docs/CV_español.html` / `docs/CV_english.html` — Generated CV files, default profile (in docs/, do not edit)
+- `docs/CV_español_<profile>.html` / `docs/CV_english_<profile>.html` — Profile variant CVs (ai-engineer, ml-engineer, mlops)
+- `docs/*.pdf` — PDF copies for GitHub Pages download button
 - `Carta_Presentacion.html` / `Cover_Letter.html` — Generated cover letters ES/EN (do not edit)
-- `docs/` — Generated portfolio + CVs for GitHub Pages (do not edit directly)
+- `docs/` — Generated portfolio + CVs + PDFs for GitHub Pages (do not edit directly)
 - `docs/static/` — Copy of styles.css + ai-suite.js (needed by CVs in docs/)
 
 ## Commands
 
 ```bash
-make              # Build everything: CVs (HTML + PDF) + portfolio in docs/
-make build        # Build CVs only (HTML + PDF, both languages)
-make html         # Build HTML only (skip PDF)
-make es           # Build Spanish CV only
-make en           # Build English CV only
+make              # Build everything: all CV profiles (HTML + PDF) + portfolio in docs/
+make build        # Build all profiles × both languages (8 CVs: 4 profiles × 2 langs)
+make html         # Build HTML only (skip PDF), all profiles
+make es           # Build Spanish CVs only (all profiles)
+make en           # Build English CVs only (all profiles)
 make carta        # Build cover letter (HTML + PDF, both languages)
 make carta-es     # Build cover letter - Spanish only
 make carta-en     # Build cover letter - English only
 make portfolio    # Build portfolio in docs/ (GitHub Pages)
 make setup        # First-time setup (uv sync + playwright)
-make clean        # Remove all generated files
+make clean        # Remove all generated files (all profiles)
 make open-es      # Build HTML and open Spanish CV in browser
 make open-en      # Build HTML and open English CV in browser
 make open-carta   # Build and open cover letter (ES) in browser
@@ -44,9 +46,11 @@ make open-portfolio # Build and open portfolio in browser
 make help         # Show all targets
 ```
 
-CV targets accept a `PROFILE` variable: `make es PROFILE=ai-engineer`. Available profiles are defined in `cv.json` → `profiles` (default, ai-engineer, ml-engineer, mlops).
+CV targets accept a `PROFILE` variable to build a single profile: `make es PROFILE=ai-engineer`. Without `PROFILE`, **all profiles are built** (default, ai-engineer, ml-engineer, mlops). Available profiles are defined in `cv.json` → `profiles`.
 
-`make` (default) runs `build` + `portfolio`, so updating `cv.json` and running `make` regenerates CVs, PDFs, and the portfolio in one step.
+Output naming: default profile uses `CV_español.html` / `CV_english.html`. Profile variants use `CV_español_<profile>.html` / `CV_english_<profile>.html` (e.g., `CV_español_ai-engineer.html`).
+
+`make` (default) runs `build` + `portfolio`, so updating `cv.json` and running `make` regenerates all 8 CVs, PDFs, and the portfolio in one step.
 
 The Makefile wraps `uv run python build.py` with various flags. You can also call build.py directly for combined flags (e.g., `uv run python build.py es --html-only --profile ai-engineer`).
 
@@ -54,7 +58,7 @@ The Makefile wraps `uv run python build.py` with various flags. You can also cal
 
 ### Data flow
 
-- **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → `docs/CV_*.html` + copies `static/` to `docs/static/` → Playwright → PDF files in root
+- **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → `docs/CV_*.html` (all profiles) + copies `static/` to `docs/static/` → Playwright → PDF files in root + copies to `docs/`
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` + `Cover_Letter.html` → Playwright → PDFs
 - **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (index.html, projects.html, contact.html). CVs are already in docs/ from the build step
 
@@ -62,8 +66,8 @@ The Makefile wraps `uv run python build.py` with various flags. You can also cal
 
 All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with identical text in both languages use plain strings. Key sections:
 
-- `personal` — Name, contact info, links, portfolio URL, formspree_id, google_analytics_id (location is i18n)
-- `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops). Each variant has `{"es": "...", "en": "..."}`. `build.py --profile <name>` selects which one to use; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
+- `personal` — Name, contact info, links (with `display_url` for ATS-visible URLs), portfolio URL, formspree_id, google_analytics_id (location is i18n)
+- `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
 - `experience` — Work history. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description)
 - `education` — Degrees and diplomas
@@ -81,11 +85,25 @@ Bilingual cover letter data. All text fields use i18n `{"es": "...", "en": "..."
 - Use `cat['items']` (not `cat.items`) for tech_stack items to avoid conflict with Python dict `.items()` method
 - UI strings (section titles, modal labels) are handled with `{% if lang == 'es' %}...{% else %}...{% endif %}` in the template
 - The template renders a small inline `CV_CONFIG` object with language-specific strings and prompt functions, then loads `static/ai-suite.js` which reads from it
+- `build.py` passes `pdf_filename` and `profile_name` to the template; CV_CONFIG uses these for dynamic PDF download URL and page title
+
+### ATS / OCR optimization
+
+The CV template is optimized for Applicant Tracking Systems and OCR extraction:
+
+- **JSON-LD** structured data (schema.org `Person`) in `<head>` for ATS that parse metadata
+- **Visible URLs** in header: `display_url` fields in cv.json shown as link text (e.g., `linkedin.com/in/...`) so PDF extractors capture the URLs
+- **Modal after article**: floating buttons and AI modal are placed after `</article>` so ATS parsers read CV content first
+- **Searchable PDFs**: the "Save PDF" button downloads the Playwright-generated PDF (searchable text), not an html2pdf.js image-based PDF
+- **Project title/URL separator**: `—` between project name and URL prevents text concatenation in PDF extraction
+- **Font fallback chain**: `Inter` → system fonts (`-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, ...`) for reliable rendering
+- **Consistent dates**: all date ranges use en-dash `–` (not hyphen `-`)
+- Font Awesome icons have `aria-hidden="true"` for accessibility
 
 ### Static files
 
-- **`static/styles.css`** — All CSS: page layout (A4), `.item-no-break`, `.prose`, `@page` rule (zero margins), `@media print` (section break control, orphans/widows). Edit here for styling changes.
-- **`static/ai-suite.js`** — All JS logic: `downloadPDF()`, modal helpers, Gemini API calls, AI features. Reads config from the global `CV_CONFIG` object. Edit here for behavior changes.
+- **`static/styles.css`** — All CSS: page layout (A4), `.item-no-break`, `.prose`, `@page` rule (zero margins), `@media print` (section break control, orphans/widows), system font fallback chain. Edit here for styling changes.
+- **`static/ai-suite.js`** — All JS logic: `downloadPDF()` (serves pre-generated Playwright PDF), modal helpers, Gemini API calls, AI features. Reads config from the global `CV_CONFIG` object (includes `pdfUrl` and `pdfFilename`). Edit here for behavior changes.
 - The `.page` class defines A4-sized pages (`21cm` wide, `29.7cm` min-height, `2.5cm`/`2cm` padding)
 - Use `.item-no-break` on any element that should not split across pages (experience entries, projects, sidebar items)
 - Use `.no-print` on UI elements that should not appear in PDFs (buttons, modals)
