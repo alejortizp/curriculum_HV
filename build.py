@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -51,6 +52,7 @@ def get_jinja_env() -> Environment:
     global _jinja_env
     if _jinja_env is None:
         _jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+        _jinja_env.globals["current_year"] = datetime.now().year
     return _jinja_env
 
 
