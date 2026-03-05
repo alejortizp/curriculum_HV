@@ -12,6 +12,12 @@ wheels/
 # Environment variables
 .env
 
+# Job offer data (personal per application)
+data/job_offer.json
+
+# Generated tailored applications
+applications/
+
 # Agents Skills
 /.agent
 /.agents

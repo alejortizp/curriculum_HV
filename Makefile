@@ -1,4 +1,4 @@
-.PHONY: all build html es en carta carta-es carta-en portfolio setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en carta carta-es carta-en portfolio apply setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -37,6 +37,10 @@ carta-en:
 # Build portfolio pages (GitHub Pages)
 portfolio:
 	uv run python build.py portfolio
+
+# Tailor CV + cover letter for a job offer (reads data/job_offer.json)
+apply:
+	uv run python tailor.py $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,)
 
 # First-time setup
 setup:
@@ -88,6 +92,7 @@ help:
 	@echo "  carta-es   Build cover letter - Spanish only"
 	@echo "  carta-en   Build cover letter - English only"
 	@echo "  portfolio  Build portfolio pages in docs/ (GitHub Pages)"
+	@echo "  apply      Tailor CV + cover letter for a job offer (uses Claude API)"
 	@echo "  setup      First-time setup (install dependencies)"
 	@echo "  clean      Remove all generated HTML and PDF files"
 	@echo "  open-es    Build HTML and open Spanish CV in browser"
@@ -101,3 +106,5 @@ help:
 	@echo "  PROFILE=name  Build only a specific profile (default, ai-engineer, ml-engineer, mlops)"
 	@echo "                Example: make es PROFILE=ai-engineer"
 	@echo "                Without PROFILE, all profiles are built."
+	@echo "  OFFER_LANG=es|en  Override language for 'make apply' (default: from job_offer.json)"
+	@echo "  HTML=1        Skip PDF generation for 'make apply'"

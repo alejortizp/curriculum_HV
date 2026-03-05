@@ -11,6 +11,10 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `data/cv.json` — **Single source of truth** for all CV content (edit this to update the CV)
 - `data/cover_letter.json` — Cover letter content, bilingual (edit per company)
 - `data/cover_letter_template.json` — Blank cover letter template (copy to create new letters)
+- `data/job_offer_template.json` — Blank job offer template (copy to `data/job_offer.json` to tailor)
+- `data/job_offer.json` — Current job offer data for tailoring (in `.gitignore`)
+- `tailor.py` — Tailoring script: reads job offer + cv.json → Claude API → tailored CV + cover letter
+- `applications/` — Output directory for tailored applications, per company (in `.gitignore`)
 - `templates/cv.html` — Jinja2 template for CVs (HTML structure, JSON-LD, modal after article)
 - `templates/cover_letter.html` — Jinja2 template for cover letter (bilingual, reuses CV header)
 - `templates/portfolio_base.html` — Portfolio base template (nav, footer, SEO, language switcher, i18n macros)
@@ -44,6 +48,9 @@ make carta        # Build cover letter (HTML + PDF, both languages)
 make carta-es     # Build cover letter - Spanish only
 make carta-en     # Build cover letter - English only
 make portfolio    # Build bilingual portfolio in docs/ (6 pages: 3 ES + 3 EN)
+make apply        # Tailor CV + cover letter for job offer (reads data/job_offer.json, uses Claude API)
+make apply OFFER_LANG=en  # Override language for tailoring
+make apply HTML=1         # Skip PDF generation
 make setup        # First-time setup (uv sync + playwright)
 make clean        # Remove all generated files (all profiles + portfolio)
 make open-es      # Build HTML and open Spanish CV in browser
@@ -69,6 +76,7 @@ The Makefile wraps `uv run python build.py` with various flags. `build.py` uses 
 - **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → `docs/CV_*.html` (all profiles) + copies `static/` to `docs/static/` → Playwright → PDF files in root (with pypdf metadata injection) + copies to `docs/`
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` + `Cover_Letter.html` → Playwright → PDFs (with pypdf metadata)
 - **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (6 pages: index, projects, contact × ES/EN) + `sitemap.xml` + `robots.txt`. CVs are already in docs/ from the build step
+- **Tailored applications:** `data/job_offer.json` + `data/cv.json` → `tailor.py` → Claude API → tailored cv_data + cover_letter_data → reuses `render_cv()` + `render_cover_letter()` from `build.py` → `applications/<company>/` (HTML + PDF). Does NOT modify `cv.json` or any existing files
 
 ### cv.json structure
 
@@ -85,6 +93,19 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 ### cover_letter.json structure
 
 Bilingual cover letter data. All text fields use i18n `{"es": "...", "en": "..."}` objects. `why_me` uses `{"es": [...], "en": [...]}` for the bullet point arrays. Fields: `company`, `recipient`, `role`, `date`, `subject`, `greeting`, `opening`, `why_me_title` + `why_me`, `differentiator_title` + `differentiator`, `closing`, `farewell`, `sign_off`. Personal info (name, contact, title, portfolio link) is pulled from `cv.json`. Use `data/cover_letter_template.json` as a starting point for new letters.
+
+### job_offer.json structure
+
+Job offer data for the `make apply` tailoring system. Fields: `company` (required), `role` (required), `location`, `lang` (`"es"` or `"en"`, determines output language), `url` (offer URL for reference), `description` (full job description text), `requirements` (array of requirement strings), `nice_to_have` (array), `notes` (personal notes). Use `data/job_offer_template.json` as a starting point.
+
+### tailor.py internals
+
+- Separate script that imports `render_cv`, `render_cover_letter`, `add_pdf_metadata`, etc. from `build.py` — does NOT modify `build.py`
+- Claude API call uses `claude-sonnet-4-20250514` model. Returns JSON with: `chosen_profile`, `tailored_summary`, `experience_order` (reordered indices), `experience_bullets` (rephrased bullets per entry), `cover_letter` (complete cover letter data)
+- The prompt instructs Claude to NEVER invent experience — only reformulate, reorder, and emphasize existing data
+- Output goes to `applications/<company-slug>/` with `static/` subdirectory for CSS/JS
+- Also saves `tailoring_result.json` in the output directory for reference/debugging
+- `ANTHROPIC_API_KEY` resolved from env var or `.env` file (same pattern as `GEMINI_API_KEY`)
 
 ### Template conventions
 
@@ -185,4 +206,8 @@ Resolution order (first non-empty wins):
 2. **Browser localStorage** — user-provided key saved as `gemini_api_key`
 3. **Prompt** — when the user opens the AI modal without a key, they are prompted to enter one
 
-The `.env` file is in `.gitignore`. See `.env.example` for the expected format.
+The `.env` file is in `.gitignore`. Expected variables: `GEMINI_API_KEY=your_key_here`.
+
+### Anthropic API key (for `make apply`)
+
+Resolution: `ANTHROPIC_API_KEY` env var or `.env` file. Required only for `make apply` (tailoring). Not needed for regular CV/portfolio builds.

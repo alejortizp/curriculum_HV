@@ -46,7 +46,7 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 ├── Carta_Presentacion.pdf       # PDF generado
 ├── Cover_Letter.html            # Carta EN generada (no editar)
 ├── Cover_Letter.pdf             # PDF generado
-├── .env.example                 # Plantilla para variables de entorno
+├── .env                         # Variables de entorno (GEMINI_API_KEY, ANTHROPIC_API_KEY)
 ├── pyproject.toml               # Configuración del proyecto (uv)
 └── README.md
 ```
