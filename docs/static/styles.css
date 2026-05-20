@@ -73,11 +73,7 @@ body {
         width: 100%;
         box-shadow: initial;
         padding: 2.5cm 2cm;
-        page-break-after: always;
-    }
-
-    .page:last-of-type {
-        page-break-after: auto;
+        min-height: 0;
     }
 
     .no-print {

@@ -96,13 +96,15 @@ def _handle_pdf_error(e: Exception) -> None:
 
 
 def add_pdf_metadata(pdf_path: Path, title: str, author: str, subject: str = "") -> None:
-    """Inject author/title/subject metadata into a PDF using pypdf."""
+    """Inject metadata and drop blank trailing pages produced by the renderer."""
     try:
         from pypdf import PdfReader, PdfWriter
 
         reader = PdfReader(pdf_path)
         writer = PdfWriter()
-        writer.append_pages_from_reader(reader)
+        for page in reader.pages:
+            if page.extract_text().strip():
+                writer.add_page(page)
         writer.add_metadata({
             "/Title": title,
             "/Author": author,

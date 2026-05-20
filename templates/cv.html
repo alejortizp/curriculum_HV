@@ -134,7 +134,7 @@
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Experiencia Laboral{% else %}Work Experience{% endif %}</h3>
                     {% for exp in cv.experience %}
                     {% if lang in exp.langs %}
-                    <div class="item-no-break {% if exp.current %}mb-6 relative pl-4 border-l-2 border-blue-600{% else %}mb-5{% endif %}">
+                    <div class="{% if exp.current %}mb-6 relative pl-4 border-l-2 border-blue-600{% else %}item-no-break mb-5{% endif %}">
                         <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">{{ t(exp.title) }}</h4>
                             {% if exp.current %}
