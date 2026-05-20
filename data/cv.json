@@ -26,12 +26,12 @@
 
   "profiles": {
     "default": {
-      "es": "AI Engineer especializado en <strong>GenAI/RAG</strong> y <strong>LLMs</strong> con track record productizando soluciones en <strong>Azure</strong>. Experiencia end-to-end desde investigación hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes con <strong>LangChain</strong> para automatización de workflows empresariales. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
-      "en": "AI Engineer specialized in <strong>GenAI/RAG</strong> and <strong>LLMs</strong> with proven track record productionizing <strong>machine learning</strong> solutions on <strong>Azure</strong>. End-to-end experience from research to production deployment with <strong>MLOps</strong>. Developer of intelligent agents with <strong>LangChain</strong> for enterprise workflow automation. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
+      "es": "AI Engineer especializado en <strong>GenAI/RAG</strong>, <strong>Agentic AI</strong> y <strong>LLMs</strong> con track record productizando soluciones <strong>multi-cloud (Azure, AWS, GCP)</strong>. Experiencia end-to-end desde arquitectura y pre-ventas hasta deployment en producción con <strong>MLOps</strong>. Desarrollador de agentes inteligentes (<strong>LangChain</strong>, agentes <strong>SRPA</strong>) que automatizan workflows empresariales y aceleran el ciclo de desarrollo de software. Combino base matemática sólida (Estadística) con ingeniería de software moderna (CI/CD, Docker) para crear sistemas de IA escalables y confiables.",
+      "en": "AI Engineer specialized in <strong>GenAI/RAG</strong>, <strong>Agentic AI</strong> and <strong>LLMs</strong> with proven track record productionizing <strong>multi-cloud (Azure, AWS, GCP)</strong> solutions. End-to-end experience from architecture and pre-sales to production deployment with <strong>MLOps</strong>. Developer of intelligent agents (<strong>LangChain</strong>, <strong>SRPA</strong> agents) automating enterprise workflows and accelerating the software development lifecycle. Combines strong mathematical foundation (Statistics) with modern software engineering (CI/CD, Docker) to build scalable and reliable AI systems."
     },
     "ai-engineer": {
-      "es": "AI Engineer con experiencia productizando soluciones de <strong>GenAI/RAG</strong> en <strong>Azure</strong>. Especializado en diseño e implementación de <strong>agentes inteligentes</strong> con <strong>LangChain</strong> y <strong>Azure OpenAI</strong> para automatización empresarial. Track record procesando <strong>10k+ consultas/mes</strong> con agentes conversacionales y pipelines de matching semántico con <strong>95%</strong> de precisión. Combino Maestría en Ingeniería de Software (en curso) con base en Estadística para diseñar sistemas de IA escalables y listos para producción.",
-      "en": "AI Engineer with proven experience productionizing <strong>GenAI/RAG</strong> solutions on <strong>Azure</strong>. Specialized in designing and deploying <strong>intelligent agents</strong> with <strong>LangChain</strong> and <strong>Azure OpenAI</strong> for enterprise automation. Track record processing <strong>10k+ queries/month</strong> with conversational agents and semantic matching pipelines with <strong>95%</strong> accuracy. Combines Master in Software Engineering (in progress) with a Statistics foundation to design scalable, production-ready AI systems."
+      "es": "AI Engineer con experiencia productizando soluciones de <strong>GenAI/RAG</strong> y <strong>Agentic AI</strong> en <strong>Azure</strong> y <strong>GCP</strong>. Especializado en diseño e implementación de <strong>agentes inteligentes</strong> (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>, agentes <strong>SRPA</strong>) y arquitecturas de referencia para clientes enterprise. Track record procesando <strong>10k+ consultas/mes</strong> con agentes conversacionales y pipelines de matching semántico con <strong>95%</strong> de precisión. Combino Maestría en Ingeniería de Software (en curso) con base en Estadística para diseñar sistemas de IA escalables y listos para producción.",
+      "en": "AI Engineer with proven experience productionizing <strong>GenAI/RAG</strong> and <strong>Agentic AI</strong> solutions on <strong>Azure</strong> and <strong>GCP</strong>. Specialized in designing and deploying <strong>intelligent agents</strong> (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>, <strong>SRPA</strong> agents) and reference architectures for enterprise clients. Track record processing <strong>10k+ queries/month</strong> with conversational agents and semantic matching pipelines with <strong>95%</strong> accuracy. Combines Master in Software Engineering (in progress) with a Statistics foundation to design scalable, production-ready AI systems."
     },
     "ml-engineer": {
       "es": "Machine Learning Engineer con experiencia end-to-end desde experimentación hasta producción. Especializado en modelos predictivos (<strong>churn, propensión, NBO</strong>) con impacto cuantificable: <strong>Lift 3.0</strong>, <strong>+15%</strong> conversión, <strong>+60%</strong> contactabilidad. Dominio de <strong>Scikit-learn, LightGBM, PyTorch</strong> y <strong>Databricks + MLflow</strong> para MLOps. Combino base matemática sólida (Estadística) con ingeniería de software moderna para crear pipelines de ML confiables y escalables.",
@@ -47,19 +47,19 @@
     {
       "current": true,
       "langs": ["es", "en"],
-      "title": {"es": "Consultor Desarrollador IA", "en": "AI Developer Consultant"},
-      "company": "Periferia IT",
+      "title": {"es": "AI Engineer — Torre IA", "en": "AI Engineer — AI Practice"},
+      "company": "Periferia IT Group",
       "date": {"es": "Jun 2025 – Actualidad", "en": "Jun 2025 – Present"},
       "items": {
         "es": [
-          "<strong>Sistema de Matching CV-Oferta:</strong> Desarrollé pipeline completo con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con 95% de precisión en extracción. Búsqueda semántica con embeddings reduce tiempo de screening en <strong>70%</strong>.",
-          "<strong>Automatización Inteligente:</strong> Implementé vectorización y chunking semántico optimizado para matching candidato-oferta, mejorando la calidad de recomendaciones en <strong>40%</strong> vs. keyword search tradicional.",
-          "<strong>Impacto:</strong> Sistema procesando <strong>10k+ búsquedas/mes</strong> con latencia <200ms. Stack: Python, Azure AI Search, Document Intelligence, FastAPI."
+          "<strong>Ecosistema PerXIA Suite (Agentes IA SRPA):</strong> Participo en diseño técnico, conceptualización y documentación de la plataforma propietaria de <em>Single-Responsibility Plug-and-play Agents</em> para automatizar el ciclo de desarrollo end-to-end. Aportes clave en <strong>PERXIA-IDEATOR</strong> (onboarding con grafo de conocimiento de repositorios, reduciendo ramp-up ~<strong>70%</strong>), <strong>PERXIA-HUS</strong> (generación automática de historias de usuario con criterios de aceptación), <strong>PERXIA-DEV</strong> (asistencia contextual en Cursor IDE), <strong>PERXIA-UNIT</strong> (pruebas unitarias multi-lenguaje con cobertura ≥<strong>85%</strong>), <strong>PERXIA-QA</strong>, <strong>PERXIA-DOCS</strong> y <strong>PERXIA-HELP</strong> (asistente sobre <strong>DeepSeek R-1</strong> en <strong>Azure AI Foundry</strong>). Despliegue multi-cloud (<strong>Azure / AWS / GCP</strong>) con ahorro de <strong>60–70%</strong> en ciclo de desarrollo.",
+          "<strong>Sistema de Matching CV-Oferta:</strong> Pipeline con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con <strong>95%</strong> de precisión en extracción y búsqueda semántica vectorial que reduce screening en <strong>70%</strong>. Productivo con <strong>10k+ búsquedas/mes</strong> y latencia <200ms.",
+          "<strong>Pre-ventas y Arquitectura de Soluciones:</strong> Construyo estimaciones técnicas, dimensionamiento de equipos y arquitecturas de referencia para soluciones de <strong>GenAI, Agentic AI y RAG</strong> en clientes enterprise (banca, seguros, retail, energía y telco). Lidero discovery técnico con stakeholders y posicionamiento de agentes PerXIA en anexos técnicos comerciales."
         ],
         "en": [
-          "<strong>CV-Job Matching System:</strong> Built complete pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> processing 500+ CVs/day with 95% extraction accuracy. Semantic search with embeddings reduced screening time by <strong>70%</strong>.",
-          "<strong>Intelligent Automation:</strong> Implemented vectorization and optimized semantic chunking for candidate-job matching, improving recommendation quality by <strong>40%</strong> vs. traditional keyword search.",
-          "<strong>Impact:</strong> System handling <strong>10k+ searches/month</strong> with <200ms latency. Stack: Python, Azure AI Search, Document Intelligence, FastAPI."
+          "<strong>PerXIA Suite Ecosystem (SRPA AI Agents):</strong> Contribute to the technical design, conceptualization and documentation of Periferia's proprietary <em>Single-Responsibility Plug-and-play Agents</em> platform automating the end-to-end software development lifecycle. Key contributions to <strong>PERXIA-IDEATOR</strong> (developer onboarding via repository knowledge graphs, cutting ramp-up by ~<strong>70%</strong>), <strong>PERXIA-HUS</strong> (automated user-story generation with acceptance criteria), <strong>PERXIA-DEV</strong> (Cursor IDE contextual assistance), <strong>PERXIA-UNIT</strong> (multi-language unit testing with ≥<strong>85%</strong> coverage), <strong>PERXIA-QA</strong>, <strong>PERXIA-DOCS</strong> and <strong>PERXIA-HELP</strong> (assistant built on <strong>DeepSeek R-1</strong> deployed on <strong>Azure AI Foundry</strong>). Multi-cloud deployment (<strong>Azure / AWS / GCP</strong>) delivering <strong>60–70%</strong> savings across the development cycle.",
+          "<strong>CV-Job Matching System:</strong> Pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> processing 500+ CVs/day with <strong>95%</strong> extraction accuracy and vector semantic search reducing screening time by <strong>70%</strong>. Running in production at <strong>10k+ searches/month</strong> with <200ms latency.",
+          "<strong>Pre-sales &amp; Solution Architecture:</strong> Build technical estimates, team sizing and reference architectures for <strong>GenAI, Agentic AI and RAG</strong> solutions for enterprise clients (banking, insurance, retail, energy and telco). Lead technical discovery with stakeholders and position PerXIA Suite agents in commercial technical proposals."
         ]
       }
     },
@@ -233,7 +233,17 @@
       "items": [
         [{"name": "Azure AI Search", "years": 1}],
         [{"name": "Document Intelligence", "years": 1}],
+        [{"name": "Azure AI Foundry", "years": 1}],
         [{"name": "Databricks + MLflow", "years": 3}]
+      ]
+    },
+    {
+      "category": "Google Cloud Platform (GCP)",
+      "items": [
+        [{"name": "Vertex AI", "years": 1, "detail": "(Training, Endpoints, Pipelines)"}],
+        [{"name": "Cloud Run", "years": 1}],
+        [{"name": "Compute Engine", "years": 1, "detail": "(MIG zonales)"}],
+        [{"name": "Cloud Storage", "years": 1}, {"name": "Cloud SQL", "years": 1}]
       ]
     },
     {
