@@ -430,7 +430,7 @@ def parse_args() -> argparse.Namespace:
         "target",
         nargs="?",
         default=None,
-        choices=["es", "en", "carta", "carta-es", "carta-en", "portfolio", "ats", "ats-en"],
+        choices=["es", "en", "carta", "carta-es", "carta-en", "portfolio", "ats", "ats-es", "ats-en"],
         help="Build target (default: all CV profiles in both languages)",
     )
     parser.add_argument(
@@ -468,7 +468,7 @@ def main():
     target = args.target
 
     # Every target except the ATS CV (inline CSS) uses the compiled Tailwind CSS
-    if target not in ("ats", "ats-en"):
+    if target not in ("ats", "ats-es", "ats-en"):
         print("Compiling Tailwind CSS...")
         compile_tailwind()
 
@@ -491,9 +491,10 @@ def main():
         print("\nDone!")
         return
 
-    # ATS-optimized CV targets (Spanish by default)
-    if target in ("ats", "ats-en"):
-        build_ats(cv_data, ["en" if target == "ats-en" else "es"], args.html_only, profiles_to_build)
+    # ATS-optimized CV targets (both languages unless ats-es / ats-en)
+    if target in ("ats", "ats-es", "ats-en"):
+        ats_langs = {"ats": ["es", "en"], "ats-es": ["es"], "ats-en": ["en"]}[target]
+        build_ats(cv_data, ats_langs, args.html_only, profiles_to_build)
         print("\nDone!")
         return
 
