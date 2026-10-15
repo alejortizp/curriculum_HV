@@ -84,6 +84,7 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 
 - `personal` — Name, contact info, links (with `display_url` for ATS-visible URLs), portfolio URL, formspree_id, google_analytics_id (location is i18n)
 - `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
+- `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` to tell a data-to-production story instead of model-effectiveness metrics
 - `experience` — Work history. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description). Shown in the CV and the portfolio
 - `academic_projects` — MISO master's course projects (CV only). Same shape as `projects` plus an i18n `course` label; `url`/`url_label` are optional because most course repos are private

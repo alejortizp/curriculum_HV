@@ -146,6 +146,32 @@ def generate_pdfs(jobs: list, margin: dict):
         browser.close()
 
 
+def apply_profile_overrides(cv_data: dict, profile_name: str) -> dict:
+    """Return cv_data with `profile_overrides[profile_name]` applied.
+
+    Supported keys: `title` (replaces personal.title) and `experience`
+    ({company: {lang: [bullets]}}, replaces that entry's bullets per language).
+    Unknown company names raise, so a typo can't silently ship the base bullets.
+    """
+    overrides = cv_data.get("profile_overrides", {}).get(profile_name)
+    if not overrides:
+        return cv_data
+    data = {**cv_data}
+    if "title" in overrides:
+        data["personal"] = {**data["personal"], "title": overrides["title"]}
+    exp_overrides = overrides.get("experience", {})
+    companies = {exp["company"] for exp in data["experience"]}
+    unknown = set(exp_overrides) - companies
+    if unknown:
+        raise ValueError(f"profile_overrides.{profile_name}: unknown companies {sorted(unknown)}")
+    data["experience"] = [
+        {**exp, "items": {**exp["items"], **exp_overrides[exp["company"]]}}
+        if exp["company"] in exp_overrides else exp
+        for exp in data["experience"]
+    ]
+    return data
+
+
 def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
              profiles_to_build: dict):
     """Build CVs for the given profiles and languages."""
@@ -163,7 +189,7 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
 
     for profile_name, profile_data in profiles_to_build.items():
         outputs = get_outputs(profile_name)
-        data = {**cv_data, "profile": profile_data}
+        data = {**apply_profile_overrides(cv_data, profile_name), "profile": profile_data}
 
         label = f" [{profile_name}]" if profile_name != "default" else ""
         print(f"Generating CV HTML files...{label}")
