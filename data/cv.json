@@ -310,6 +310,20 @@
         "en": "Reproducible multivariate regression pipeline comparing <strong>7 models</strong> (Ridge, ElasticNet, Random Forest, Gradient Boosting, SVR, XGBoost, LightGBM) with hyperparameter search (RandomizedSearchCV, 5-fold CV) and <strong>MLflow</strong> tracking. The best model (Gradient Boosting, R² <strong>0.84</strong>) cut MAE by <strong>26%</strong> versus the baseline and is serialized as an inference-ready sklearn pipeline."
       },
       "stack": "Scikit-learn, XGBoost, LightGBM, MLflow, Pandas, Joblib"
+    },
+    {
+      "emoji": "🔁",
+      "title": {"es": "Sistema MLOps de Clasificación de Texto", "en": "MLOps Text Classification System"},
+      "categories": ["classic-ml"],
+      "cv": false,
+      "url": "https://github.com/alejortizp/mlops-text-classification",
+      "icon": "model_training",
+      "url_label": "github.com/alejortizp/mlops-text-classification",
+      "description": {
+        "es": "Sistema MLOps para clasificar mensajes de soporte al cliente (dataset público de Twitter): pipelines de <strong>entrenamiento</strong>, <strong>predicción por lotes</strong> y <strong>monitoreo</strong> con alertas por umbral de accuracy, y reentrenamiento <strong>campeón/retador</strong> que solo promueve un modelo nuevo si supera al actual en el <strong>MLflow Model Registry</strong>. Modelo TF-IDF + CatBoost con accuracy <strong>0.85</strong>.",
+        "en": "MLOps system classifying customer-support messages (public Twitter dataset): <strong>training</strong>, <strong>batch prediction</strong> and <strong>monitoring</strong> pipelines with accuracy-threshold alerts, plus <strong>champion/challenger</strong> retraining that only promotes a new model if it beats the current one in the <strong>MLflow Model Registry</strong>. TF-IDF + CatBoost model with <strong>0.85</strong> accuracy."
+      },
+      "stack": "MLflow, Model Registry, CatBoost, Scikit-learn, NLTK, TF-IDF, Pandas"
     }
   ],
 
