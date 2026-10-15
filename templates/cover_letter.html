@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if lang == 'es' %}Carta de Presentación{% else %}Cover Letter{% endif %} - {{ cv.personal.name }} - {{ letter.company }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/styles.css">
+    <!-- After styles.css: the Play CDN injected Tailwind last, so utilities (e.g. .flex) win over .item-no-break -->
+    <link rel="stylesheet" href="static/tailwind-cv.css">
 </head>
 <body class="py-10 print:py-0">
 

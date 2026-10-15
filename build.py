@@ -39,6 +39,41 @@ PORTFOLIO_TEMPLATES = {
 # Portfolio language variants: {lang: file suffix}
 PORTFOLIO_LANGS = {"es": "", "en": "_en"}
 
+# Static assets copied next to generated HTML (docs/static, applications/<x>/static)
+STATIC_ASSETS = ("styles.css", "ai-suite.js", "tailwind-cv.css", "tailwind-portfolio.css")
+
+# Tailwind is compiled locally (no Play CDN): one CSS per theme, committed so builds
+# still work offline. Pinned to v3 — the CDN served v3 and v4 changed the config format.
+TAILWIND_VERSION = "v3.4.17"
+TAILWIND_BUILDS = {"cv": "tailwind/cv.config.js", "portfolio": "tailwind/portfolio.config.js"}
+
+
+def compile_tailwind() -> None:
+    """Regenerate static/tailwind-<name>.css; on failure keep the committed CSS."""
+    try:
+        import pytailwindcss
+    except ImportError:
+        print("  Note: pytailwindcss not installed (uv sync --dev); using committed Tailwind CSS")
+        return
+    for name, config in TAILWIND_BUILDS.items():
+        output = ROOT / "static" / f"tailwind-{name}.css"
+        try:
+            pytailwindcss.run(
+                ["-c", config, "-i", "tailwind/input.css", "-o", str(output), "--minify"],
+                cwd=ROOT, auto_install=True, version=TAILWIND_VERSION,
+            )
+            print(f"  CSS: static/{output.name}")
+        except Exception as e:
+            print(f"  Warning: Tailwind build failed for {name} ({e}); using committed {output.name}")
+
+
+def copy_static_assets(dest: Path) -> None:
+    dest.mkdir(parents=True, exist_ok=True)
+    for fname in STATIC_ASSETS:
+        src = ROOT / "static" / fname
+        if src.exists():
+            shutil.copy2(src, dest / fname)
+
 
 def load_json(path: Path) -> dict:
     with open(path, encoding="utf-8") as f:
@@ -195,14 +230,8 @@ def apply_profile_overrides(cv_data: dict, profile_name: str) -> dict:
 def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
              profiles_to_build: dict):
     """Build CVs for the given profiles and languages."""
-    # Ensure docs/ and docs/static/ exist
     DOCS_DIR.mkdir(exist_ok=True)
-    docs_static = DOCS_DIR / "static"
-    docs_static.mkdir(exist_ok=True)
-    for fname in ("styles.css", "ai-suite.js"):
-        src = ROOT / "static" / fname
-        if src.exists():
-            shutil.copy2(src, docs_static / fname)
+    copy_static_assets(DOCS_DIR / "static")
 
     all_jobs = []  # Collect {html, pdf} for batch PDF generation
     author = cv_data.get("personal", {}).get("name", "")
@@ -326,6 +355,7 @@ def build_cover_letter(cv_data: dict, html_only: bool, langs: list | None = None
 
 def build_portfolio(cv_data: dict):
     DOCS_DIR.mkdir(exist_ok=True)
+    copy_static_assets(DOCS_DIR / "static")
     env = get_jinja_env()
     print("Generating portfolio pages...")
     for lang, suffix in PORTFOLIO_LANGS.items():
@@ -436,6 +466,11 @@ def main():
         profiles_to_build = all_profiles
 
     target = args.target
+
+    # Every target except the ATS CV (inline CSS) uses the compiled Tailwind CSS
+    if target not in ("ats", "ats-en"):
+        print("Compiling Tailwind CSS...")
+        compile_tailwind()
 
     # Cover letter targets
     if target in ("carta", "carta-es", "carta-en"):

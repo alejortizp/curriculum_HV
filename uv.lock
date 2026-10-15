@@ -62,6 +62,11 @@ dependencies = [
     { name = "pypdf" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytailwindcss" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.40" },
@@ -69,6 +74,9 @@ requires-dist = [
     { name = "playwright", specifier = ">=1.40" },
     { name = "pypdf", specifier = ">=4.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytailwindcss", specifier = ">=0.4.2" }]
 
 [[package]]
 name = "distro"
@@ -389,6 +397,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/53/9b/63e767042fc852384dc71e5ff6f990ee4e1b165b1526cf3f9c23a4eebb47/pypdf-6.7.3.tar.gz", hash = "sha256:eca55c78d0ec7baa06f9288e2be5c4e8242d5cbb62c7a4b94f2716f8e50076d2", size = 5303304, upload-time = "2026-02-24T17:23:11.42Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b0/90/3308a9b8b46c1424181fdf3f4580d2b423c5471425799e7fc62f92d183f4/pypdf-6.7.3-py3-none-any.whl", hash = "sha256:cd25ac508f20b554a9fafd825186e3ba29591a69b78c156783c5d8a2d63a1c0a", size = 331263, upload-time = "2026-02-24T17:23:09.932Z" },
+]
+
+[[package]]
+name = "pytailwindcss"
+version = "0.4.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fb/2c/044d8fffba8c4cd236766879a8fab6e782b8ecad285399b5b7b6c29e3836/pytailwindcss-0.4.2.tar.gz", hash = "sha256:f069bfe693aba32ffa7097ed642fc53e83db3b229449d6074a67dc900fa9c89f", size = 68086, upload-time = "2026-10-13T15:31:07.633Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/a8/73b554fe3fab569b6827d7fba2e0cc9a0fa6ec866263153c0daa77a8417f/pytailwindcss-0.4.2-py3-none-any.whl", hash = "sha256:55cd55394ceb747c90b92e3e2822207cb60b143996e4ccf7753d8127e7fb5246", size = 10771, upload-time = "2026-10-13T15:31:06.453Z" },
 ]
 
 [[package]]

@@ -6,7 +6,6 @@ import copy
 import json
 import os
 import re
-import shutil
 import sys
 from pathlib import Path
 
@@ -15,6 +14,7 @@ from anthropic import Anthropic
 from build import (
     ROOT,
     add_pdf_metadata,
+    copy_static_assets,
     get_api_key,
     load_json,
     render_cover_letter,
@@ -253,12 +253,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Copy static files so HTML can reference them
-    static_dir = output_dir / "static"
-    static_dir.mkdir(exist_ok=True)
-    for fname in ("styles.css", "ai-suite.js"):
-        src = ROOT / "static" / fname
-        if src.exists():
-            shutil.copy2(src, static_dir / fname)
+    copy_static_assets(output_dir / "static")
 
     # Filenames
     author = cv_data.get("personal", {}).get("name", "")

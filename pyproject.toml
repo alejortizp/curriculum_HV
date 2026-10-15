@@ -13,3 +13,8 @@ dependencies = [
 
 [project.scripts]
 build-cv = "build:main"
+
+[dependency-groups]
+dev = [
+    "pytailwindcss>=0.4.2",
+]
