@@ -1,4 +1,4 @@
-.PHONY: all build html es en carta carta-es carta-en portfolio apply setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en ats ats-en carta carta-es carta-en portfolio apply setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -21,6 +21,14 @@ es:
 # Build only English (all profiles or PROFILE=name)
 en:
 	uv run python build.py en $(PROFILE_FLAG)
+
+# ATS-optimized CV (single column, plain text) -> ats/Alejandro_Ortiz_Perdomo_CV*_ES.pdf
+ats:
+	uv run python build.py ats $(PROFILE_FLAG)
+
+# ATS-optimized CV in English
+ats-en:
+	uv run python build.py ats-en $(PROFILE_FLAG)
 
 # Build cover letter (HTML + PDF) - both languages
 carta:
@@ -53,6 +61,7 @@ clean:
 	rm -f docs/CV_español*.pdf docs/CV_english*.pdf docs/CV-*.pdf
 	rm -f CV_español*.pdf CV_english*.pdf CV-*.pdf
 	rm -rf docs/static
+	rm -f ats/*.html ats/*.pdf
 	rm -f Carta_Presentacion.html Carta_Presentacion.pdf
 	rm -f Cover_Letter.html Cover_Letter.pdf
 	rm -f docs/index*.html docs/projects*.html docs/contact*.html
@@ -88,6 +97,8 @@ help:
 	@echo "  html       Build HTML only (skip PDF generation)"
 	@echo "  es         Build Spanish CVs only (HTML + PDF)"
 	@echo "  en         Build English CVs only (HTML + PDF)"
+	@echo "  ats        Build ATS-optimized Spanish CVs in ats/ (no CDN needed)"
+	@echo "  ats-en     Build ATS-optimized English CVs in ats/"
 	@echo "  carta      Build cover letter (HTML + PDF, both languages)"
 	@echo "  carta-es   Build cover letter - Spanish only"
 	@echo "  carta-en   Build cover letter - English only"

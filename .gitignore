@@ -23,3 +23,5 @@ applications/
 /.agents
 /.claude
 /.agents/skills/i18n-localization/SKILL.md
+# ATS intermediate HTML (only the PDFs are kept)
+ats/*.html

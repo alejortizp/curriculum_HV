@@ -47,12 +47,26 @@ def load_json(path: Path) -> dict:
 
 _jinja_env: Environment | None = None
 
+# Symbols that older ATS parsers mangle or drop; mapped to plain ASCII equivalents.
+ATS_REPLACEMENTS = {
+    "→": " -> ", "≥": ">=", "≤": "<=", "−": "-", "–": "-", "—": "-",
+    "·": "-", " ": " ", "“": '"', "”": '"', "‘": "'", "’": "'",
+}
+
+
+def ats_text(value) -> str:
+    text = str(value)
+    for symbol, plain in ATS_REPLACEMENTS.items():
+        text = text.replace(symbol, plain)
+    return text
+
 
 def get_jinja_env() -> Environment:
     global _jinja_env
     if _jinja_env is None:
         _jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
         _jinja_env.globals["current_year"] = datetime.now().year
+        _jinja_env.filters["ats"] = ats_text
     return _jinja_env
 
 
@@ -95,22 +109,28 @@ def _handle_pdf_error(e: Exception) -> None:
     sys.exit(1)
 
 
-def add_pdf_metadata(pdf_path: Path, title: str, author: str, subject: str = "") -> None:
+def add_pdf_metadata(pdf_path: Path, title: str, author: str, subject: str = "",
+                     keywords: str = "") -> None:
     """Inject metadata and drop blank trailing pages produced by the renderer."""
     try:
         from pypdf import PdfReader, PdfWriter
 
         reader = PdfReader(pdf_path)
-        writer = PdfWriter()
-        for page in reader.pages:
-            if page.extract_text().strip():
-                writer.add_page(page)
-        writer.add_metadata({
+        # clone_from keeps the catalog (structure tree, /Lang, outline); copying pages
+        # one by one into a blank writer silently produced untagged PDFs
+        writer = PdfWriter(clone_from=reader)
+        blank = [i for i, page in enumerate(reader.pages) if not page.extract_text().strip()]
+        for i in reversed(blank):
+            del writer.pages[i]
+        metadata = {
             "/Title": title,
             "/Author": author,
             "/Subject": subject or "Curriculum Vitae",
             "/Creator": "curriculum_HV build system",
-        })
+        }
+        if keywords:
+            metadata["/Keywords"] = keywords
+        writer.add_metadata(metadata)
         with open(pdf_path, "wb") as f:
             writer.write(f)
     except ImportError:
@@ -219,6 +239,53 @@ def build_cv(cv_data: dict, api_key: str, langs: list, html_only: bool,
                     print(f"  Copy: docs/{files['pdf']}")
         except Exception as e:
             _handle_pdf_error(e)
+
+
+ATS_DIR = ROOT / "ats"
+ATS_TEMPLATE = "cv_ats.html"
+ATS_MARGIN = {"top": "1.4cm", "bottom": "1.4cm", "left": "1.6cm", "right": "1.6cm"}
+
+
+def get_ats_outputs(profile_name: str, lang: str) -> dict:
+    """ATS file names follow the Firstname_Lastname_CV convention recruiters expect."""
+    names = {"default": "", "ai-engineer": "AI-Engineer", "ml-engineer": "ML-Engineer", "mlops": "MLOps"}
+    label = names.get(profile_name, profile_name)
+    label = f"_{label}" if label else ""
+    stem = f"Alejandro_Ortiz_Perdomo_CV{label}_{lang.upper()}"
+    return {"html": f"ats/{stem}.html", "pdf": f"ats/{stem}.pdf"}
+
+
+def build_ats(cv_data: dict, langs: list, html_only: bool, profiles_to_build: dict):
+    """Build single-column, ATS-parseable CVs (no CDN, icons or multi-column layout)."""
+    ATS_DIR.mkdir(exist_ok=True)
+    env = get_jinja_env()
+    template = env.get_template(ATS_TEMPLATE)
+    author = cv_data["personal"]["name"]
+    jobs = []
+
+    print("Generating ATS CV HTML files...")
+    for profile_name, profile_data in profiles_to_build.items():
+        data = {**apply_profile_overrides(cv_data, profile_name), "profile": profile_data}
+        keywords = ", ".join(
+            skill["name"] for cat in data["tech_stack"] for line in cat["items"] for skill in line
+        )
+        for lang in langs:
+            outputs = get_ats_outputs(profile_name, lang)
+            (ROOT / outputs["html"]).write_text(template.render(cv=data, lang=lang), encoding="utf-8")
+            print(f"  HTML: {outputs['html']}")
+            jobs.append({**outputs, "title": f"{author} - {ats_text(data['personal']['title'])}",
+                         "keywords": keywords})
+
+    if html_only:
+        return
+    print("Generating ATS CV PDF files...")
+    try:
+        generate_pdfs(jobs, ATS_MARGIN)
+    except Exception as e:
+        _handle_pdf_error(e)
+    for job in jobs:
+        add_pdf_metadata(ROOT / job["pdf"], job["title"], author,
+                         subject="Curriculum Vitae", keywords=job["keywords"])
 
 
 def build_cover_letter(cv_data: dict, html_only: bool, langs: list | None = None):
@@ -333,7 +400,7 @@ def parse_args() -> argparse.Namespace:
         "target",
         nargs="?",
         default=None,
-        choices=["es", "en", "carta", "carta-es", "carta-en", "portfolio"],
+        choices=["es", "en", "carta", "carta-es", "carta-en", "portfolio", "ats", "ats-en"],
         help="Build target (default: all CV profiles in both languages)",
     )
     parser.add_argument(
@@ -386,6 +453,12 @@ def main():
     if target == "portfolio":
         cv_data["profile"] = all_profiles.get("default", {})
         build_portfolio(cv_data)
+        print("\nDone!")
+        return
+
+    # ATS-optimized CV targets (Spanish by default)
+    if target in ("ats", "ats-en"):
+        build_ats(cv_data, ["en" if target == "ats-en" else "es"], args.html_only, profiles_to_build)
         print("\nDone!")
         return
 

@@ -8,7 +8,7 @@
     "linkedin": {
       "url": "https://www.linkedin.com/in/alejandro-ortiz-perdomo-a35348116/",
       "label": "LinkedIn",
-      "display_url": "linkedin.com/in/alejandro-ortiz-perdomo"
+      "display_url": "linkedin.com/in/alejandro-ortiz-perdomo-a35348116"
     },
     "github": {
       "url": "https://github.com/alejortizp",
@@ -129,6 +129,7 @@
       "langs": ["es", "en"],
       "title": {"es": "AI Engineer — Torre IA", "en": "AI Engineer — AI Practice"},
       "company": "Periferia IT Group",
+      "start": "2025-06", "end": null,
       "date": {"es": "Jun 2025 – Actualidad", "en": "Jun 2025 – Present"},
       "items": {
         "es": [
@@ -148,6 +149,7 @@
       "langs": ["es", "en"],
       "title": {"es": "AI Engineer Freelance — Clínica Odontológica", "en": "Freelance AI Engineer — Dental Clinic"},
       "company": "Freelance",
+      "start": "2026-07", "end": "2026-08",
       "date": {"es": "Jul – Ago 2026", "en": "Jul – Aug 2026"},
       "items": {
         "es": [
@@ -165,6 +167,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Machine Learning Engineer", "en": "Machine Learning Engineer"},
       "company": "Global Hitss",
+      "start": "2023-09", "end": "2025-06",
       "date": {"es": "Sep 2023 – Jun 2025", "en": "Sep 2023 – Jun 2025"},
       "items": {
         "es": [
@@ -186,6 +189,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Consultor Machine Learning", "en": "Machine Learning Consultant"},
       "company": "Grupo CINTE",
+      "start": "2023-08", "end": "2023-09",
       "date": {"es": "Ago – Sep 2023", "en": "Aug – Sep 2023"},
       "items": {
         "es": [
@@ -203,6 +207,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Data Scientist", "en": "Data Scientist"},
       "company": "NAE",
+      "start": "2023-03", "end": "2023-07",
       "date": {"es": "Mar 2023 – Jul 2023", "en": "Mar 2023 – Jul 2023"},
       "items": {
         "es": [
@@ -218,6 +223,7 @@
       "langs": ["es", "en"],
       "title": {"es": "Data Scientist II", "en": "Data Scientist II"},
       "company": "Xolit",
+      "start": "2022-05", "end": "2023-01",
       "date": {"es": "May 2022 – Ene 2023", "en": "May 2022 – Jan 2023"},
       "items": {
         "es": [
@@ -239,6 +245,7 @@
       "langs": ["es"],
       "title": {"es": "Analista de Datos / BI"},
       "company": "Savia Salud EPS",
+      "start": "2018-08", "end": "2021-04",
       "date": {"es": "Ago 2018 – Abr 2021"},
       "items": {
         "es": [

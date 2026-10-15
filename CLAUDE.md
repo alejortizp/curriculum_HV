@@ -44,6 +44,8 @@ make build        # Build all profiles × both languages (8 CVs: 4 profiles × 2
 make html         # Build HTML only (skip PDF), all profiles
 make es           # Build Spanish CVs only (all profiles)
 make en           # Build English CVs only (all profiles)
+make ats          # Build ATS-optimized Spanish CVs (all profiles) in ats/
+make ats-en       # Build ATS-optimized English CVs in ats/
 make carta        # Build cover letter (HTML + PDF, both languages)
 make carta-es     # Build cover letter - Spanish only
 make carta-en     # Build cover letter - English only
@@ -74,6 +76,7 @@ The Makefile wraps `uv run python build.py` with various flags. `build.py` uses 
 ### Data flow
 
 - **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → `docs/CV_*.html` (all profiles) + copies `static/` to `docs/static/` → Playwright → PDF files in root (with pypdf metadata injection) + copies to `docs/`
+- **ATS CVs:** `data/cv.json` + `templates/cv_ats.html` → `build.py ats` → `ats/Alejandro_Ortiz_Perdomo_CV[_<Profile>]_ES.pdf` (HTML intermediates are gitignored). Single column, inline CSS (no Tailwind/CDN, so it builds offline), Arial, no icons/emojis, literal `•` bullets (CSS list markers vanish from extracted text), plain-text URLs derived from the real `url` (not `display_url`), dates rendered as `MM/YYYY - MM/YYYY|Actualidad` from `experience[].start/end`. Every visible string passes the `ats` Jinja filter (`ATS_REPLACEMENTS` in `build.py`: arrows, en/em dashes, ≥, smart quotes → ASCII). Profile overrides apply here too. `/Keywords` metadata is filled from `tech_stack`
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` + `Cover_Letter.html` → Playwright → PDFs (with pypdf metadata)
 - **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (6 pages: index, projects, contact × ES/EN) + `sitemap.xml` + `robots.txt`. CVs are already in docs/ from the build step
 - **Tailored applications:** `data/job_offer.json` + `data/cv.json` → `tailor.py` → Claude API → tailored cv_data + cover_letter_data → reuses `render_cv()` + `render_cover_letter()` from `build.py` → `applications/<company>/` (HTML + PDF). Does NOT modify `cv.json` or any existing files
@@ -85,7 +88,7 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 - `personal` — Name, contact info, links (with `display_url` for ATS-visible URLs), portfolio URL, formspree_id, google_analytics_id (location is i18n)
 - `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
 - `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` to tell a data-to-production story instead of model-effectiveness metrics
-- `experience` — Work history. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
+- `experience` — Work history. `start`/`end` (`"YYYY-MM"`, `end: null` = current) are the structured dates used by the ATS template; `date` is the display string for the designed CV. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description). Shown in the CV and the portfolio
 - `academic_projects` — MISO master's course projects (CV only). Same shape as `projects` plus an i18n `course` label; `url`/`url_label` are optional because most course repos are private
 - `education` — Degrees and diplomas
@@ -196,7 +199,7 @@ The CV template is optimized for Applicant Tracking Systems and OCR extraction:
 
 - Uses **argparse** for CLI parsing (same interface as before, but with `--help` support)
 - **Jinja2 Environment** is cached (singleton) across all template renders
-- **PDF metadata**: after Playwright PDF generation, `pypdf` injects `/Title`, `/Author`, `/Subject`, `/Creator` into each PDF
+- **PDF metadata**: after Playwright PDF generation, `pypdf` injects `/Title`, `/Author`, `/Subject`, `/Creator` (and optional `/Keywords`) into each PDF. It uses `PdfWriter(clone_from=reader)` so the structure tree and `/Lang` survive; copying pages into a blank writer drops tagging
 - **DRY error handling**: `_handle_pdf_error()` helper shared by CV and cover letter builds
 - **Portfolio language loop**: iterates `PORTFOLIO_LANGS = {"es": "", "en": "_en"}`, passes `lang`, `page_suffix`, `other_page_suffix` to templates
 - Font await fix: uses `async () => { await document.fonts.ready; }` (properly awaits the Promise)

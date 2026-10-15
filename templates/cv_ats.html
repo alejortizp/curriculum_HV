@@ -1,0 +1,135 @@
+{#- ATS-optimized CV: single column, no CDN/icons/emojis, plain-text URLs, MM/YYYY dates.
+    Every visible string goes through the `ats` filter (normalizes arrows, dashes, ≥ …). -#}
+{%- macro t(value) %}{% if value is mapping and lang in value %}{{ value[lang] }}{% else %}{{ value }}{% endif %}{% endmacro -%}
+{%- macro ym(value) %}{% if value %}{{ value[5:7] }}/{{ value[:4] }}{% else %}{% if lang == 'es' %}Actualidad{% else %}Present{% endif %}{% endif %}{% endmacro -%}
+{%- macro bare(url) %}{{ url | replace('https://', '') | replace('http://', '') | replace('www.', '') | trim('/') }}{% endmacro -%}
+{%- set es = lang == 'es' -%}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cv.personal.name }} - {{ cv.personal.title | ats }}</title>
+    <meta name="author" content="{{ cv.personal.name }}">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #fff; }
+        body {
+            font-family: Arial, "Liberation Sans", Helvetica, sans-serif;
+            font-size: 10pt;
+            line-height: 1.3;
+            color: #000;
+            text-align: left;
+            hyphens: none;
+            font-variant-ligatures: none;
+            font-feature-settings: "liga" 0, "clig" 0;
+        }
+        a { color: #000; text-decoration: none; }
+        h1 { font-size: 18pt; margin: 0; }
+        .headline { font-size: 12pt; font-weight: bold; margin: 2pt 0 4pt; }
+        .contact { margin: 0; }
+        h2 {
+            font-size: 12pt;
+            text-transform: uppercase;
+            margin: 12pt 0 6pt;
+            padding-bottom: 2pt;
+            border-bottom: 1px solid #000;
+            break-after: avoid;
+        }
+        h3 { font-size: 11pt; margin: 0; break-after: avoid; }
+        p { margin: 0; }
+        .entry { margin-bottom: 8pt; }
+        .entry-head { break-inside: avoid; break-after: avoid; }
+        /* Bullet is a literal "•" (CSS list markers are drawn as graphics and vanish from extracted text) */
+        ul { margin: 3pt 0 0; padding: 0; list-style: none; }
+        li { margin-bottom: 2pt; padding-left: 11pt; text-indent: -11pt; }
+        p, li { orphans: 3; widows: 3; }
+    </style>
+</head>
+<body>
+
+<h1>{{ cv.personal.name }}</h1>
+<p class="headline">{{ cv.personal.title | ats }}</p>
+<p class="contact">{{ t(cv.personal.location) }} | {{ cv.personal.phone }} | <a href="mailto:{{ cv.personal.email }}">{{ cv.personal.email }}</a></p>
+<p class="contact">LinkedIn: <a href="{{ cv.personal.linkedin.url }}">{{ bare(cv.personal.linkedin.url) }}</a> | GitHub: <a href="{{ cv.personal.github.url }}">{{ bare(cv.personal.github.url) }}</a> | {% if es %}Portafolio{% else %}Portfolio{% endif %}: <a href="{{ cv.personal.portfolio.url }}">{{ bare(cv.personal.portfolio.url) }}</a></p>
+
+<h2>{% if es %}Resumen Profesional{% else %}Professional Summary{% endif %}</h2>
+<p>{{ cv.profile[lang] | ats }}</p>
+
+<h2>{% if es %}Experiencia Laboral{% else %}Work Experience{% endif %}</h2>
+{% for exp in cv.experience if lang in exp.langs %}
+<div class="entry">
+    <div class="entry-head">
+        <h3>{{ t(exp.title) | ats }}</h3>
+        <p>{{ exp.company }}</p>
+        <p>{{ ym(exp.start) }} - {{ ym(exp.end) }}</p>
+    </div>
+    <ul>
+        {% for item in exp['items'][lang] %}<li>• {{ item | ats }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+
+<h2>{% if es %}Educación{% else %}Education{% endif %}</h2>
+{% for deg in cv.education.degrees %}
+<div class="entry entry-head">
+    <h3>{{ t(deg.title) }}</h3>
+    <p>{{ deg.institution }}</p>
+    <p>{{ t(deg.date) | ats }}</p>
+</div>
+{% endfor %}
+<ul>
+    {% for dip in cv.education.diplomas %}<li>• {{ t(dip.title) }} - {{ t(dip.institution) }}, {{ dip.year }}</li>
+    {% endfor %}
+</ul>
+
+<h2>{% if es %}Certificaciones{% else %}Certifications{% endif %}</h2>
+<ul>
+    {% for cert in cv.certifications %}<li>• {{ t(cert.title) }}{% if cert.detail %} {{ cert.detail }}{% endif %} - {{ cert.institution }}, {{ t(cert.date) }}</li>
+    {% endfor %}
+</ul>
+
+<h2>{% if es %}Habilidades Técnicas{% else %}Technical Skills{% endif %}</h2>
+<ul>
+    {% for cat in cv.tech_stack %}<li>• <strong>{{ cat.category }}:</strong> {% for line in cat['items'] %}{% for skill in line %}{{ skill.name }}{% if skill.detail %} {{ skill.detail }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% if not loop.last %}, {% endif %}{% endfor %}</li>
+    {% endfor %}
+</ul>
+
+<h2>{% if es %}Habilidades Blandas{% else %}Soft Skills{% endif %}</h2>
+<p>{{ cv.power_skills[lang] | join(', ') }}</p>
+
+<h2>{% if es %}Idiomas{% else %}Languages{% endif %}</h2>
+<ul>
+    {% for l in cv.languages %}<li>• {{ t(l.name) }}: {{ t(l.level) }}</li>
+    {% endfor %}
+</ul>
+
+<h2>{% if es %}Proyectos{% else %}Projects{% endif %}</h2>
+{% for proj in cv.projects %}
+<div class="entry">
+    <div class="entry-head">
+        <h3>{{ t(proj.title) | ats }}</h3>
+        <p><a href="{{ proj.url }}">{{ bare(proj.url) }}</a></p>
+    </div>
+    <p>{{ t(proj.description) | ats }}</p>
+    <p>{% if es %}Tecnologías{% else %}Technologies{% endif %}: {{ proj.stack }}</p>
+</div>
+{% endfor %}
+
+{% if cv.academic_projects %}
+<h2>{% if es %}Proyectos Académicos{% else %}Academic Projects{% endif %}</h2>
+{% for proj in cv.academic_projects %}
+<div class="entry">
+    <div class="entry-head">
+        <h3>{{ t(proj.title) | ats }}</h3>
+        <p>{{ t(proj.course) | ats }} - Universidad de los Andes</p>
+        {% if proj.url %}<p><a href="{{ proj.url }}">{{ bare(proj.url) }}</a></p>{% endif %}
+    </div>
+    <p>{{ t(proj.description) | ats }}</p>
+    <p>{% if es %}Tecnologías{% else %}Technologies{% endif %}: {{ proj.stack }}</p>
+</div>
+{% endfor %}
+{% endif %}
+
+</body>
+</html>
