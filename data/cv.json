@@ -134,12 +134,12 @@
       "items": {
         "es": [
           "<strong>Plataforma de Agentes IA (SRPA) para el SDLC:</strong> Diseño técnico, conceptualización y documentación de un ecosistema propietario de agentes <em>Single-Responsibility Plug-and-play</em> que automatiza el ciclo de desarrollo end-to-end (onboarding, historias de usuario, asistencia en IDE, pruebas unitarias multi-lenguaje con cobertura ≥<strong>85%</strong>, QA, documentación y asistentes técnicos sobre LLMs como <strong>DeepSeek R-1</strong> en <strong>Azure AI Foundry</strong>). Plataforma multi-cloud (<strong>Azure / AWS / GCP</strong>) usada interna y comercialmente, con ramp-up <strong>−70%</strong> y ahorro de <strong>60–70%</strong> en el ciclo de desarrollo.",
-          "<strong>Sistema de Matching CV-Oferta:</strong> Pipeline con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> que procesa 500+ CVs/día con <strong>95%</strong> de precisión en extracción y búsqueda semántica vectorial que reduce screening en <strong>70%</strong>. Productivo con <strong>10k+ búsquedas/mes</strong> y latencia <200ms.",
+          "<strong>Sistema de Matching CV-Oferta:</strong> Pipeline con <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong>, desplegado como <strong>Azure Functions en Docker</strong>, que procesa 500+ CVs/día con <strong>95%</strong> de precisión en extracción y búsqueda semántica vectorial que reduce screening en <strong>70%</strong>. Productivo con <strong>10k+ búsquedas/mes</strong> y latencia <200ms.",
           "<strong>Pre-ventas y Arquitectura de Soluciones:</strong> Construyo estimaciones técnicas, dimensionamiento de equipos y arquitecturas de referencia para soluciones de <strong>GenAI, Agentic AI y RAG</strong> en clientes enterprise (banca, seguros, retail, energía y telco). Lidero discovery técnico con stakeholders y posicionamiento del portafolio de agentes en anexos técnicos comerciales."
         ],
         "en": [
           "<strong>AI Agent Platform (SRPA) for the SDLC:</strong> Technical design, conceptualization and documentation of a proprietary <em>Single-Responsibility Plug-and-play</em> agent ecosystem that automates the end-to-end development lifecycle (onboarding, user-story generation, IDE assistance, multi-language unit testing with ≥<strong>85%</strong> coverage, QA, documentation and technical assistants on LLMs such as <strong>DeepSeek R-1</strong> on <strong>Azure AI Foundry</strong>). Multi-cloud platform (<strong>Azure / AWS / GCP</strong>) used both internally and commercially, delivering <strong>−70%</strong> ramp-up and <strong>60–70%</strong> savings across the development cycle.",
-          "<strong>CV-Job Matching System:</strong> Pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong> processing 500+ CVs/day with <strong>95%</strong> extraction accuracy and vector semantic search reducing screening time by <strong>70%</strong>. Running in production at <strong>10k+ searches/month</strong> with <200ms latency.",
+          "<strong>CV-Job Matching System:</strong> Pipeline with <strong>Azure Document Intelligence</strong> + <strong>AI Search</strong>, deployed as <strong>Dockerized Azure Functions</strong>, processing 500+ CVs/day with <strong>95%</strong> extraction accuracy and vector semantic search reducing screening time by <strong>70%</strong>. Running in production at <strong>10k+ searches/month</strong> with <200ms latency.",
           "<strong>Pre-sales &amp; Solution Architecture:</strong> Build technical estimates, team sizing and reference architectures for <strong>GenAI, Agentic AI and RAG</strong> solutions for enterprise clients (banking, insurance, retail, energy and telco). Lead technical discovery with stakeholders and position the proprietary agent portfolio in commercial technical proposals."
         ]
       }
@@ -172,15 +172,15 @@
       "items": {
         "es": [
           "<strong>GenAI & RAG:</strong> Diseñé e implementé agente conversacional con RAG que redujo tickets de soporte en <strong>40%</strong>, procesando <strong>10k+ consultas/mes</strong> con 85% de resolución sin escalamiento. Stack: LangChain, Azure OpenAI, FAISS.",
-          "<strong>MLOps:</strong> Implementé pipeline CI/CD en <strong>Databricks + MLflow</strong> que redujo tiempo de deployment de 2 semanas a <strong>2 días</strong>. Modelos en producción con monitoreo automático de drift y reentrenamiento.",
+          "<strong>MLOps en Databricks:</strong> Ciclo completo de los datos a producción con <strong>PySpark</strong>, <strong>Delta Lake</strong> y <strong>Unity Catalog</strong>, orquestación con <strong>Workflows</strong>, versionado en <strong>MLflow Model Registry</strong> y serving por endpoint o batch. Pipeline CI/CD que redujo el deployment de 2 semanas a <strong>2 días</strong>, con monitoreo de drift y reentrenamiento automático.",
           "<strong>Reinforcement Learning:</strong> Productivicé sistema <em>Next Best Offer</em> (NBO) con A/B testing que incrementó conversión en <strong>15%</strong> y revenue de <strong>$10k por persona</strong>.",
-          "<strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 3.0</strong> y recall del 82% en top decil, integrado a CRM para retención proactiva. Impactó <strong>50k+ clientes</strong>."
+          "<strong>Modelo de Churn:</strong> Desarrollé modelo predictivo con <strong>Lift de 3.0</strong> y recall del 82% en top decil, desplegado en Databricks e integrado al CRM para retención proactiva. Impactó <strong>50k+ clientes</strong>."
         ],
         "en": [
           "<strong>GenAI & RAG:</strong> Designed and deployed conversational agent with RAG that reduced support tickets by <strong>40%</strong>, processing <strong>10k+ queries/month</strong> with 85% resolution without escalation. Stack: LangChain, Azure OpenAI, FAISS.",
-          "<strong>MLOps:</strong> Implemented CI/CD pipeline in <strong>Databricks + MLflow</strong> reducing deployment time from 2 weeks to <strong>2 days</strong>. Production models with automatic drift monitoring and retraining.",
+          "<strong>MLOps on Databricks:</strong> End-to-end data-to-production cycle with <strong>PySpark</strong>, <strong>Delta Lake</strong> and <strong>Unity Catalog</strong>, orchestration with <strong>Workflows</strong>, versioning in the <strong>MLflow Model Registry</strong> and endpoint or batch serving. CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with drift monitoring and automated retraining.",
           "<strong>Reinforcement Learning:</strong> Productized <em>Next Best Offer</em> (NBO) system with A/B testing that increased conversion by <strong>15%</strong> and revenue by <strong>$10k per person</strong>.",
-          "<strong>Churn Model:</strong> Developed predictive model with <strong>Lift of 3.0</strong> and 82% recall in top decile, integrated to CRM for proactive retention. Impacted <strong>50k+ customers</strong>."
+          "<strong>Churn Model:</strong> Developed predictive model with <strong>Lift of 3.0</strong> and 82% recall in top decile, deployed on Databricks and integrated into the CRM for proactive retention. Impacted <strong>50k+ customers</strong>."
         ]
       }
     },
@@ -230,13 +230,13 @@
           "<strong>Modelo de Propensión de Pago:</strong> Desarrollé modelo predictivo de probabilidad de pago y acuerdo de cartera, maximizando el recaudo mediante <strong>focos automáticos</strong> de gestión priorizados por propensión.",
           "<strong>Sistema de Recomendación:</strong> Implementé motor de recomendación de franja horaria óptima de contacto por titular, incrementando la efectividad de la gestión de cobranza.",
           "<strong>Segmentación de Clientes:</strong> Diseñé estrategia de marketing basada en clustering de titulares, permitiendo comunicación personalizada por segmento para optimizar tasas de recaudo.",
-          "<strong>Monitoreo:</strong> Construí dashboards en <strong>Power BI</strong> para seguimiento de KPIs de recaudo y métricas de desempeño de modelos en producción."
+          "<strong>Producción y monitoreo:</strong> Desplegué los modelos como procesos batch orquestados con <strong>Apache Airflow</strong> y construí dashboards en <strong>Power BI</strong> para seguimiento de KPIs de recaudo y métricas de desempeño de los modelos en producción."
         ],
         "en": [
           "<strong>Payment Propensity Model:</strong> Developed predictive model for payment probability and portfolio agreement, maximizing collection through <strong>automated management priorities</strong> based on propensity scores.",
           "<strong>Recommendation System:</strong> Implemented optimal contact time-slot recommendation engine per account holder, increasing debt collection management effectiveness.",
           "<strong>Customer Segmentation:</strong> Designed clustering-based marketing strategy for account holders, enabling personalized communication per segment to optimize collection rates.",
-          "<strong>Monitoring:</strong> Built <strong>Power BI</strong> dashboards for tracking collection KPIs and production model performance metrics."
+          "<strong>Production &amp; Monitoring:</strong> Deployed the models as batch jobs orchestrated with <strong>Apache Airflow</strong> and built <strong>Power BI</strong> dashboards tracking collection KPIs and production model performance metrics."
         ]
       }
     },
