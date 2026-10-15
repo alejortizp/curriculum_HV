@@ -157,7 +157,7 @@
                 <!-- Projects -->
                 <section>
                     <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Proyectos Open Source{% else %}Open Source Projects{% endif %}</h3>
-                    {% for proj in cv.projects %}
+                    {% for proj in cv.projects if proj.get('cv', true) %}{# "cv": false keeps a project out of this page-limited layout (still in portfolio + ATS) #}
                     <div class="mb-4 item-no-break">
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">{{ proj.emoji }}</span> {{ t(proj.title) }}</h4>

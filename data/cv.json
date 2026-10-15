@@ -296,6 +296,20 @@
         "en": "Agent that translates natural language to SQL queries and Pandas operations. Includes code validation, secure sandbox execution, and automatic results visualization."
       },
       "stack": "LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern"
+    },
+    {
+      "emoji": "📈",
+      "title": {"es": "Pipeline de ML con MLflow: Benchmark de 7 Modelos", "en": "ML Pipeline with MLflow: 7-Model Benchmark"},
+      "categories": ["classic-ml"],
+      "cv": false,
+      "url": "https://github.com/alejortizp/MLOps-Pipeline-",
+      "icon": "analytics",
+      "url_label": "github.com/alejortizp/MLOps-Pipeline-",
+      "description": {
+        "es": "Pipeline reproducible de regresión multivariada que compara <strong>7 modelos</strong> (Ridge, ElasticNet, Random Forest, Gradient Boosting, SVR, XGBoost, LightGBM) con búsqueda de hiperparámetros (RandomizedSearchCV, CV de 5 folds) y tracking en <strong>MLflow</strong>. El mejor modelo (Gradient Boosting, R² <strong>0.84</strong>) redujo el MAE en <strong>26%</strong> frente al baseline y se serializa como pipeline sklearn listo para inferencia.",
+        "en": "Reproducible multivariate regression pipeline comparing <strong>7 models</strong> (Ridge, ElasticNet, Random Forest, Gradient Boosting, SVR, XGBoost, LightGBM) with hyperparameter search (RandomizedSearchCV, 5-fold CV) and <strong>MLflow</strong> tracking. The best model (Gradient Boosting, R² <strong>0.84</strong>) cut MAE by <strong>26%</strong> versus the baseline and is serialized as an inference-ready sklearn pipeline."
+      },
+      "stack": "Scikit-learn, XGBoost, LightGBM, MLflow, Pandas, Joblib"
     }
   ],
 
