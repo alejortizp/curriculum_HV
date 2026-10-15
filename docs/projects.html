@@ -148,35 +148,39 @@
             </p>
         </div>
 
-        <!-- Filters -->
-        <div class="flex flex-wrap gap-3 pb-4 border-b border-surface-secondary" role="group" aria-label="Filtrar proyectos">
-            <button type="button" aria-pressed="true" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 transition-colors shadow-[0_0_10px_rgba(19,91,236,0.3)]">
+        <!-- Filters: only categories that at least one project has (projects[].categories in cv.json) -->
+        
+        
+        
+        <div id="project-filters" class="flex flex-wrap gap-3 pb-4 border-b border-surface-secondary" role="group" aria-label="Filtrar proyectos">
+            <button type="button" data-filter="all" aria-pressed="true" class="group flex h-11 items-center justify-center gap-x-2 rounded-full border px-5 transition-colors bg-surface-dark border-surface-secondary text-text-secondary hover:border-primary/50 hover:bg-surface-secondary hover:text-white aria-pressed:bg-primary aria-pressed:border-primary aria-pressed:text-white aria-pressed:hover:bg-primary aria-pressed:shadow-[0_0_10px_rgba(19,91,236,0.3)]">
                 <span class="text-sm font-medium">Todos</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
+            
+            <button type="button" data-filter="agents" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full border px-5 transition-colors bg-surface-dark border-surface-secondary text-text-secondary hover:border-primary/50 hover:bg-surface-secondary hover:text-white aria-pressed:bg-primary aria-pressed:border-primary aria-pressed:text-white aria-pressed:hover:bg-primary aria-pressed:shadow-[0_0_10px_rgba(19,91,236,0.3)]">
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>
                 <span class="text-sm font-medium">Agentes IA</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
+            
+            <button type="button" data-filter="genai-rag" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full border px-5 transition-colors bg-surface-dark border-surface-secondary text-text-secondary hover:border-primary/50 hover:bg-surface-secondary hover:text-white aria-pressed:bg-primary aria-pressed:border-primary aria-pressed:text-white aria-pressed:hover:bg-primary aria-pressed:shadow-[0_0_10px_rgba(19,91,236,0.3)]">
                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chat</span>
-                <span class="text-sm font-medium">GenAI &amp; RAG</span>
+                <span class="text-sm font-medium">GenAI & RAG</span>
             </button>
-            <button type="button" aria-pressed="false" class="group flex h-11 items-center justify-center gap-x-2 rounded-full bg-surface-dark border border-surface-secondary hover:border-primary/50 hover:bg-surface-secondary text-text-secondary hover:text-white px-5 transition-colors">
-                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">analytics</span>
-                <span class="text-sm font-medium">ML Clásico</span>
-            </button>
+            
         </div>
+        <p id="project-filter-status" class="sr-only" aria-live="polite"></p>
 
         <!-- Projects List -->
         <div class="flex flex-col gap-6">
             
             
             
-            <article class="@container">
+            
+            <article class="@container" data-categories="genai-rag">
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-surface-secondary hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">mail</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">account_balance</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -221,11 +225,11 @@
                 </div>
             </article>
             
-            <article class="@container">
+            <article class="@container" data-categories="agents">
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-surface-secondary hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-green-900 to-teal-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">database</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">mail</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -266,11 +270,11 @@
                 </div>
             </article>
             
-            <article class="@container">
+            <article class="@container" data-categories="agents">
                 <div class="group flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start bg-surface-dark border border-surface-secondary hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:-translate-y-1 overflow-hidden">
                     <!-- Icon placeholder -->
                     <div class="w-full @xl:w-[320px] shrink-0 aspect-video @xl:aspect-auto bg-center bg-no-repeat bg-cover relative overflow-hidden bg-gradient-to-br from-orange-900 to-red-900 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">restaurant</span>
+                        <span class="material-symbols-outlined text-white text-7xl opacity-30" aria-hidden="true">database</span>
                         <div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <!-- Content -->
@@ -314,6 +318,26 @@
         </div>
     </div>
 </main>
+<script>
+(function() {
+    var buttons = document.querySelectorAll('#project-filters [data-filter]');
+    var articles = document.querySelectorAll('article[data-categories]');
+    var status = document.getElementById('project-filter-status');
+    buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var filter = btn.dataset.filter;
+            var shown = 0;
+            buttons.forEach(function(b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+            articles.forEach(function(article) {
+                var match = filter === 'all' || article.dataset.categories.split(' ').indexOf(filter) !== -1;
+                article.hidden = !match;
+                if (match) shown++;
+            });
+            status.textContent = 'Mostrando ' + shown + (shown === 1 ? ' proyecto' : ' proyectos');
+        });
+    });
+})();
+</script>
 
 
 <!-- Footer -->
