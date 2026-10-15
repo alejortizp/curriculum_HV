@@ -160,6 +160,25 @@
                     
                     <div class="item-no-break mb-5">
                         <div class="flex justify-between items-baseline">
+                            <h4 class="font-bold text-gray-900 text-base">AI Engineer Freelance — Clínica Odontológica</h4>
+                            
+                            <span class="text-xs text-gray-500 italic">Jul – Ago 2026</span>
+                            
+                        </div>
+                        <div class="text-sm font-semibold text-blue-700 mb-2">Freelance</div>
+                        <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
+                            
+                            <li><strong>Agentes IA sobre WhatsApp:</strong> Diseñé y desarrollé como único ingeniero dos agentes con <strong>LangGraph</strong> + <strong>Azure OpenAI</strong>: agendamiento de citas sincronizado con <strong>Outlook (Microsoft Graph)</strong>, con clasificación de intención por LLM y escalamiento de casos complejos; y recordatorios por categoría clínica con aprobación humana (<em>human-in-the-loop</em>).</li>
+                            
+                            <li><strong>Guardrails deterministas y despliegue serverless:</strong> El LLM solo interpreta; la reserva la ejecuta código determinista con bloqueo que evita la doble reserva. Desplegado en <strong>Azure Functions</strong> (colas con poison-queue y deduplicación), Table Storage, <strong>Key Vault</strong> con managed identity y alertas en Application Insights; webhook de <strong>WhatsApp Cloud API</strong> con verificación HMAC. Desarrollo TDD con <strong>118 tests</strong>.</li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="item-no-break mb-5">
+                        <div class="flex justify-between items-baseline">
                             <h4 class="font-bold text-gray-900 text-base">Machine Learning Engineer</h4>
                             
                             <span class="text-xs text-gray-500 italic">Sep 2023 – Jun 2025</span>
@@ -268,6 +287,16 @@
                     
                     <div class="mb-4 item-no-break">
                         <div class="flex items-baseline gap-2 mb-1">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">🏦</span> Asistente RAG con Web Scraping y Evaluación RAGAS</h4>
+                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
+                            <a href="https://github.com/alejortizp/rag-banco" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/rag-banco</a>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Asistente conversacional sobre el sitio público de un banco: crawler que respeta robots.txt, indexación en <strong>Qdrant</strong>, reranking con cross-encoder y memoria por sesión. Evaluado con <strong>RAGAS</strong> (50 preguntas, juez LLM independiente): faithfulness <strong>0.87</strong>; el reranker mejoró context utilization en <strong>+8 pts</strong> (A/B).</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> Qdrant, Sentence-Transformers, Cross-Encoder, Groq Llama 3.1, RAGAS, Streamlit, Docker</p>
+                    </div>
+                    
+                    <div class="mb-4 item-no-break">
+                        <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">🤖</span> Agente Email con LangChain</h4>
                             <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
                             <a href="https://github.com/alejortizp/email-agent" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/email-agent</a>
@@ -280,23 +309,73 @@
                         <div class="flex items-baseline gap-2 mb-1">
                             <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">💬</span> NL-to-SQL/Pandas Agent</h4>
                             <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
-                            <a href="https://github.com/alejortizp/Agente-de-Consultas---High-Garden-Coffee---Agentic-Rag" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/nl-to-code</a>
+                            <a href="https://github.com/alejortizp/nl-to-code" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/nl-to-code</a>
                         </div>
                         <p class="text-xs text-gray-700 leading-snug mb-1">Agente que traduce lenguaje natural a queries SQL y operaciones Pandas. Incluye validación de código, ejecución segura en sandbox y visualización automática de resultados.</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern</p>
                     </div>
                     
+                </section>
+
+                <!-- Academic Projects (MISO): mostly private course repos, so url is optional -->
+                
+                
+                <section>
+                    
                     <div class="mb-4 item-no-break">
-                        <div class="flex items-baseline gap-2 mb-1">
-                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">🛒</span> RAG Restaurant Ordering System</h4>
-                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
-                            <a href="https://github.com/alejortizp/rag-ordering" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/alejortizp/rag-ordering</a>
+                        <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">Proyectos Académicos — Maestría (Uniandes)</h3>
+                        
+                        <div class="flex items-baseline gap-2 mb-0.5">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">☁️</span> Plataforma de Monitorías en GCP (Go + Angular)</h4>
+                            
                         </div>
-                        <p class="text-xs text-gray-700 leading-snug mb-1">Sistema de pedidos conversacional con RAG sobre menú de restaurante. Agente procesa selección de productos en lenguaje natural, genera factura y calcula totales. Incluye gestión de inventario.</p>
-                        <p class="text-xs text-gray-500"><strong>Stack:</strong> LangChain, FAISS, Azure OpenAI, FastAPI, Streamlit</p>
+                        <p class="text-xs text-blue-700 mb-1">MISW4204 Desarrollo de Soluciones Cloud · 2026</p>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Principal contribuidor (<strong>60%</strong> de commits, equipo de 4). Migré el sistema de Docker Compose a <strong>MIG con autoscaling + Load Balancer</strong> y luego a <strong>Cloud Run + Pub/Sub</strong> serverless, con reportes PDF generados por IA de forma asíncrona. Pruebas de carga JMeter: <strong>158 rps</strong> (p95 292 ms) con <strong>0%</strong> errores de infraestructura; cobertura <strong>84%</strong> (Go) y <strong>93%</strong> (Angular); SonarQube A.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> Go (Gin), Angular, PostgreSQL, Cloud Run, Pub/Sub, Cloud SQL, OpenAI, JMeter, SonarQube, GitHub Actions</p>
+                
+                    </div>
+                    
+                    <div class="mb-4 item-no-break">
+                        
+                        <div class="flex items-baseline gap-2 mb-0.5">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">🚚</span> Marketplace de Envíos Event-Driven en AWS</h4>
+                            
+                        </div>
+                        <p class="text-xs text-blue-700 mb-1">MISW4301 Desarrollo de Apps en la Nube · 2026</p>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Lideré la arquitectura AWS e IaC de <strong>11 microservicios</strong> FastAPI (arquitectura hexagonal) sobre <strong>EKS</strong>, con extensión serverless: <strong>SNS→SQS</strong> con DLQ, <strong>4 Lambdas</strong> en contenedor y DynamoDB, todo en <strong>Terraform</strong> desplegado con GitHub Actions a 5 ambientes. Resolví cold starts y permisos IAM, logrando <strong>76/76</strong> aserciones E2E sin fallos.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> AWS (EKS, Lambda, SNS, SQS, DynamoDB, RDS), Terraform, Kubernetes, FastAPI, Docker</p>
+                
+                    </div>
+                    
+                    <div class="mb-4 item-no-break">
+                        
+                        <div class="flex items-baseline gap-2 mb-0.5">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">🛡️</span> Experimentos de Arquitectura en Microservicios</h4>
+                            
+                        </div>
+                        <p class="text-xs text-blue-700 mb-1">MISW4202 Arquitecturas Ágiles de Software · 2026</p>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Experimentos guiados por hipótesis para un sistema de reservas: detección asíncrona de anomalías de pago en <strong>538 ms</strong> promedio vs. meta de 2 s (t-test, p&lt;0.001) y detección del <strong>100%</strong> de ataques Man-in-the-Middle con 0 falsos positivos (JWT RS256 con revocación, RSA-OAEP, hash de integridad, TLS).</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> Flask, Redis Streams, Celery, Nginx, JWT, RSA, SciPy</p>
+                
+                    </div>
+                    
+                    <div class="mb-4 item-no-break">
+                        
+                        <div class="flex items-baseline gap-2 mb-0.5">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">⏰</span> Alarmas QR: de la Investigación UX a App Android + Web</h4>
+                            
+                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
+                            <a href="https://github.com/a-ortizp/alarmas-qr-app" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/a-ortizp/alarmas-qr-app</a>
+                            
+                        </div>
+                        <p class="text-xs text-blue-700 mb-1">Prototipado UX · MISO · 2026</p>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">Ciclo completo de producto: investigación con usuarios, <strong>3 pruebas de usabilidad</strong> (20 hallazgos), prototipo en Figma y design system Material 3 (48 componentes); luego app Android de <strong>22 pantallas</strong> (escaneo QR con ML Kit, alarmas con la app cerrada) y web Angular, con APK firmado vía GitHub Actions.</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> Figma, Kotlin, Jetpack Compose, CameraX, ML Kit, Angular, GitHub Actions</p>
+                
                     </div>
                     
                 </section>
+                
             </div>
 
             <!-- Side Column -->
@@ -429,6 +508,9 @@
                                     
                                     <strong>LangChain</strong> <span class="text-blue-600 font-semibold">2+</span> <span class="text-gray-500">(Agents, RAG)</span>
                                     
+                                     | 
+                                    <strong>LangGraph</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
                                 </div>
                                 
                                 <div>
@@ -448,7 +530,14 @@
                                 <div>
                                     
                                     
-                                    <strong>Vector DBs</strong> <span class="text-blue-600 font-semibold">2+</span> <span class="text-gray-500">(FAISS, Pinecone)</span>
+                                    <strong>Vector DBs</strong> <span class="text-blue-600 font-semibold">2+</span> <span class="text-gray-500">(FAISS, Qdrant, Pinecone)</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>LLM Evaluation</strong> <span class="text-blue-600 font-semibold">1+</span> <span class="text-gray-500">(RAGAS)</span>
                                     
                                 </div>
                                 
@@ -478,6 +567,9 @@
                                     
                                     <strong>Azure AI Foundry</strong> <span class="text-blue-600 font-semibold">1+</span>
                                     
+                                     | 
+                                    <strong>Azure Functions</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
                                 </div>
                                 
                                 <div>
@@ -506,6 +598,9 @@
                                     
                                     <strong>Cloud Run</strong> <span class="text-blue-600 font-semibold">1+</span>
                                     
+                                     | 
+                                    <strong>Pub/Sub</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
                                 </div>
                                 
                                 <div>
@@ -522,6 +617,39 @@
                                     
                                      | 
                                     <strong>Cloud SQL</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="item-no-break">
+                            <span class="text-xs font-bold text-gray-500 uppercase block mb-1.5">Amazon Web Services (AWS)</span>
+                            <div class="space-y-1">
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>EKS</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>Lambda</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>DynamoDB</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>SNS</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>SQS</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>RDS</strong> <span class="text-blue-600 font-semibold">1+</span>
                                     
                                 </div>
                                 
@@ -589,6 +717,29 @@
                                     
                                      | 
                                     <strong>CI/CD</strong> <span class="text-blue-600 font-semibold">2+</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Kubernetes</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>Terraform</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                </div>
+                                
+                                <div>
+                                    
+                                    
+                                    <strong>Go</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>Angular</strong> <span class="text-blue-600 font-semibold">1+</span>
+                                    
+                                     | 
+                                    <strong>Kotlin</strong> <span class="text-blue-600 font-semibold">1+</span>
                                     
                                 </div>
                                 

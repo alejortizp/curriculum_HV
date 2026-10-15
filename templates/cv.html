@@ -169,6 +169,34 @@
                     </div>
                     {% endfor %}
                 </section>
+
+                <!-- Academic Projects (MISO): mostly private course repos, so url is optional -->
+                {% macro academic_card(proj) %}
+                        <div class="flex items-baseline gap-2 mb-0.5">
+                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">{{ proj.emoji }}</span> {{ t(proj.title) }}</h4>
+                            {% if proj.url %}
+                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
+                            <a href="{{ proj.url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">{{ proj.url_label }}</a>
+                            {% endif %}
+                        </div>
+                        <p class="text-xs text-blue-700 mb-1">{{ t(proj.course) }}</p>
+                        <p class="text-xs text-gray-700 leading-snug mb-1">{{ t(proj.description) }}</p>
+                        <p class="text-xs text-gray-500"><strong>Stack:</strong> {{ proj.stack }}</p>
+                {% endmacro %}
+                {% if cv.academic_projects %}
+                <section>
+                    {# Heading shares a no-break block with the first card: Chromium ignores break-after: avoid on h3 #}
+                    <div class="mb-4 item-no-break">
+                        <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Proyectos Académicos — Maestría (Uniandes){% else %}Academic Projects — M.Sc. (Uniandes){% endif %}</h3>
+                        {{ academic_card(cv.academic_projects[0]) }}
+                    </div>
+                    {% for proj in cv.academic_projects[1:] %}
+                    <div class="mb-4 item-no-break">
+                        {{ academic_card(proj) }}
+                    </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
             </div>
 
             <!-- Side Column -->

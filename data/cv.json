@@ -66,6 +66,23 @@
     {
       "current": false,
       "langs": ["es", "en"],
+      "title": {"es": "AI Engineer Freelance — Clínica Odontológica", "en": "Freelance AI Engineer — Dental Clinic"},
+      "company": "Freelance",
+      "date": {"es": "Jul – Ago 2026", "en": "Jul – Aug 2026"},
+      "items": {
+        "es": [
+          "<strong>Agentes IA sobre WhatsApp:</strong> Diseñé y desarrollé como único ingeniero dos agentes con <strong>LangGraph</strong> + <strong>Azure OpenAI</strong>: agendamiento de citas sincronizado con <strong>Outlook (Microsoft Graph)</strong>, con clasificación de intención por LLM y escalamiento de casos complejos; y recordatorios por categoría clínica con aprobación humana (<em>human-in-the-loop</em>).",
+          "<strong>Guardrails deterministas y despliegue serverless:</strong> El LLM solo interpreta; la reserva la ejecuta código determinista con bloqueo que evita la doble reserva. Desplegado en <strong>Azure Functions</strong> (colas con poison-queue y deduplicación), Table Storage, <strong>Key Vault</strong> con managed identity y alertas en Application Insights; webhook de <strong>WhatsApp Cloud API</strong> con verificación HMAC. Desarrollo TDD con <strong>118 tests</strong>."
+        ],
+        "en": [
+          "<strong>WhatsApp AI Agents:</strong> Designed and built, as sole engineer, two agents with <strong>LangGraph</strong> + <strong>Azure OpenAI</strong>: appointment scheduling synced with <strong>Outlook (Microsoft Graph)</strong>, with LLM intent classification and escalation of complex cases; and clinical-category reminders with <em>human-in-the-loop</em> approval.",
+          "<strong>Deterministic guardrails &amp; serverless deployment:</strong> The LLM only interprets; booking is executed by deterministic code with locking to prevent double booking. Deployed on <strong>Azure Functions</strong> (queues with poison-queue handling and deduplication), Table Storage, <strong>Key Vault</strong> with managed identity and Application Insights alerts; <strong>WhatsApp Cloud API</strong> webhook with HMAC verification. Test-driven development with <strong>118 tests</strong>."
+        ]
+      }
+    },
+    {
+      "current": false,
+      "langs": ["es", "en"],
       "title": {"es": "Machine Learning Engineer", "en": "Machine Learning Engineer"},
       "company": "Global Hitss",
       "date": {"es": "Sep 2023 – Jun 2025", "en": "Sep 2023 – Jun 2025"},
@@ -155,6 +172,17 @@
 
   "projects": [
     {
+      "emoji": "\ud83c\udfe6",
+      "title": {"es": "Asistente RAG con Web Scraping y Evaluaci\u00f3n RAGAS", "en": "RAG Assistant with Web Scraping and RAGAS Evaluation"},
+      "url": "https://github.com/alejortizp/rag-banco",
+      "url_label": "github.com/alejortizp/rag-banco",
+      "description": {
+        "es": "Asistente conversacional sobre el sitio p\u00fablico de un banco: crawler que respeta robots.txt, indexaci\u00f3n en <strong>Qdrant</strong>, reranking con cross-encoder y memoria por sesi\u00f3n. Evaluado con <strong>RAGAS</strong> (50 preguntas, juez LLM independiente): faithfulness <strong>0.87</strong>; el reranker mejor\u00f3 context utilization en <strong>+8 pts</strong> (A/B).",
+        "en": "Conversational assistant over a bank's public website: robots.txt-compliant crawler, <strong>Qdrant</strong> indexing, cross-encoder reranking and per-session memory. Evaluated with <strong>RAGAS</strong> (50 questions, independent LLM judge): faithfulness <strong>0.87</strong>; the reranker improved context utilization by <strong>+8 pts</strong> (A/B)."
+      },
+      "stack": "Qdrant, Sentence-Transformers, Cross-Encoder, Groq Llama 3.1, RAGAS, Streamlit, Docker"
+    },
+    {
       "emoji": "\ud83e\udd16",
       "title": {"es": "Agente Email con LangChain", "en": "Email Agent with LangChain"},
       "url": "https://github.com/alejortizp/email-agent",
@@ -168,24 +196,58 @@
     {
       "emoji": "\ud83d\udcac",
       "title": {"es": "NL-to-SQL/Pandas Agent", "en": "NL-to-SQL/Pandas Agent"},
-      "url": "https://github.com/alejortizp/Agente-de-Consultas---High-Garden-Coffee---Agentic-Rag",
+      "url": "https://github.com/alejortizp/nl-to-code",
       "url_label": "github.com/alejortizp/nl-to-code",
       "description": {
         "es": "Agente que traduce lenguaje natural a queries SQL y operaciones Pandas. Incluye validación de código, ejecución segura en sandbox y visualización automática de resultados.",
         "en": "Agent that translates natural language to SQL queries and Pandas operations. Includes code validation, secure sandbox execution, and automatic results visualization."
       },
       "stack": "LangChain, SQL, Pandas, Code Interpreter, ReAct Pattern"
+    }
+  ],
+
+  "academic_projects": [
+    {
+      "emoji": "☁️",
+      "title": {"es": "Plataforma de Monitorías en GCP (Go + Angular)", "en": "Teaching-Assistant Platform on GCP (Go + Angular)"},
+      "course": {"es": "MISW4204 Desarrollo de Soluciones Cloud · 2026", "en": "MISW4204 Cloud Solutions Development · 2026"},
+      "description": {
+        "es": "Principal contribuidor (<strong>60%</strong> de commits, equipo de 4). Migré el sistema de Docker Compose a <strong>MIG con autoscaling + Load Balancer</strong> y luego a <strong>Cloud Run + Pub/Sub</strong> serverless, con reportes PDF generados por IA de forma asíncrona. Pruebas de carga JMeter: <strong>158 rps</strong> (p95 292 ms) con <strong>0%</strong> errores de infraestructura; cobertura <strong>84%</strong> (Go) y <strong>93%</strong> (Angular); SonarQube A.",
+        "en": "Top contributor (<strong>60%</strong> of commits, team of 4). Migrated the system from Docker Compose to an <strong>autoscaling MIG + Load Balancer</strong> and then to serverless <strong>Cloud Run + Pub/Sub</strong>, with asynchronous AI-generated PDF reports. JMeter load tests: <strong>158 rps</strong> (p95 292 ms) with <strong>0%</strong> infrastructure errors; <strong>84%</strong> (Go) and <strong>93%</strong> (Angular) coverage; SonarQube A rating."
+      },
+      "stack": "Go (Gin), Angular, PostgreSQL, Cloud Run, Pub/Sub, Cloud SQL, OpenAI, JMeter, SonarQube, GitHub Actions"
     },
     {
-      "emoji": "\ud83d\uded2",
-      "title": {"es": "RAG Restaurant Ordering System", "en": "RAG Restaurant Ordering System"},
-      "url": "https://github.com/alejortizp/rag-ordering",
-      "url_label": "github.com/alejortizp/rag-ordering",
+      "emoji": "🚚",
+      "title": {"es": "Marketplace de Envíos Event-Driven en AWS", "en": "Event-Driven Delivery Marketplace on AWS"},
+      "course": {"es": "MISW4301 Desarrollo de Apps en la Nube · 2026", "en": "MISW4301 Cloud-Native App Development · 2026"},
       "description": {
-        "es": "Sistema de pedidos conversacional con RAG sobre menú de restaurante. Agente procesa selección de productos en lenguaje natural, genera factura y calcula totales. Incluye gestión de inventario.",
-        "en": "Conversational ordering system with RAG over restaurant menu. Agent processes product selection in natural language, generates invoices, and calculates totals. Includes inventory management."
+        "es": "Lideré la arquitectura AWS e IaC de <strong>11 microservicios</strong> FastAPI (arquitectura hexagonal) sobre <strong>EKS</strong>, con extensión serverless: <strong>SNS→SQS</strong> con DLQ, <strong>4 Lambdas</strong> en contenedor y DynamoDB, todo en <strong>Terraform</strong> desplegado con GitHub Actions a 5 ambientes. Resolví cold starts y permisos IAM, logrando <strong>76/76</strong> aserciones E2E sin fallos.",
+        "en": "Led the AWS architecture and IaC for <strong>11 FastAPI microservices</strong> (hexagonal architecture) on <strong>EKS</strong>, with a serverless extension: <strong>SNS→SQS</strong> with DLQs, <strong>4 container Lambdas</strong> and DynamoDB, all in <strong>Terraform</strong> deployed via GitHub Actions to 5 environments. Fixed cold starts and IAM permissions, reaching <strong>76/76</strong> E2E assertions with zero failures."
       },
-      "stack": "LangChain, FAISS, Azure OpenAI, FastAPI, Streamlit"
+      "stack": "AWS (EKS, Lambda, SNS, SQS, DynamoDB, RDS), Terraform, Kubernetes, FastAPI, Docker"
+    },
+    {
+      "emoji": "🛡️",
+      "title": {"es": "Experimentos de Arquitectura en Microservicios", "en": "Microservices Architecture Experiments"},
+      "course": {"es": "MISW4202 Arquitecturas Ágiles de Software · 2026", "en": "MISW4202 Agile Software Architectures · 2026"},
+      "description": {
+        "es": "Experimentos guiados por hipótesis para un sistema de reservas: detección asíncrona de anomalías de pago en <strong>538 ms</strong> promedio vs. meta de 2 s (t-test, p&lt;0.001) y detección del <strong>100%</strong> de ataques Man-in-the-Middle con 0 falsos positivos (JWT RS256 con revocación, RSA-OAEP, hash de integridad, TLS).",
+        "en": "Hypothesis-driven experiments for a booking system: asynchronous payment-anomaly detection in <strong>538 ms</strong> mean vs. a 2 s target (t-test, p&lt;0.001) and <strong>100%</strong> Man-in-the-Middle attack detection with zero false positives (RS256 JWT with revocation, RSA-OAEP, integrity hashing, TLS)."
+      },
+      "stack": "Flask, Redis Streams, Celery, Nginx, JWT, RSA, SciPy"
+    },
+    {
+      "emoji": "⏰",
+      "title": {"es": "Alarmas QR: de la Investigación UX a App Android + Web", "en": "QR Alarms: from UX Research to Android + Web App"},
+      "course": {"es": "Prototipado UX · MISO · 2026", "en": "UX Prototyping · MISO · 2026"},
+      "url": "https://github.com/a-ortizp/alarmas-qr-app",
+      "url_label": "github.com/a-ortizp/alarmas-qr-app",
+      "description": {
+        "es": "Ciclo completo de producto: investigación con usuarios, <strong>3 pruebas de usabilidad</strong> (20 hallazgos), prototipo en Figma y design system Material 3 (48 componentes); luego app Android de <strong>22 pantallas</strong> (escaneo QR con ML Kit, alarmas con la app cerrada) y web Angular, con APK firmado vía GitHub Actions.",
+        "en": "Full product cycle: user research, <strong>3 usability tests</strong> (20 findings), Figma prototype and Material 3 design system (48 components); then a <strong>22-screen</strong> Android app (ML Kit QR scanning, alarms firing with the app closed) and Angular web app, with signed APK releases via GitHub Actions."
+      },
+      "stack": "Figma, Kotlin, Jetpack Compose, CameraX, ML Kit, Angular, GitHub Actions"
     }
   ],
 
@@ -222,10 +284,11 @@
     {
       "category": "GenAI & LLMs",
       "items": [
-        [{"name": "LangChain", "years": 2, "detail": "(Agents, RAG)"}],
+        [{"name": "LangChain", "years": 2, "detail": "(Agents, RAG)"}, {"name": "LangGraph", "years": 1}],
         [{"name": "Azure OpenAI", "years": 2, "detail": "(GPT-4, Embeddings)"}],
         [{"name": "Prompt Engineering", "years": 2}],
-        [{"name": "Vector DBs", "years": 2, "detail": "(FAISS, Pinecone)"}]
+        [{"name": "Vector DBs", "years": 2, "detail": "(FAISS, Qdrant, Pinecone)"}],
+        [{"name": "LLM Evaluation", "years": 1, "detail": "(RAGAS)"}]
       ]
     },
     {
@@ -233,7 +296,7 @@
       "items": [
         [{"name": "Azure AI Search", "years": 1}],
         [{"name": "Document Intelligence", "years": 1}],
-        [{"name": "Azure AI Foundry", "years": 1}],
+        [{"name": "Azure AI Foundry", "years": 1}, {"name": "Azure Functions", "years": 1}],
         [{"name": "Databricks + MLflow", "years": 3}]
       ]
     },
@@ -241,9 +304,16 @@
       "category": "Google Cloud Platform (GCP)",
       "items": [
         [{"name": "Vertex AI", "years": 1, "detail": "(Training, Endpoints, Pipelines)"}],
-        [{"name": "Cloud Run", "years": 1}],
+        [{"name": "Cloud Run", "years": 1}, {"name": "Pub/Sub", "years": 1}],
         [{"name": "Compute Engine", "years": 1, "detail": "(MIG zonales)"}],
         [{"name": "Cloud Storage", "years": 1}, {"name": "Cloud SQL", "years": 1}]
+      ]
+    },
+    {
+      "category": "Amazon Web Services (AWS)",
+      "items": [
+        [{"name": "EKS", "years": 1}, {"name": "Lambda", "years": 1}, {"name": "DynamoDB", "years": 1}],
+        [{"name": "SNS", "years": 1}, {"name": "SQS", "years": 1}, {"name": "RDS", "years": 1}]
       ]
     },
     {
@@ -259,6 +329,8 @@
       "items": [
         [{"name": "Python", "years": 7}, {"name": "SQL", "years": 7}, {"name": "PySpark", "years": 3}],
         [{"name": "Docker", "years": 2}, {"name": "CI/CD", "years": 2}],
+        [{"name": "Kubernetes", "years": 1}, {"name": "Terraform", "years": 1}],
+        [{"name": "Go", "years": 1}, {"name": "Angular", "years": 1}, {"name": "Kotlin", "years": 1}],
         [{"name": "FastAPI", "years": 3}, {"name": "Streamlit", "years": 3}],
         [{"name": "Git", "years": 4}, {"name": "GitHub Actions", "years": 2}]
       ]
