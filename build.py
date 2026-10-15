@@ -376,6 +376,15 @@ def build_portfolio(cv_data: dict):
         cv_path = ROOT / files["html"]
         if not cv_path.exists():
             print(f"  Note: {files['html']} not found — run 'make build' first")
+    # Publish ATS PDFs (linked from the "Descargar CV" dropdown); GitHub Pages only serves docs/
+    ats_pdfs = sorted(ATS_DIR.glob("*.pdf"))
+    if ats_pdfs:
+        (DOCS_DIR / "ats").mkdir(exist_ok=True)
+        for pdf in ats_pdfs:
+            shutil.copy2(pdf, DOCS_DIR / "ats" / pdf.name)
+        print(f"  Copy: docs/ats/ ({len(ats_pdfs)} ATS PDFs)")
+    else:
+        print("  Note: no ATS PDFs in ats/ — run 'make ats' first")
     # Copy profile photo to docs/ if source exists
     photo_src = ROOT / "static" / "profile.jpg"
     photo_dst = DOCS_DIR / "profile.jpg"

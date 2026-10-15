@@ -155,14 +155,29 @@
                             Descargar CV
                             <span class="material-symbols-outlined text-lg" aria-hidden="true">expand_more</span>
                         </button>
-                        <div id="cv-dropdown-menu" role="menu" class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl opacity-0 invisible transition-all z-10
+                        <div id="cv-dropdown-menu" role="menu" class="absolute top-full left-0 mt-2 w-64 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl opacity-0 invisible transition-all z-10
                                     [.open_&]:opacity-100 [.open_&]:visible">
-                            <a href="CV_español.html" role="menuitem" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-t-lg transition-colors">
-                                <span aria-hidden="true">🇪🇸</span> Español
-                            </a>
-                            <a href="CV_english.html" role="menuitem" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-b-lg transition-colors">
-                                <span aria-hidden="true">🇬🇧</span> English
-                            </a>
+                            
+                            <div role="group" aria-label="CV completo">
+                                <p class="px-4 pt-2 pb-1 text-xs font-bold uppercase tracking-wider text-slate-500" aria-hidden="true">CV completo</p>
+                                <a href="CV_español.html" role="menuitem" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                    <span aria-hidden="true">🇪🇸</span> Español
+                                </a>
+                                <a href="CV_english.html" role="menuitem" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                    <span aria-hidden="true">🇬🇧</span> English
+                                </a>
+                            </div>
+                            
+                            <div role="group" aria-label="Versión ATS (PDF)" class="border-t border-slate-200 dark:border-slate-700 mt-1">
+                                <p class="px-4 pt-2 text-xs font-bold uppercase tracking-wider text-slate-500" aria-hidden="true">Versión ATS (PDF)</p>
+                                <p class="px-4 pb-1 text-xs text-slate-500" aria-hidden="true">Texto plano para portales de empleo</p>
+                                <a href="ats/Alejandro_Ortiz_Perdomo_CV_ES.pdf" download role="menuitem" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                    <span aria-hidden="true">🇪🇸</span> Español <span class="sr-only">(PDF ATS)</span>
+                                </a>
+                                <a href="ats/Alejandro_Ortiz_Perdomo_CV_EN.pdf" download role="menuitem" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-b-lg transition-colors">
+                                    <span aria-hidden="true">🇬🇧</span> English <span class="sr-only">(ATS PDF)</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -370,6 +385,11 @@
     btn.addEventListener('click', function() {
         var isOpen = dd.classList.toggle('open');
         btn.setAttribute('aria-expanded', isOpen);
+        if (isOpen) {
+            // The button sits near the fold on desktop; bring the whole menu into view
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.getElementById('cv-dropdown-menu').scrollIntoView({block: 'nearest', behavior: reduce ? 'auto' : 'smooth'});
+        }
     });
     document.addEventListener('click', function(e) {
         if (!dd.contains(e.target)) {

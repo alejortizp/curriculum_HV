@@ -41,7 +41,7 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 ## Commands
 
 ```bash
-make              # Build everything: all CV profiles (HTML + PDF) + bilingual portfolio
+make              # Build everything: all CV profiles (HTML + PDF) + ATS PDFs + bilingual portfolio
 make build        # Build all profiles × both languages (8 CVs: 4 profiles × 2 langs)
 make html         # Build HTML only (skip PDF), all profiles
 make es           # Build Spanish CVs only (all profiles)
@@ -70,7 +70,7 @@ CV targets accept a `PROFILE` variable to build a single profile: `make es PROFI
 
 Output naming: default profile uses `CV_español.html` / `CV_english.html`. Profile variants use `CV_español_<profile>.html` / `CV_english_<profile>.html` (e.g., `CV_español_ai-engineer.html`). PDFs use ASCII-safe names: `CV-Alejandro-Ortiz-Perdomo-ES.pdf`, `CV-Alejandro-Ortiz-Perdomo-AI-Engineer-EN.pdf`, etc.
 
-`make` (default) runs `build` + `portfolio`, so updating `cv.json` and running `make` regenerates all 8 CVs, PDFs, and the bilingual portfolio in one step.
+`make` (default) runs `build` + `ats` + `portfolio`, so updating `cv.json` and running `make` regenerates all 8 CVs, PDFs, and the bilingual portfolio in one step.
 
 The Makefile wraps `uv run python build.py` with various flags. `build.py` uses **argparse** — run `uv run python build.py --help` for usage. Example: `uv run python build.py es --html-only --profile ai-engineer`.
 
@@ -81,7 +81,7 @@ The Makefile wraps `uv run python build.py` with various flags. `build.py` uses 
 - **CVs:** `data/cv.json` + `templates/cv.html` → `build.py` → `docs/CV_*.html` (all profiles) + copies `static/` to `docs/static/` → Playwright → PDF files in root (with pypdf metadata injection) + copies to `docs/`
 - **ATS CVs:** `data/cv.json` + `templates/cv_ats.html` → `build.py ats` → `ats/Alejandro_Ortiz_Perdomo_CV[_<Profile>]_{ES,EN}.pdf` (HTML intermediates are gitignored). Single column, inline CSS (no Tailwind/CDN, so it builds offline), Arial, no icons/emojis, literal `•` bullets (CSS list markers vanish from extracted text), plain-text URLs derived from the real `url` (not `display_url`), dates rendered as `MM/YYYY - MM/YYYY|Actualidad` from `experience[].start/end`. Every visible string passes the `ats` Jinja filter (`ATS_REPLACEMENTS` in `build.py`: arrows, en/em dashes, ≥, smart quotes → ASCII). Profile overrides apply here too. `/Keywords` metadata is filled from `tech_stack`
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` + `Cover_Letter.html` → Playwright → PDFs (with pypdf metadata)
-- **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (6 pages: index, projects, contact × ES/EN) + `sitemap.xml` + `robots.txt`. CVs are already in docs/ from the build step
+- **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (6 pages: index, projects, contact × ES/EN) + `sitemap.xml` + `robots.txt`; also copies `ats/*.pdf` to `docs/ats/` (GitHub Pages only serves `docs/`). CVs are already in docs/ from the build step
 - **Tailored applications:** `data/job_offer.json` + `data/cv.json` → `tailor.py` → Claude API → tailored cv_data + cover_letter_data → reuses `render_cv()` + `render_cover_letter()` from `build.py` → `applications/<company>/` (HTML + PDF). Does NOT modify `cv.json` or any existing files
 
 ### cv.json structure
@@ -192,7 +192,7 @@ The CV template is optimized for Applicant Tracking Systems and OCR extraction:
 - Contact form uses Formspree (AJAX submit, no redirect). The Formspree ID is in `cv.json` → `personal.formspree_id`
 - Google Analytics is optional — set `personal.google_analytics_id` in `cv.json` (gtag.js script is conditionally injected only when the ID has a value)
 - Mobile menu: hamburger button toggles a slide-in panel with overlay (JS in base template)
-- "Descargar CV" / "Download CV" button on index page has a dropdown with both language options (ES/EN)
+- "Descargar CV" / "Download CV" button on index page has a dropdown with two groups: "CV completo" (designed HTML CV, ES/EN) and "Versión ATS (PDF)" (`docs/ats/Alejandro_Ortiz_Perdomo_CV_{ES,EN}.pdf`, `download` links). Opening it scrolls the menu into view (it sits near the fold on desktop)
 - `profile.jpg` canonical source is `static/profile.jpg` — build copies it to `docs/`
 - Tailwind CSS custom color tokens (defined in `tailwind/portfolio.config.js`): `primary`, `primary-hover`, `surface-secondary`, `surface-secondary-hover`, `border-dark`, `text-secondary`
 - GitHub Pages serves from `docs/` folder on `main` branch

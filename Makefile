@@ -3,8 +3,8 @@
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
 
-# Default: build everything (all CV profiles + PDFs + portfolio)
-all: build portfolio
+# Default: build everything (all CV profiles + PDFs + ATS PDFs + portfolio)
+all: build ats portfolio
 
 # Build HTML + PDF for all profiles (or single profile with PROFILE=name)
 build:
