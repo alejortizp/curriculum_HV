@@ -191,7 +191,8 @@ def generate_tailored_pdfs(output_dir: Path, html_pdf_pairs: list[tuple[Path, Pa
     margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        # system Google Chrome, same as build.generate_pdfs
+        browser = p.chromium.launch(channel="chrome")
         for html_path, pdf_path in html_pdf_pairs:
             page = browser.new_page()
             page.goto(f"file://{html_path.resolve()}", wait_until="networkidle")
@@ -324,7 +325,7 @@ def main():
                 )
         except Exception as e:
             print(f"\n  Error generating PDFs: {e}")
-            print("  Make sure Playwright is installed: uv run playwright install chromium")
+            print("  PDFs are rendered with the system Google Chrome; make sure it is installed.")
             sys.exit(1)
 
     # Save the tailoring result for reference

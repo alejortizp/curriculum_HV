@@ -107,8 +107,16 @@ body {
     }
 
     .fa, .fas, .fab {
-        font-family: "Font Awesome 6 Free", sans-serif !important;
         -webkit-font-smoothing: antialiased;
+    }
+
+    .fa, .fas {
+        font-family: "Font Awesome 6 Free", sans-serif !important;
+    }
+
+    /* brand glyphs (LinkedIn, GitHub) only exist in the Brands face */
+    .fab {
+        font-family: "Font Awesome 6 Brands", sans-serif !important;
     }
 
     a {

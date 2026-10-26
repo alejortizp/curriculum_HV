@@ -139,8 +139,8 @@ def render_cover_letter(cv_data: dict, letter_data: dict, lang: str) -> str:
 def _handle_pdf_error(e: Exception) -> None:
     """Print PDF generation error and exit."""
     print(f"\n  Error generating PDFs: {e}")
-    print("  Make sure Playwright is installed:")
-    print("    uv run playwright install chromium")
+    print("  PDFs are rendered with the system Google Chrome; make sure it is installed")
+    print("  (google-chrome --version).")
     sys.exit(1)
 
 
@@ -181,7 +181,8 @@ def generate_pdfs(jobs: list, margin: dict):
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        # system Google Chrome, so builds never need `playwright install chromium`
+        browser = p.chromium.launch(channel="chrome")
         for files in jobs:
             html_path = (ROOT / files["html"]).resolve()
             pdf_path = ROOT / files["pdf"]
