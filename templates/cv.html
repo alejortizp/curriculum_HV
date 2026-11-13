@@ -183,14 +183,16 @@
                         <p class="text-xs text-gray-700 leading-snug mb-1">{{ t(proj.description) }}</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> {{ proj.stack }}</p>
                 {% endmacro %}
-                {% if cv.academic_projects %}
+                {# "cv": false hides an academic project from this page-limited layout, same as projects (still in ATS) #}
+                {% set academic = cv.academic_projects | default([]) | rejectattr('cv', 'sameas', false) | list %}
+                {% if academic %}
                 <section>
                     {# Heading shares a no-break block with the first card: Chromium ignores break-after: avoid on h3 #}
                     <div class="mb-4 item-no-break">
                         <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4 uppercase tracking-wider">{% if lang == 'es' %}Proyectos Académicos — Maestría (Uniandes){% else %}Academic Projects — M.Sc. (Uniandes){% endif %}</h3>
-                        {{ academic_card(cv.academic_projects[0]) }}
+                        {{ academic_card(academic[0]) }}
                     </div>
-                    {% for proj in cv.academic_projects[1:] %}
+                    {% for proj in academic[1:] %}
                     <div class="mb-4 item-no-break">
                         {{ academic_card(proj) }}
                     </div>

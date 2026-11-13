@@ -147,7 +147,9 @@
                         <div class="text-sm font-semibold text-blue-700 mb-2">Periferia IT Group</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
                             
-                            <li><strong>Production CV-Job semantic search pipeline:</strong> Took to production the ingestion (<strong>Azure Document Intelligence</strong>) and vector indexing (<strong>Azure AI Search</strong>) pipeline, packaged as <strong>Dockerized Azure Functions</strong> with SQL-triggered incremental indexing and scheduled sync. Processes <strong>500+ CVs/day</strong> and serves <strong>10k+ searches/month</strong> at <strong>&lt;200ms</strong> latency.</li>
+                            <li><strong>Custom OCR model with MLOps retraining:</strong> Trained a custom <strong>Azure Document Intelligence</strong> (OCR) model for a proprietary document format, with a retraining cycle following <strong>MLOps</strong> methodology. It feeds the CV-Job semantic search pipeline (<strong>Azure AI Search</strong>), packaged as <strong>Dockerized Azure Functions</strong> with SQL-triggered incremental indexing: <strong>500+ CVs/day</strong> and <strong>10k+ searches/month</strong> at <strong>&lt;200ms</strong> latency.</li>
+                            
+                            <li><strong>Production incident portal with RAG agent:</strong> Deployed a RAG conversational agent (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>, <strong>FAISS</strong>) serving <strong>10k+ queries/month</strong>.</li>
                             
                             <li><strong>Multi-cloud LLM agent platform (SRPA):</strong> Technical design and documentation of a <em>plug-and-play</em> agent platform automating the SDLC, with LLMs such as <strong>DeepSeek R-1</strong> served on <strong>Azure AI Foundry</strong> and run on <strong>Azure / AWS / GCP</strong> for internal and commercial use; includes automated unit-test generation with ≥<strong>85%</strong> coverage.</li>
                             
@@ -191,9 +193,9 @@
                             
                             <li><strong>Model CI/CD &amp; operations:</strong> Implemented the CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with automated drift monitoring and retraining.</li>
                             
-                            <li><strong>Production RAG agent:</strong> Deployed a RAG conversational agent (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>, <strong>FAISS</strong>) serving <strong>10k+ queries/month</strong>.</li>
+                            <li><strong>Financial models in production:</strong> Deployed on the platform models for <strong>credit risk</strong>, <strong>suspicious transactions</strong>, <strong>pricing</strong> and <strong>dynamic pricing</strong>.</li>
                             
-                            <li><strong>Models in production:</strong> Productized the <em>Next Best Offer</em> system (Reinforcement Learning) with rollout validated by <strong>A/B testing</strong>, and the churn model with scores fed into the <strong>CRM</strong> for <strong>50k+ customers</strong>.</li>
+                            <li><strong>Marketing &amp; recommendation models in production:</strong> Productized <em>Next Best Offer</em> (Reinforcement Learning) with rollout validated by <strong>A/B testing</strong>, churn with scores fed into the <strong>CRM</strong>, customer characterization, network analysis and <strong>geospatial</strong> competitor risk.</li>
                             
                         </ul>
                     </div>
@@ -210,9 +212,9 @@
                         <div class="text-sm font-semibold text-blue-700 mb-2">Grupo CINTE</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
                             
-                            <li><strong>ML Observability:</strong> Designed the monitoring methodology for <em>data/model drift</em> detection with automated retraining alerts, adopted as the data science team's standard.</li>
+                            <li><strong>NBO in production:</strong> Deployed on <strong>Databricks</strong> the model recommending offers and plans per customer (<em>Next Best Offer</em>), with versioning and registration in <strong>MLflow</strong>.</li>
                             
-                            <li><strong>Inference optimization:</strong> Audited and optimized LightGBM and Random Forest models, reducing inference times and compute cost.</li>
+                            <li><strong>ML Observability:</strong> Designed the monitoring methodology for <em>data/model drift</em> detection with automated retraining alerts, adopted as the data science team's standard.</li>
                             
                         </ul>
                     </div>
@@ -229,7 +231,7 @@
                         <div class="text-sm font-semibold text-blue-700 mb-2">NAE</div>
                         <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-1.5 leading-snug">
                             
-                            <li><strong>Contactability model in operation:</strong> Built and put into operation a <strong>LightGBM</strong> model prioritizing time windows and channels for campaigns of <strong>100k+ contacts/month</strong>.</li>
+                            <li><strong>Time-slot recommendation in production:</strong> Deployed on <strong>Databricks</strong> with <strong>MLflow</strong> a <strong>LightGBM</strong> model recommending the time slots and channels with the highest contact propensity per customer to feed the campaigns.</li>
                             
                         </ul>
                     </div>
@@ -299,6 +301,8 @@
                 <!-- Academic Projects (MISO): mostly private course repos, so url is optional -->
                 
                 
+                
+                
                 <section>
                     
                     <div class="mb-4 item-no-break">
@@ -335,21 +339,6 @@
                         <p class="text-xs text-blue-700 mb-1">MISW4202 Agile Software Architectures · 2026</p>
                         <p class="text-xs text-gray-700 leading-snug mb-1">Hypothesis-driven experiments for a booking system: asynchronous payment-anomaly detection in <strong>538 ms</strong> mean vs. a 2 s target (t-test, p&lt;0.001) and <strong>100%</strong> Man-in-the-Middle attack detection with zero false positives (RS256 JWT with revocation, RSA-OAEP, integrity hashing, TLS).</p>
                         <p class="text-xs text-gray-500"><strong>Stack:</strong> Flask, Redis Streams, Celery, Nginx, JWT, RSA, SciPy</p>
-                
-                    </div>
-                    
-                    <div class="mb-4 item-no-break">
-                        
-                        <div class="flex items-baseline gap-2 mb-0.5">
-                            <h4 class="font-bold text-gray-900 text-sm"><span aria-hidden="true">⏰</span> QR Alarms: from UX Research to Android + Web App</h4>
-                            
-                            <span class="text-gray-300 text-xs" aria-hidden="true">&mdash;</span>
-                            <a href="https://github.com/a-ortizp/alarmas-qr-app" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline">github.com/a-ortizp/alarmas-qr-app</a>
-                            
-                        </div>
-                        <p class="text-xs text-blue-700 mb-1">UX Prototyping · MISO · 2026</p>
-                        <p class="text-xs text-gray-700 leading-snug mb-1">Full product cycle: user research, <strong>3 usability tests</strong> (20 findings), Figma prototype and Material 3 design system (48 components); then a <strong>22-screen</strong> Android app (ML Kit QR scanning, alarms firing with the app closed) and Angular web app, with signed APK releases via GitHub Actions.</p>
-                        <p class="text-xs text-gray-500"><strong>Stack:</strong> Figma, Kotlin, Jetpack Compose, CameraX, ML Kit, Angular, GitHub Actions</p>
                 
                     </div>
                     
