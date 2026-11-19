@@ -124,8 +124,9 @@ def test_allowed_tags_cannot_carry_attributes(bad):
 
 def test_entity_for_less_than_is_fine_but_a_raw_one_is_not(bad):
     assert bad(experience={"Acme": ["precisión &lt;95%"]}) == []
-    assert bad(summary="a &lt; b") == []
+    assert bad(experience={"Acme": ["a < b"]}) != []
     assert bad(summary="a < b") != []
+    assert bad(summary="a &lt; b") != []      # el resumen se decodifica al ir al JSON-LD
 
 
 def test_every_letter_field_is_checked_for_markup(cv):
