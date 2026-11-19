@@ -79,13 +79,13 @@
         },
         "Global Hitss": {
           "es": [
-            "<strong>Ciclo MLOps completo en Databricks:</strong> Llevé los modelos de los datos a producción: construcción de <strong>data pipelines y ETL</strong> con <strong>PySpark</strong> sobre <strong>Delta Lake</strong> gobernado con <strong>Unity Catalog</strong>, orquestación con <strong>Databricks Workflows</strong>, versionado y promoción en <strong>MLflow Model Registry</strong>, y serving por <strong>endpoint</strong> o <strong>batch</strong> según el caso de uso.",
+            "<strong>Ciclo MLOps completo en Databricks:</strong> Llevé los modelos de los datos a producción: construcción de <strong>data pipelines y ETL</strong> con <strong>Azure Data Factory</strong> y <strong>PySpark</strong> sobre <strong>Delta Lake</strong> gobernado con <strong>Unity Catalog</strong>, orquestación con <strong>Databricks Workflows</strong>, versionado y promoción en <strong>MLflow Model Registry</strong>, y serving por <strong>endpoint</strong> o <strong>batch</strong> según el caso de uso.",
             "<strong>CI/CD y operación de modelos:</strong> Implementé el pipeline CI/CD que redujo el despliegue de 2 semanas a <strong>2 días</strong>, con monitoreo automático de drift y reentrenamiento.",
             "<strong>Modelos financieros en producción:</strong> Desplegué en la plataforma modelos de <strong>riesgo de crédito</strong>, <strong>transacciones sospechosas</strong>, <strong>fijación de precios</strong> y <strong>precios dinámicos</strong>.",
             "<strong>Modelos de marketing y recomendación en producción:</strong> Productivicé el <em>Next Best Offer</em> (Reinforcement Learning) con salida validada por <strong>A/B testing</strong>, churn con scores integrados al <strong>CRM</strong>, caracterización de clientes, análisis de redes y riesgo <strong>geoespacial</strong> de la competencia."
           ],
           "en": [
-            "<strong>End-to-end MLOps on Databricks:</strong> Took models from data to production: <strong>data pipelines and ETL</strong> built with <strong>PySpark</strong> on <strong>Delta Lake</strong> governed by <strong>Unity Catalog</strong>, orchestration with <strong>Databricks Workflows</strong>, versioning and promotion in the <strong>MLflow Model Registry</strong>, and <strong>endpoint</strong> or <strong>batch</strong> serving depending on the use case.",
+            "<strong>End-to-end MLOps on Databricks:</strong> Took models from data to production: <strong>data pipelines and ETL</strong> built with <strong>Azure Data Factory</strong> and <strong>PySpark</strong> on <strong>Delta Lake</strong> governed by <strong>Unity Catalog</strong>, orchestration with <strong>Databricks Workflows</strong>, versioning and promotion in the <strong>MLflow Model Registry</strong>, and <strong>endpoint</strong> or <strong>batch</strong> serving depending on the use case.",
             "<strong>Model CI/CD &amp; operations:</strong> Implemented the CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with automated drift monitoring and retraining.",
             "<strong>Financial models in production:</strong> Deployed on the platform models for <strong>credit risk</strong>, <strong>suspicious transactions</strong>, <strong>pricing</strong> and <strong>dynamic pricing</strong>.",
             "<strong>Marketing &amp; recommendation models in production:</strong> Productized <em>Next Best Offer</em> (Reinforcement Learning) with rollout validated by <strong>A/B testing</strong>, churn with scores fed into the <strong>CRM</strong>, customer characterization, network analysis and <strong>geospatial</strong> competitor risk."
@@ -160,13 +160,13 @@
         },
         "Global Hitss": {
           "es": [
-            "<strong>Data pipelines y ETL en Databricks:</strong> Construí los <strong>data pipelines y ETL</strong> con <strong>PySpark</strong> sobre <strong>Delta Lake</strong>, gobernados con <strong>Unity Catalog</strong> y orquestados con <strong>Databricks Workflows</strong>, que alimentan el portafolio de modelos en producción.",
+            "<strong>Data pipelines y ETL en Databricks:</strong> Construí los <strong>data pipelines y ETL</strong> con <strong>Azure Data Factory</strong> y <strong>PySpark</strong> sobre <strong>Delta Lake</strong>, gobernados con <strong>Unity Catalog</strong> y orquestados con <strong>Databricks Workflows</strong>, que alimentan el portafolio de modelos en producción.",
             "<strong>CI/CD y operación:</strong> Implementé el pipeline CI/CD que redujo el despliegue de 2 semanas a <strong>2 días</strong>, con monitoreo automático de drift y reentrenamiento.",
             "<strong>Entrega de datos al negocio:</strong> Resultados servidos por <strong>batch</strong> o <strong>endpoint</strong> según el caso de uso, con scores de churn integrados al <strong>CRM</strong> y versionado en <strong>MLflow Model Registry</strong>.",
             "<strong>Modelos alimentados por los pipelines:</strong> Riesgo de crédito, transacciones sospechosas, fijación de precios y precios dinámicos, <em>Next Best Offer</em>, churn, caracterización de clientes, análisis de redes y riesgo geoespacial de la competencia."
           ],
           "en": [
-            "<strong>Data pipelines &amp; ETL on Databricks:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> on <strong>Delta Lake</strong>, governed by <strong>Unity Catalog</strong> and orchestrated with <strong>Databricks Workflows</strong>, feeding the model portfolio in production.",
+            "<strong>Data pipelines &amp; ETL on Databricks:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>Azure Data Factory</strong> and <strong>PySpark</strong> on <strong>Delta Lake</strong>, governed by <strong>Unity Catalog</strong> and orchestrated with <strong>Databricks Workflows</strong>, feeding the model portfolio in production.",
             "<strong>CI/CD &amp; operations:</strong> Implemented the CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with automated drift monitoring and retraining.",
             "<strong>Data delivery to the business:</strong> Results served through <strong>batch</strong> or <strong>endpoint</strong> depending on the use case, with churn scores fed into the <strong>CRM</strong> and versioning in the <strong>MLflow Model Registry</strong>.",
             "<strong>Models fed by the pipelines:</strong> Credit risk, suspicious transactions, pricing and dynamic pricing, <em>Next Best Offer</em>, churn, customer characterization, network analysis and geospatial competitor risk."
@@ -258,13 +258,13 @@
       "date": {"es": "Sep 2023 – Jun 2025", "en": "Sep 2023 – Jun 2025"},
       "items": {
         "es": [
-          "<strong>Data pipelines y plataforma MLOps en Databricks:</strong> Construí los <strong>data pipelines y ETL</strong> con <strong>PySpark</strong> sobre <strong>Delta Lake</strong> y <strong>Unity Catalog</strong> que alimentan el portafolio de modelos, y lo llevé a producción con orquestación en <strong>Workflows</strong>, versionado y promoción en <strong>MLflow Model Registry</strong> y serving por endpoint o batch. Pipeline CI/CD que redujo el deployment de 2 semanas a <strong>2 días</strong>, con monitoreo de drift y reentrenamiento automático.",
-          "<strong>Modelos financieros en producción:</strong> Desarrollé y desplegué en la plataforma modelos de <strong>riesgo de crédito</strong>, detección de <strong>transacciones sospechosas</strong>, <strong>fijación de precios</strong> y <strong>precios dinámicos</strong>.",
+          "<strong>Data pipelines y plataforma MLOps en Databricks:</strong> Construí los <strong>data pipelines y ETL</strong> con <strong>Azure Data Factory</strong> y <strong>PySpark</strong> sobre <strong>Delta Lake</strong> y <strong>Unity Catalog</strong> que alimentan el portafolio de modelos, y lo llevé a producción con orquestación en <strong>Workflows</strong>, versionado y promoción en <strong>MLflow Model Registry</strong> y serving por endpoint o batch. Pipeline CI/CD que redujo el deployment de 2 semanas a <strong>2 días</strong>, con monitoreo de drift y reentrenamiento automático.",
+          "<strong>Modelos financieros en producción:</strong> Desarrollé en Python con <strong>NumPy</strong> y desplegué en la plataforma modelos de <strong>riesgo de crédito</strong>, detección de <strong>transacciones sospechosas</strong>, <strong>fijación de precios</strong> y <strong>precios dinámicos</strong>.",
           "<strong>Modelos de marketing y recomendación en producción:</strong> Sistema <em>Next Best Offer</em> (NBO) con <strong>Reinforcement Learning</strong> desplegado con A/B testing, modelo de <strong>churn</strong> con scores integrados al CRM, <strong>caracterización de clientes</strong>, <strong>análisis de redes</strong> e identificación <strong>geoespacial</strong> de riesgos de la competencia."
         ],
         "en": [
-          "<strong>Data pipelines &amp; MLOps platform on Databricks:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> on <strong>Delta Lake</strong> and <strong>Unity Catalog</strong> feeding the model portfolio, and took it to production with orchestration in <strong>Workflows</strong>, versioning and promotion in the <strong>MLflow Model Registry</strong> and endpoint or batch serving. CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with drift monitoring and automated retraining.",
-          "<strong>Financial models in production:</strong> Built and deployed on the platform models for <strong>credit risk</strong>, <strong>suspicious transaction</strong> detection, <strong>pricing</strong> and <strong>dynamic pricing</strong>.",
+          "<strong>Data pipelines &amp; MLOps platform on Databricks:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>Azure Data Factory</strong> and <strong>PySpark</strong> on <strong>Delta Lake</strong> and <strong>Unity Catalog</strong> feeding the model portfolio, and took it to production with orchestration in <strong>Workflows</strong>, versioning and promotion in the <strong>MLflow Model Registry</strong> and endpoint or batch serving. CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with drift monitoring and automated retraining.",
+          "<strong>Financial models in production:</strong> Built in Python with <strong>NumPy</strong> and deployed on the platform models for <strong>credit risk</strong>, <strong>suspicious transaction</strong> detection, <strong>pricing</strong> and <strong>dynamic pricing</strong>.",
           "<strong>Marketing &amp; recommendation models in production:</strong> <em>Next Best Offer</em> (NBO) system with <strong>Reinforcement Learning</strong> rolled out through A/B testing, <strong>churn</strong> model with scores fed into the CRM, <strong>customer characterization</strong>, <strong>network analysis</strong> and <strong>geospatial</strong> identification of competitor risk."
         ]
       }
@@ -278,11 +278,11 @@
       "date": {"es": "Ago – Sep 2023", "en": "Aug – Sep 2023"},
       "items": {
         "es": [
-          "<strong>Next Best Offer (NBO):</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> y el modelo de recomendación de ofertas y planes por cliente, desplegado en producción en <strong>Databricks</strong> con versionado y registro en <strong>MLflow</strong>.",
+          "<strong>Next Best Offer (NBO):</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> y el modelo de recomendación de ofertas y planes por cliente, desarrollado en Python con <strong>NumPy</strong> y desplegado en producción en <strong>Databricks</strong> con versionado y registro en <strong>MLflow</strong>.",
           "<strong>Observabilidad ML:</strong> Diseñé metodología integral de monitoreo para detección de <em>data/model drift</em> con alertas automáticas de reentrenamiento, adoptada como estándar del equipo de ciencia de datos."
         ],
         "en": [
-          "<strong>Next Best Offer (NBO):</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> and the model recommending offers and plans for each customer, deployed to production on <strong>Databricks</strong> with versioning and registration in <strong>MLflow</strong>.",
+          "<strong>Next Best Offer (NBO):</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> and the model recommending offers and plans for each customer, developed in Python with <strong>NumPy</strong> and deployed to production on <strong>Databricks</strong> with versioning and registration in <strong>MLflow</strong>.",
           "<strong>ML Observability:</strong> Designed comprehensive monitoring methodology for <em>data/model drift</em> detection with automated retraining alerts, adopted as the data science team's standard."
         ]
       }
@@ -296,10 +296,10 @@
       "date": {"es": "Mar 2023 – Jul 2023", "en": "Mar 2023 – Jul 2023"},
       "items": {
         "es": [
-          "<strong>Recomendación de franjas horarias de contacto:</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> y el modelo <strong>LightGBM</strong> que recomienda las franjas horarias y canales con mayor propensión de contacto por cliente, desplegado en producción en <strong>Databricks</strong> con versionado y registro en <strong>MLflow</strong> para alimentar las campañas."
+          "<strong>Recomendación de franjas horarias de contacto:</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> y el modelo <strong>LightGBM</strong>, desarrollado en Python con <strong>NumPy</strong>, que recomienda las franjas horarias y canales con mayor propensión de contacto por cliente, desplegado en producción en <strong>Databricks</strong> con versionado y registro en <strong>MLflow</strong> para alimentar las campañas."
         ],
         "en": [
-          "<strong>Contact time-slot recommendation:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> and a <strong>LightGBM</strong> model recommending the time slots and channels with the highest contact propensity per customer, deployed to production on <strong>Databricks</strong> with versioning and registration in <strong>MLflow</strong> to feed the campaigns."
+          "<strong>Contact time-slot recommendation:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> and a <strong>LightGBM</strong> model, developed in Python with <strong>NumPy</strong>, recommending the time slots and channels with the highest contact propensity per customer, deployed to production on <strong>Databricks</strong> with versioning and registration in <strong>MLflow</strong> to feed the campaigns."
         ]
       }
     },
@@ -313,12 +313,12 @@
       "items": {
         "es": [
           "<strong>Data pipelines y despliegue con Apache Airflow:</strong> Construí los <strong>pipelines de datos y ETL</strong> y llevé los modelos a producción como procesos batch orquestados con <strong>Apache Airflow</strong> que entregan los scores a la operación de cobranza, con dashboards en <strong>Power BI</strong> para monitorear su desempeño.",
-          "<strong>Modelo financiero de propensión de pago:</strong> Modelo de probabilidad de pago y acuerdo de cartera que alimenta los <strong>focos automáticos</strong> de gestión.",
+          "<strong>Modelo financiero de propensión de pago:</strong> Modelo de probabilidad de pago y acuerdo de cartera, desarrollado en Python con <strong>NumPy</strong>, que alimenta los <strong>focos automáticos</strong> de gestión.",
           "<strong>Modelos de recomendación y marketing:</strong> Recomendación de la franja horaria con mayor propensión de contacto por titular y segmentación por clustering para comunicación personalizada."
         ],
         "en": [
           "<strong>Data pipelines &amp; deployment with Apache Airflow:</strong> Built the <strong>data pipelines and ETL</strong> and took models to production as batch jobs orchestrated with <strong>Apache Airflow</strong> that deliver scores to the collections operation, with <strong>Power BI</strong> dashboards monitoring their performance.",
-          "<strong>Financial payment propensity model:</strong> Payment probability and portfolio agreement model feeding <strong>automated management priorities</strong>.",
+          "<strong>Financial payment propensity model:</strong> Payment probability and portfolio agreement model, developed in Python with <strong>NumPy</strong>, feeding <strong>automated management priorities</strong>.",
           "<strong>Recommendation &amp; marketing models:</strong> Recommendation of the time slot with the highest contact propensity per account holder and clustering-based segmentation for personalized communication."
         ]
       }
@@ -502,6 +502,7 @@
         [{"name": "Azure AI Search", "years": 1}],
         [{"name": "Document Intelligence", "years": 1}],
         [{"name": "Azure AI Foundry", "years": 1}, {"name": "Azure Functions", "years": 1}],
+        [{"name": "Azure Data Factory", "years": 1}],
         [{"name": "Databricks + MLflow", "years": 3, "detail": "(Workflows, Model Registry)"}],
         [{"name": "Delta Lake", "years": 1}, {"name": "Unity Catalog", "years": 1}]
       ]
@@ -527,7 +528,8 @@
       "items": [
         [{"name": "PyTorch", "years": 2}, {"name": "TensorFlow", "years": 3}],
         [{"name": "Scikit-learn", "years": 4}, {"name": "XGBoost", "years": 4}, {"name": "LightGBM", "years": 4}],
-        [{"name": "Hugging Face Transformers", "years": 2}]
+        [{"name": "Hugging Face Transformers", "years": 2}],
+        [{"name": "NumPy", "years": 7}]
       ]
     },
     {
