@@ -149,3 +149,19 @@ def test_summary_is_checked_in_its_decoded_form(bad):
     assert bad(summary="dijo &quot;hola&quot;") != []
     assert bad(summary="ruta &#92;datos") != []
     assert bad(summary="Datos &amp; IA con <strong>Python</strong>.") == []
+
+
+# Hallazgos de la revisión final: respuestas que pasaban y fallaban o se veían mal al renderizar
+def test_repeated_names_are_rejected(bad):
+    twice = [{"category": "Datos", "first": []}, {"category": "Datos", "first": []}]
+    assert any("repetido" in r for r in bad(tech_stack_order=twice))
+    assert any("repetido" in r for r in bad(tech_stack_order=[{"category": "Datos", "first": ["Go", "Go"]}]))
+    assert any("repetido" in r for r in bad(projects_shown=["Agente A", "Agente A"]))
+    assert any("repetido" in r for r in bad(academic_shown=["Curso C", "Curso C"]))
+
+
+def test_empty_texts_are_rejected(bad):
+    assert any("vacío" in r for r in bad(summary="   "))
+    assert any("vacío" in r for r in bad(summary="<strong> </strong>"))
+    assert any("Acme" in r for r in bad(experience={"Acme": []}))
+    assert any("Acme" in r for r in bad(experience={"Acme": ["Pipelines con Python.", "  "]}))

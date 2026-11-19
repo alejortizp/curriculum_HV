@@ -155,8 +155,30 @@ def _rule_structure(cv, adjustments, lang) -> list[str]:
     return reasons
 
 
+def _repeated(names: list[str]) -> list[str]:
+    return sorted({name for name in names if names.count(name) > 1})
+
+
+def _rule_not_empty(adjustments) -> list[str]:
+    """An empty summary or a blank bullet would render an empty block."""
+    reasons = []
+    if not plain(adjustments["summary"]).strip():
+        reasons.append("resumen: está vacío")
+    for company, bullets in adjustments.get("experience", {}).items():
+        if not bullets or any(not plain(bullet).strip() for bullet in bullets):
+            reasons.append(f"{company}: no tiene viñetas o alguna está vacía")
+    return reasons
+
+
 def _rule_selection(cv, adjustments, lang) -> list[str]:
     reasons = []
+    specs = adjustments.get("tech_stack_order", [])
+    for label, names in [("tech_stack_order", [spec["category"] for spec in specs]),
+                         *[(f"tech_stack_order {spec['category']}", spec.get("first", [])) for spec in specs],
+                         ("projects_shown", adjustments.get("projects_shown") or []),
+                         ("academic_shown", adjustments.get("academic_shown") or [])]:
+        if _repeated(names):
+            reasons.append(f"{label}: nombre repetido {_repeated(names)}")
     groups = {cat["category"]: {s["name"] for line in cat["items"] for s in line}
               for cat in cv["tech_stack"]}
     for spec in adjustments.get("tech_stack_order", []):
@@ -189,6 +211,7 @@ def validate(cv: dict, adjustments: dict, target: dict,
         *_rule_figures(cv, adjustments, letter_units, lang),       # 2
         *_rule_structure(cv, adjustments, lang),                   # 3 and 4
         *_rule_selection(cv, adjustments, lang),                   # 5
+        *_rule_not_empty(adjustments),
         *_rule_general_terms(units, target),                       # 6
         *_rule_markup(cv_units + _letter_strings(cover_letter, lang)),
         *_rule_summary_quotes(adjustments["summary"]),

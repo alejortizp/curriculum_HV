@@ -33,6 +33,10 @@ def _client() -> anthropic.Anthropic:
                 if line.startswith("ANTHROPIC_API_KEY="):
                     os.environ["ANTHROPIC_API_KEY"] = line.split("=", 1)[1].strip().strip('"').strip("'")
                     break
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+        # without this the SDK fails later with a TypeError and a traceback
+        raise LLMError("No hay credenciales de Anthropic: define ANTHROPIC_API_KEY en .env "
+                       "o como variable de entorno.")
     return anthropic.Anthropic()
 
 
