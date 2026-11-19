@@ -4,11 +4,10 @@ MIN_OFFERS = 10  # below this, the report warns that the signal is weak
 
 
 def skill_weight(required: int, nice: int, state: str) -> float:
-    """Peso con que una habilidad se ordena en el informe y en el objetivo.
+    """Weight used to order a skill in the report and in a target.
 
-    required/nice: en cuántas ofertas de la familia aparece como requerida o deseable.
-    state: "covered", "mentioned" o "gap".
-    Mayor peso = más arriba en el informe y más prioridad para destacarla en el CV.
+    Market demand only: a required mention counts double a nice-to-have one, and
+    the state (covered, mentioned, gap) does not change it, so the report shows
+    what offers ask for most regardless of what the CV already lists.
     """
-    # TODO(Alejandro): 5-10 líneas.
-    raise NotImplementedError
+    return 2 * required + nice

@@ -40,3 +40,16 @@ def test_numbers_finds_plain_integers():
 
 def test_numbers_ignores_text_without_digits():
     assert numbers("sin cifras") == set()
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("10k+ búsquedas", {"10"}),
+    ("latencia <200ms", {"200"}),
+    ("ahorro de 60–70%", {"60", "70"}),
+    ("faithfulness 0.87", {"0.87"}),
+    ("faithfulness 0,87", {"0.87"}),
+    ("listo en 2 días.", {"2"}),
+    ("DeepSeek R-1 y GPT-4", {"1", "4"}),
+])
+def test_numbers_compares_bare_digits_without_units(text, expected):
+    assert numbers(text) == expected

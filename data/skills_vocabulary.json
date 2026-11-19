@@ -58,16 +58,47 @@
     "REST APIs": "APIs REST",
     "API REST": "APIs REST",
     "Workflow orchestration": "Orquestación de pipelines",
-    "Orquestación": "Orquestación de pipelines"
+    "Orquestación": "Orquestación de pipelines",
+    "Data Lakes": "Data Lake"
   },
   "general_terms": {
-    "Lakehouse": ["Delta Lake", "Unity Catalog"],
-    "NoSQL": ["DynamoDB"],
-    "Bases de datos relacionales": ["Cloud SQL", "RDS"],
-    "Contenedores": ["Docker", "Kubernetes"],
-    "Colas de mensajes": ["SQS", "SNS", "Pub/Sub"],
-    "Orquestación de pipelines": ["Apache Airflow"],
-    "APIs REST": ["FastAPI"],
-    "Big Data": ["PySpark", "Databricks + MLflow"]
+    "Lakehouse": [
+      "Delta Lake",
+      "Unity Catalog"
+    ],
+    "NoSQL": [
+      "DynamoDB"
+    ],
+    "Bases de datos relacionales": [
+      "Cloud SQL",
+      "RDS"
+    ],
+    "Contenedores": [
+      "Docker",
+      "Kubernetes"
+    ],
+    "Colas de mensajes": [
+      "SQS",
+      "SNS",
+      "Pub/Sub"
+    ],
+    "Orquestación de pipelines": [
+      "Apache Airflow"
+    ],
+    "APIs REST": [
+      "FastAPI"
+    ],
+    "Big Data": [
+      "PySpark",
+      "Databricks + MLflow"
+    ],
+    "Data Lake": [
+      "Delta Lake",
+      "Cloud Storage"
+    ],
+    "ELT": [
+      "ETL",
+      "Data Pipelines"
+    ]
   }
 }

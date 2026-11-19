@@ -36,11 +36,15 @@ def term_in(term: str, text: str) -> bool:
     return re.search(pattern, text, re.IGNORECASE) is not None
 
 
-def numbers(text: str) -> set[str]:
-    """Cifras de un texto, en la forma en que el validador las compara.
+_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
 
-    El validador rechaza una viñeta si numbers(viñeta) no es subconjunto de
-    numbers(original). Esta función decide qué tan estricta es esa regla.
+
+def numbers(text: str) -> set[str]:
+    """Figures in a text, in the form the validator compares them.
+
+    Bare digits, without units or symbols: "10k+" and "10 k" are both {"10"}, so a
+    harmless rewording is not rejected. The price is that "10k" -> "10" is not
+    caught either; that is left to the human review of the adjustments file.
+    Decimals stay whole and a decimal comma equals a decimal point.
     """
-    # TODO(Alejandro): 5-10 líneas.
-    raise NotImplementedError
+    return {match.replace(",", ".") for match in _NUMBER.findall(text)}
