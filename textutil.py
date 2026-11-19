@@ -4,6 +4,7 @@ import html as html_lib
 import re
 import unicodedata
 
+FENCE_TAGS = ("offer_data", "offer")   # longest first, for the regex
 _TAG = re.compile(r"<[^>]+>")
 _TAG_NAME = re.compile(r"<\s*/?\s*([a-zA-Z][\w-]*)")
 
@@ -27,10 +28,11 @@ def tags(markup: str) -> set[str]:
 
 
 def fenced(text: str, tag: str = "offer") -> str:
-    """Untrusted text wrapped in <tag>…</tag>. Anything that starts a closing tag of
-    its own is removed, closed or not, and repeatedly, so the text cannot end the
-    fence early and pose as instructions ("</of</offer>fer>" would otherwise rebuild one)."""
-    closing = re.compile(rf"<\s*/\s*{re.escape(tag)}[^>]*>?", re.IGNORECASE)
+    """Untrusted text wrapped in <tag>…</tag>. Anything that starts a closing tag of any
+    fence is removed, closed or not, and repeatedly, so the text cannot end a fence
+    early and pose as instructions ("</of</offer>fer>" would otherwise rebuild one).
+    This narrows the risk; it does not make a prompt immune to look-alike characters."""
+    closing = re.compile(r"<\s*/\s*(?:" + "|".join(map(re.escape, FENCE_TAGS)) + r")[^>]*>?", re.IGNORECASE)
     cleaned = text
     while closing.search(cleaned):
         cleaned = closing.sub("", cleaned)

@@ -107,7 +107,7 @@ def extract(raw_text: str, cv: dict, vocab: Vocabulary, complete=llm.complete_js
         if not reasons:
             return {
                 "schema_version": SCHEMA_VERSION,
-                "model": llm.EXTRACTION_MODEL,
+                "model": getattr(complete, "label", llm.EXTRACTION_MODEL),
                 "extracted_at": datetime.now().astimezone().isoformat(timespec="seconds"),
                 **data,
             }

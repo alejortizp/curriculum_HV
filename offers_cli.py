@@ -42,23 +42,31 @@ def cmd_add(text: str, *, company: str = "", role: str = "", url: str = "", comp
     return _extract_one(offer, cv, vocab, complete)
 
 
-def cmd_extract(*, force: bool = False, complete=None, waiting: list | None = None) -> list[dict]:
-    """Extract pending offers. Steps still waiting for a session's answer are
-    appended to `waiting` instead of stopping the rest."""
-    pending = [o for o in offers.list_offers() if force or o["extraction"] is None]
+def cmd_extract(*, force: bool = False, complete=None, waiting: list | None = None,
+                failed: list | None = None) -> list[dict]:
+    """Extract pending offers: those without an extraction and those with a prompt
+    still open in the inbox (a forced re-extraction answered in session). Steps
+    waiting for an answer go to `waiting` and invalid answers to `failed`, when
+    given, so one offer does not stop the rest."""
+    def open_step(offer):
+        return (INBOX_DIR / offer["id"] / "extraction.prompt.md").exists()
+
+    pending = [o for o in offers.list_offers() if force or o["extraction"] is None or open_step(o)]
     if not pending:
         return []
     cv, vocab = _context()
     updated = []
     for offer in pending:
-        if force:
-            shutil.rmtree(INBOX_DIR / offer["id"], ignore_errors=True)
         try:
             updated.append(_extract_one(offer, cv, vocab, complete))
         except session.AwaitingResponse as e:
             if waiting is None:
                 raise
             waiting.append(e)
+        except (session.SessionError, extraction.ExtractionError) as e:
+            if failed is None:
+                raise
+            failed.append(e)
     return updated
 
 
@@ -90,6 +98,8 @@ def _describe(offer: dict) -> str:
 
 
 def _print_waiting(step: session.AwaitingResponse) -> None:
+    if step.discarded:
+        print(f"Nota: había una respuesta para un prompt anterior; quedó en {step.discarded.name}.")
     print(f"En una sesión de Claude Code, para {step.prompt_path.parent.name}:")
     print(f"  1. Lee {step.prompt_path.relative_to(build.ROOT)}")
     print(f"  2. Escribe la respuesta JSON en {step.response_path.relative_to(build.ROOT)}")
@@ -130,12 +140,17 @@ def main(argv: list[str] | None = None) -> None:
                 cmd_add(text, company=args.company, role=args.role, url=args.url)))
         elif args.command == "extract":
             waiting: list = []
-            updated = cmd_extract(force=args.force, waiting=waiting)
+            failed: list = []
+            updated = cmd_extract(force=args.force, waiting=waiting, failed=failed)
             print(f"Ofertas extraídas: {len(updated)}")
             for offer in updated:
                 print("  " + _describe(offer))
             for step in waiting:
                 _print_waiting(step)
+            for error in failed:
+                print(f"Error: {error}")
+            if failed:
+                sys.exit(1)
         elif args.command == "list":
             listed = cmd_list()
             print("\n".join(_describe(o) for o in listed) if listed else "No hay ofertas registradas.")

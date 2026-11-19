@@ -225,7 +225,7 @@ Guarda las ofertas de empleo que te interesan, analiza qué pide cada familia de
 | `make apply OFFER=<id> RENDER=1` | Vuelve a renderizar un `adjustments.<lang>.json` editado a mano, sin llamar a la API |
 | `make test` | Ejecuta las pruebas |
 
-Los dos pasos que necesitan un modelo (extraer una oferta y redactar el CV) se responden en una sesión de Claude Code: el comando escribe un archivo `*.prompt.md` y se detiene; en la sesión, Claude lee ese archivo y escribe `*.response.json` en la misma carpeta; al ejecutar de nuevo el mismo comando, la respuesta se valida y el flujo continúa. No tiene costo fuera de la suscripción.
+Los dos pasos que necesitan un modelo (extraer una oferta y redactar el CV) se responden en una sesión de Claude Code: el comando escribe un archivo `*.prompt.md` y se detiene; en la sesión, Claude lee ese archivo y escribe `*.response.json` en la misma carpeta; al ejecutar `make offers-extract` (tras `make offer-add`) o de nuevo el mismo `make apply` / `make cv-market`, la respuesta se valida y el flujo continúa. No tiene costo fuera de la suscripción.
 
 Para usar la API de Anthropic en su lugar, define `LLM_PROVIDER=api` y `ANTHROPIC_API_KEY` en `.env`. Ese uso se factura aparte y necesita saldo en la Consola; el adaptador de API no se ha probado con una llamada real (ver `docs/adr/0003-*.md`).
 

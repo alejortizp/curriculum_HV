@@ -193,3 +193,11 @@ def test_letter_is_checked_in_every_language_and_needs_the_target_language(cv):
     assert validate(cv, OK, T, {"opening": {"es": "Hola.", "en": "<script>x</script>"}}) != []
     assert any("opening" in r for r in validate(cv, OK, T, {"opening": {"en": "Hello."}}))
     assert validate(cv, OK, T, {"opening": {"es": "Hola."}, "why_me": {"es": ["Uno."]}}) == []
+
+
+# Segunda revisión: más formas de un archivo editado a mano
+def test_more_malformed_files_give_reasons(cv, bad):
+    assert any("profile" in r for r in bad(profile=["data-engineer"]))
+    assert any("tech_stack_order" in r for r in bad(tech_stack_order=[{"category": "Datos"}]))
+    for value in (None, 3, {"es": 3}, {"es": [1, 2]}, [["a"]]):
+        assert any("opening" in r for r in validate(cv, OK, T, {"opening": value})), value

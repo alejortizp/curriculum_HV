@@ -132,7 +132,8 @@ def _rule_shape(cv: dict, adjustments, cover_letter) -> list[str]:
     reasons = []
     if adjustments.get("lang") not in ("es", "en"):
         reasons.append("lang: debe ser 'es' o 'en'")
-    if adjustments.get("profile") not in cv["profiles"]:
+    profile = adjustments.get("profile")
+    if not isinstance(profile, str) or profile not in cv["profiles"]:
         reasons.append(f"profile: debe ser uno de {list(cv['profiles'])}")
     if not isinstance(adjustments.get("summary"), str):
         reasons.append("summary: falta o no es un texto")
@@ -147,10 +148,14 @@ def _rule_shape(cv: dict, adjustments, cover_letter) -> list[str]:
     order = adjustments.get("tech_stack_order", [])
     if not isinstance(order, list) or not all(
             isinstance(spec, dict) and isinstance(spec.get("category"), str)
-            and _strings(spec.get("first", [])) for spec in order):
+            and _strings(spec.get("first")) for spec in order):
         reasons.append("tech_stack_order: debe ser una lista de {category, first}")
     if cover_letter is not None and not isinstance(cover_letter, dict):
-        reasons.append("la carta debe ser un objeto JSON")
+        return reasons + ["la carta debe ser un objeto JSON"]
+    for key, value in (cover_letter or {}).items():
+        texts = list(value.values()) if isinstance(value, dict) else [value]
+        if not all(isinstance(text, str) or _strings(text) for text in texts):
+            reasons.append(f"carta: {key} debe ser un texto, una lista de textos o {{idioma: texto}}")
     return reasons
 
 

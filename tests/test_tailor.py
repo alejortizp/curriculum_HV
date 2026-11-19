@@ -168,3 +168,14 @@ def test_unknown_offer_is_reported_in_one_line(cv_file, offers_dir, capsys):
     with pytest.raises(SystemExit) as exc:
         tailor.main(["--offer", "no-existe"])
     assert exc.value.code == 1 and "No existe la oferta" in capsys.readouterr().out
+
+
+def test_render_only_without_adjustments_says_what_is_missing(tmp_path, cv_file):
+    with pytest.raises(FileNotFoundError, match="adjustments.es.json"):
+        run(TARGET, tmp_path, html_only=True, render_only=True)
+
+
+def test_rejection_names_the_files_to_fix(tmp_path, cv_file):
+    with pytest.raises(Rejected) as exc:
+        run(TARGET, tmp_path, html_only=True, complete=fake(BAD, BAD))
+    assert exc.value.rejected_path == tmp_path / "adjustments.es.rejected.json"
