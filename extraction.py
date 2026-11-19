@@ -92,12 +92,13 @@ def validate_extraction(data: dict, families: list[str]) -> list[str]:
     return reasons
 
 
-def extract(raw_text: str, cv: dict, vocab: Vocabulary, complete=llm.complete_json) -> dict:
+def extract(raw_text: str, cv: dict, vocab: Vocabulary, complete=llm.complete_json,
+            attempts: int = 2) -> dict:
     families = role_families(cv)
     schema = build_schema(families)
     prompt = build_prompt(raw_text, families, vocab)
     reasons: list[str] = []
-    for attempt in range(2):
+    for _ in range(attempts):
         if reasons:
             prompt += "\n\nYour previous answer was invalid. Fix these problems:\n" + "\n".join(
                 f"- {r}" for r in reasons)

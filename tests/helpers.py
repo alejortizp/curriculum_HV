@@ -101,3 +101,6 @@ def seed_offer(family, required, text="oferta de prueba"):
     import offers
     offer = offers.add(text, company="Empresa", role="Rol")
     return offers.save_extraction(offer["id"], mk("x", family, required)["extraction"])
+
+
+BAD_SUMMARY = "Experto en Snowflake."

@@ -15,6 +15,7 @@ import build
 import llm
 import offers
 import report
+import session
 import targets
 import vocabulary
 from extraction import role_families
@@ -159,10 +160,11 @@ def _convert(response: dict, target: dict) -> tuple[dict, dict | None]:
     return adjustments, letter
 
 
-def generate(cv: dict, target: dict, complete=llm.complete_json) -> tuple[dict, dict | None]:
-    """Ask the model for adjustments; retry once with the validator's reasons."""
+def generate(cv: dict, target: dict, complete=llm.complete_json,
+             attempts: int = 2) -> tuple[dict, dict | None]:
+    """Ask for adjustments; with the API, a rejected answer is retried with the reasons."""
     prompt, schema = build_prompt(cv, target), build_schema(target["kind"])
-    for _ in range(2):
+    for _ in range(attempts):
         response = complete(prompt, schema, model=llm.TAILORING_MODEL, effort=llm.TAILORING_EFFORT)
         adjustments, letter = _convert(response, target)
         reasons = validate(cv, adjustments, target, letter)
@@ -213,7 +215,7 @@ def render(cv: dict, adjustments: dict, cover_letter: dict | None, out_dir: Path
 
 
 def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bool = False,
-        complete=llm.complete_json) -> dict:
+        complete=None) -> dict:
     cv = build.load_json(build.DATA_FILE)
     adjustments_path, letter_path = out_dir / "adjustments.json", out_dir / "cover_letter.json"
     rejected_path = out_dir / "adjustments.rejected.json"
@@ -228,8 +230,10 @@ def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bo
             raise Rejected(reasons, adjustments, letter)
     else:
         out_dir.mkdir(parents=True, exist_ok=True)
+        # default provider: a Claude Code session answering through files in out_dir
+        complete, attempts = (complete, 2) if complete else session.provider(out_dir, "tailoring")
         try:
-            adjustments, letter = generate(cv, target, complete)
+            adjustments, letter = generate(cv, target, complete, attempts)
         except Rejected as e:
             rejected_path.write_text(dump({"reasons": e.reasons, "adjustments": e.adjustments,
                                            "cover_letter": e.cover_letter}), encoding="utf-8")
@@ -245,7 +249,7 @@ def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bo
 
 def main_family(family: str, out_dir: Path, *, lang: str = "es", since: date | None = None,
                 html_only: bool = False, render_only: bool = False,
-                complete=llm.complete_json) -> dict:
+                complete=None) -> dict:
     """Derived CV for a role family. The report is rebuilt first, so it is never stale."""
     cv = build.load_json(build.DATA_FILE)
     vocab = vocabulary.load(cv)
@@ -258,7 +262,7 @@ def main_family(family: str, out_dir: Path, *, lang: str = "es", since: date | N
 
 def main_offer(offer_id: str, out_dir: Path | None = None, *, lang: str | None = None,
                html_only: bool = False, render_only: bool = False,
-               complete=llm.complete_json) -> dict:
+               complete=None) -> dict:
     cv = build.load_json(build.DATA_FILE)
     offer = offers.get(offer_id)
     target = targets.from_offer(offer, cv, vocabulary.load(cv), lang)
@@ -302,15 +306,22 @@ def main(argv: list[str] | None = None) -> None:
             result = main_family(args.family, out_dir, lang=args.lang or "es", since=args.since, **options)
             if result["weak_signal"]:
                 print(f"Aviso: solo hay {result['n_offers']} ofertas en esta familia; la señal es débil.")
+    except session.AwaitingResponse as e:
+        print("Falta la respuesta del modelo. En una sesión de Claude Code:")
+        print(f"  1. Lee {e.prompt_path.relative_to(build.ROOT)}")
+        print(f"  2. Escribe la respuesta JSON en {e.response_path.relative_to(build.ROOT)}")
+        print("  3. Vuelve a ejecutar este mismo comando")
+        return
     except Rejected as e:
         print("El validador rechazó los ajustes:")
         for reason in e.reasons:
             print(f"  - {reason}")
         if not args.render_only:
             print(f"Resultado rechazado guardado en {out_dir / 'adjustments.rejected.json'}")
+            print("En una sesión: corrige tailoring.response.json en esa carpeta y vuelve a ejecutar.")
         sys.exit(1)
-    except (offers.OfferNotFound, targets.TargetError, llm.LLMError, vocabulary.VocabularyError,
-            FileNotFoundError, ValueError) as e:
+    except (offers.OfferNotFound, targets.TargetError, llm.LLMError, session.SessionError,
+            vocabulary.VocabularyError, FileNotFoundError, ValueError) as e:
         _fail(f"Error: {e}")
 
     for key in ("cv_html", "cv_pdf", "letter_html", "letter_pdf"):

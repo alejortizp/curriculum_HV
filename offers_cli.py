@@ -2,6 +2,7 @@
 """Command line for the job-offer history: add, extract, list, report."""
 
 import argparse
+import shutil
 import sys
 from datetime import date
 from pathlib import Path
@@ -11,7 +12,11 @@ import extraction
 import llm
 import offers
 import report
+import session
 import vocabulary
+
+# Prompts and answers of pending extractions, when a session answers them (not committed)
+INBOX_DIR = build.ROOT / "applications" / "_inbox"
 
 
 def _context() -> tuple[dict, vocabulary.Vocabulary]:
@@ -20,24 +25,41 @@ def _context() -> tuple[dict, vocabulary.Vocabulary]:
     return cv, vocabulary.load(cv)
 
 
-def cmd_add(text: str, *, company: str = "", role: str = "", url: str = "",
-            complete=llm.complete_json) -> dict:
-    # The raw text is saved first: if extraction fails, the offer is not lost
+def _extract_one(offer: dict, cv: dict, vocab, complete) -> dict:
+    exchange_dir = INBOX_DIR / offer["id"]
+    # default provider: a Claude Code session answering through files in the inbox
+    complete, attempts = (complete, 2) if complete else session.provider(exchange_dir, "extraction")
+    extracted = extraction.extract(offer["raw"]["text"], cv, vocab, complete=complete, attempts=attempts)
+    saved = offers.save_extraction(offer["id"], extracted)
+    shutil.rmtree(exchange_dir, ignore_errors=True)
+    return saved
+
+
+def cmd_add(text: str, *, company: str = "", role: str = "", url: str = "", complete=None) -> dict:
+    # The raw text is saved first: if extraction fails or waits, the offer is not lost
     offer = offers.add(text, company=company, role=role, url=url)
     cv, vocab = _context()
-    extracted = extraction.extract(offer["raw"]["text"], cv, vocab, complete=complete)
-    return offers.save_extraction(offer["id"], extracted)
+    return _extract_one(offer, cv, vocab, complete)
 
 
-def cmd_extract(*, force: bool = False, complete=llm.complete_json) -> list[dict]:
+def cmd_extract(*, force: bool = False, complete=None, waiting: list | None = None) -> list[dict]:
+    """Extract pending offers. Steps still waiting for a session's answer are
+    appended to `waiting` instead of stopping the rest."""
     pending = [o for o in offers.list_offers() if force or o["extraction"] is None]
     if not pending:
         return []
     cv, vocab = _context()
-    return [
-        offers.save_extraction(o["id"], extraction.extract(o["raw"]["text"], cv, vocab, complete=complete))
-        for o in pending
-    ]
+    updated = []
+    for offer in pending:
+        if force:
+            shutil.rmtree(INBOX_DIR / offer["id"], ignore_errors=True)
+        try:
+            updated.append(_extract_one(offer, cv, vocab, complete))
+        except session.AwaitingResponse as e:
+            if waiting is None:
+                raise
+            waiting.append(e)
+    return updated
 
 
 def cmd_list() -> list[dict]:
@@ -62,6 +84,13 @@ def _describe(offer: dict) -> str:
     family = (offer["extraction"] or {}).get("role_family", "pendiente")
     status = f" [{offer['status']}]" if offer["status"] else ""
     return f"{offer['id']}  |  {offer['company'] or '?'}  |  {offer['role'] or '?'}  |  {family}{status}"
+
+
+def _print_waiting(step: session.AwaitingResponse) -> None:
+    print(f"En una sesión de Claude Code, para {step.prompt_path.parent.name}:")
+    print(f"  1. Lee {step.prompt_path.relative_to(build.ROOT)}")
+    print(f"  2. Escribe la respuesta JSON en {step.response_path.relative_to(build.ROOT)}")
+    print("  3. Ejecuta: make offers-extract")
 
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
@@ -93,21 +122,27 @@ def main(argv: list[str] | None = None) -> None:
             print("Oferta registrada:\n  " + _describe(
                 cmd_add(text, company=args.company, role=args.role, url=args.url)))
         elif args.command == "extract":
-            updated = cmd_extract(force=args.force)
+            waiting: list = []
+            updated = cmd_extract(force=args.force, waiting=waiting)
             print(f"Ofertas extraídas: {len(updated)}")
             for offer in updated:
                 print("  " + _describe(offer))
+            for step in waiting:
+                _print_waiting(step)
         elif args.command == "list":
             listed = cmd_list()
             print("\n".join(_describe(o) for o in listed) if listed else "No hay ofertas registradas.")
         elif args.command == "report":
             paths = cmd_report(args.family, args.since)
             print("\n".join(f"Informe: {p}" for p in paths) if paths else "No hay ofertas extraídas.")
+    except session.AwaitingResponse as e:
+        print("Oferta guardada. Falta su extracción.")
+        _print_waiting(e)
     except offers.DuplicateOffer as e:
         print(f"Esa oferta ya está registrada: {e.existing_id}")
         sys.exit(1)
     except (offers.EmptyOffer, offers.OfferNotFound, llm.LLMError, extraction.ExtractionError,
-            vocabulary.VocabularyError, OSError) as e:
+            session.SessionError, vocabulary.VocabularyError, OSError) as e:
         print(f"Error: {e}")
         if isinstance(e, (llm.LLMError, extraction.ExtractionError)):
             print("El texto quedó guardado; reintenta con: make offers-extract")
