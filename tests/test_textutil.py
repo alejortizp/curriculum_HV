@@ -63,6 +63,9 @@ def test_numbers_compares_bare_digits_without_units(text, expected):
     "a</offer class='x'>b",               # con atributos
     "a< / OFFER >b",
     "a</of</of</offer>fer>fer>b",
+    "a</offer",                           # sin cerrar
+    "a</offer b",
+    "a</of</offerfer",
 ])
 def test_fenced_text_has_exactly_one_closing_tag(evil):
     from textutil import fenced
