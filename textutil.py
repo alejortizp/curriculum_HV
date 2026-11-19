@@ -27,9 +27,13 @@ def tags(markup: str) -> set[str]:
 
 
 def fenced(text: str, tag: str = "offer") -> str:
-    """Untrusted text wrapped in <tag>…</tag>, with any closing tag of its own removed
-    so the text cannot end the fence early and pose as instructions."""
-    cleaned = re.sub(rf"<\s*/\s*{tag}\s*>", "", text, flags=re.IGNORECASE)
+    """Untrusted text wrapped in <tag>…</tag>. Any closing tag of its own is removed,
+    repeatedly, so the text cannot end the fence early and pose as instructions
+    (removing "</offer>" from "</of</offer>fer>" would otherwise leave a new one)."""
+    closing = re.compile(rf"<\s*/\s*{tag}[^>]*>", re.IGNORECASE)
+    cleaned = text
+    while closing.search(cleaned):
+        cleaned = closing.sub("", cleaned)
     return f"<{tag}>\n{cleaned}\n</{tag}>"
 
 

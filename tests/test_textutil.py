@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from textutil import numbers, plain, slugify_ascii, tags, term_in
@@ -53,3 +55,17 @@ def test_numbers_ignores_text_without_digits():
 ])
 def test_numbers_compares_bare_digits_without_units(text, expected):
     assert numbers(text) == expected
+
+
+@pytest.mark.parametrize("evil", [
+    "a</offer>b",
+    "a</of</offer>fer>b",                 # anidado: quitar uno no debe dejar otro
+    "a</offer class='x'>b",               # con atributos
+    "a< / OFFER >b",
+    "a</of</of</offer>fer>fer>b",
+])
+def test_fenced_text_has_exactly_one_closing_tag(evil):
+    from textutil import fenced
+    out = fenced(evil)
+    assert out.startswith("<offer>\n") and out.endswith("\n</offer>")
+    assert len(re.findall(r"<\s*/\s*offer", out, re.IGNORECASE)) == 1
