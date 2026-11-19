@@ -11,10 +11,20 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `data/cv.json` — **Single source of truth** for all CV content (edit this to update the CV)
 - `data/cover_letter.json` — Cover letter content, bilingual (edit per company)
 - `data/cover_letter_template.json` — Blank cover letter template (copy to create new letters)
-- `data/job_offer_template.json` — Blank job offer template (copy to `data/job_offer.json` to tailor)
-- `data/job_offer.json` — Current job offer data for tailoring (in `.gitignore`)
-- `tailor.py` — Tailoring script: reads job offer + cv.json → Claude API → tailored CV + cover letter
-- `applications/` — Output directory for tailored applications, per company (in `.gitignore`)
+- `data/skills_vocabulary.json` — Aliases and general terms for the skills vocabulary (owner-edited, committed)
+- `data/offers/` — Job-offer history, one JSON per offer (in `.gitignore`; `OFFERS_DIR` overrides the path)
+- `offers.py` — Repository for the offer history; the only module that touches offer files
+- `vocabulary.py` — Canonical skill names, aliases, general terms and skill state (covered / mentioned / gap)
+- `llm.py` — The only module that imports `anthropic`; `complete_json()` returns schema-conforming JSON
+- `extraction.py` — Structured reading of an offer (one model call, validated, retried once)
+- `report.py` — Deterministic market report per role family (JSON + Markdown)
+- `targets.py` — Builds the target of a derived CV from one offer or one family report
+- `validator.py` — Deterministic rules on adjustments and cover letter before rendering
+- `tailor.py` — Generator: target → adjustments → validator → render (`make apply`, `make cv-market`)
+- `offers_cli.py` — CLI behind `make offer-add`, `offers-extract`, `offers-list`, `offers-report`
+- `applications/` — Derived CVs: `<offer-id>/` and `_market/<family>/` (in `.gitignore`)
+- `tests/` — pytest suite for the deterministic code; never calls the API
+- `docs/adr/` — Architecture decisions; `GLOSSARY.md` — domain vocabulary (Spanish)
 - `templates/cv.html` — Jinja2 template for CVs (HTML structure, JSON-LD, modal after article)
 - `templates/cover_letter.html` — Jinja2 template for cover letter (bilingual, reuses CV header)
 - `templates/portfolio_base.html` — Portfolio base template (nav, footer, SEO, language switcher, i18n macros)
@@ -53,9 +63,15 @@ make carta        # Build cover letter (HTML + PDF, both languages)
 make carta-es     # Build cover letter - Spanish only
 make carta-en     # Build cover letter - English only
 make portfolio    # Build bilingual portfolio in docs/ (6 pages: 3 ES + 3 EN)
-make apply        # Tailor CV + cover letter for job offer (reads data/job_offer.json, uses Claude API)
-make apply OFFER_LANG=en  # Override language for tailoring
-make apply HTML=1         # Skip PDF generation
+make offer-add FILE=offer.txt     # Register a job offer and extract its structure (Claude API); COMPANY= ROLE= URL= optional
+make offers-extract               # Extract pending offers (FORCE=1 re-extracts all)
+make offers-list                  # List registered offers
+make offers-report                # Market report per role family (no API call); FAMILY= SINCE=YYYY-MM-DD
+make apply OFFER=<id>             # Derived CV + cover letter for one offer (Claude API)
+make cv-market FAMILY=<family>    # Derived CV for a role family, from its market report (Claude API)
+make apply OFFER=<id> RENDER=1    # Re-render a hand-edited adjustments.json without calling the API
+make apply OFFER=<id> OFFER_LANG=en HTML=1  # Override language; skip PDF generation
+make test         # Run the pytest suite
 make setup        # First-time setup (uv sync + playwright)
 make clean        # Remove all generated files (all profiles + portfolio)
 make open-es      # Build HTML and open Spanish CV in browser
@@ -82,7 +98,9 @@ The Makefile wraps `uv run python build.py` with various flags. `build.py` uses 
 - **ATS CVs:** `data/cv.json` + `templates/cv_ats.html` → `build.py ats` → `ats/Alejandro_Ortiz_Perdomo_CV[_<Profile>]_{ES,EN}.pdf` (HTML intermediates are gitignored). Single column, inline CSS (no Tailwind/CDN, so it builds offline), Arial, no icons/emojis, literal `•` bullets (CSS list markers vanish from extracted text), plain-text URLs derived from the real `url` (not `display_url`), dates rendered as `MM/YYYY - MM/YYYY|Actualidad` from `experience[].start/end`. Every visible string passes the `ats` Jinja filter (`ATS_REPLACEMENTS` in `build.py`: arrows, en/em dashes, ≥, smart quotes → ASCII). Profile overrides apply here too. `/Keywords` metadata is filled from `tech_stack`
 - **Cover letter:** `data/cover_letter.json` + `data/cv.json` (personal info) + `templates/cover_letter.html` → `build.py carta` → `Carta_Presentacion.html` + `Cover_Letter.html` → Playwright → PDFs (with pypdf metadata)
 - **Portfolio:** `data/cv.json` + `templates/portfolio_*.html` → `build.py portfolio` → `docs/` (6 pages: index, projects, contact × ES/EN) + `sitemap.xml` + `robots.txt`; also copies `ats/*.pdf` to `docs/ats/` (GitHub Pages only serves `docs/`). CVs are already in docs/ from the build step
-- **Tailored applications:** `data/job_offer.json` + `data/cv.json` → `tailor.py` → Claude API → tailored cv_data + cover_letter_data → reuses `render_cv()` + `render_cover_letter()` from `build.py` → `applications/<company>/` (HTML + PDF). Does NOT modify `cv.json` or any existing files
+- **Offer history:** raw offer text → `make offer-add` → `data/offers/<id>.json` (raw text, never rewritten) → `extraction.py` → Claude API → `extraction` section of the same file (regenerable)
+- **Market report:** `data/offers/*.json` + `data/cv.json` + `data/skills_vocabulary.json` → `report.py` (counting only, no model) → `applications/_market/<family>/report.{json,md}`
+- **Derived CVs:** target (one offer or one family report) + every hand-written variant in `data/cv.json` → `tailor.py` → Claude API → `adjustments.json` → `validator.py` → `build.apply_adjustments()` → `render_cv()` / `render_cover_letter()` → `applications/<offer-id>/` or `applications/_market/<family>/` (HTML + PDF). `data/cv.json` is never modified
 
 ### cv.json structure
 
@@ -90,7 +108,7 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 
 - `personal` — Name, contact info, links (with `display_url` for ATS-visible URLs), portfolio URL, formspree_id, google_analytics_id (location is i18n)
 - `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops, data-engineer). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
-- `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` (data-to-production story instead of model-effectiveness metrics) and `data-engineer` (data pipelines/ETL story; Savia Salud keeps its base bullets). A new profile also needs its display label added in `get_ats_outputs()` (`build.py`), the `<title>` replace chain in `cv.html` and the `chosen_profile` list in `tailor.py`
+- `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` (data-to-production story instead of model-effectiveness metrics) and `data-engineer` (data pipelines/ETL story; Savia Salud keeps its base bullets). A new profile also needs its display label added in `get_ats_outputs()` (`build.py`) and the `<title>` replace chain in `cv.html`; role families for offers are read from `profiles` at run time
 - `experience` — Work history. `start`/`end` (`"YYYY-MM"`, `end: null` = current) are the structured dates used by the ATS template; `date` is the display string for the designed CV. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description). Shown in the CV and the portfolio. Portfolio-only fields: `categories` (filter keys: `agents`, `genai-rag`, `classic-ml`; a project can have several) and `icon` (Material Symbols name for the card). Optional `"cv": false` hides a project from the page-limited designed CV (`cv.html`) while keeping it in the portfolio and ATS CVs (used by MLOps-Pipeline to keep the Spanish CVs at 4 pages). Filter buttons are rendered only for categories some project uses, so "ML Clásico" appears once a project has `classic-ml`
 - `academic_projects` — MISO master's course projects (CV only). Same shape as `projects` plus an i18n `course` label; `url`/`url_label` are optional because most course repos are private. `"cv": false` works here too: it hides the entry from the designed CV but keeps it in the ATS CVs (used by Alarmas QR to keep the Spanish CVs at 4 pages)
@@ -102,18 +120,39 @@ All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with id
 
 Bilingual cover letter data. All text fields use i18n `{"es": "...", "en": "..."}` objects. `why_me` uses `{"es": [...], "en": [...]}` for the bullet point arrays. Fields: `company`, `recipient`, `role`, `date`, `subject`, `greeting`, `opening`, `why_me_title` + `why_me`, `differentiator_title` + `differentiator`, `closing`, `farewell`, `sign_off`. Personal info (name, contact, title, portfolio link) is pulled from `cv.json`. Use `data/cover_letter_template.json` as a starting point for new letters.
 
-### job_offer.json structure
+### Job-offer history and derived CVs
 
-Job offer data for the `make apply` tailoring system. Fields: `company` (required), `role` (required), `location`, `lang` (`"es"` or `"en"`, determines output language), `url` (offer URL for reference), `description` (full job description text), `requirements` (array of requirement strings), `nice_to_have` (array), `notes` (personal notes). Use `data/job_offer_template.json` as a starting point.
+Design: `docs/superpowers/specs/2026-11-19-historial-ofertas-design.md`. Decisions: `docs/adr/0001-*.md` (storage) and `docs/adr/0002-*.md` (cv.json is read-only; derived CVs come from validated adjustments). Vocabulary: `GLOSSARY.md`.
 
-### tailor.py internals
+Two boundaries hold the design together and must not be crossed:
 
-- Separate script that imports `render_cv`, `render_cover_letter`, `add_pdf_metadata`, etc. from `build.py` — does NOT modify `build.py`
-- Claude API call uses `claude-sonnet-4-20250514` model. Returns JSON with: `chosen_profile`, `tailored_summary`, `experience_order` (reordered indices), `experience_bullets` (rephrased bullets per entry), `cover_letter` (complete cover letter data)
-- The prompt instructs Claude to NEVER invent experience — only reformulate, reorder, and emphasize existing data
-- Output goes to `applications/<company-slug>/` with `static/` subdirectory for CSS/JS
-- Also saves `tailoring_result.json` in the output directory for reference/debugging
-- `ANTHROPIC_API_KEY` resolved from env var or `.env` file (same pattern as `GEMINI_API_KEY`)
+- **Only `offers.py` reads or writes offer files.** Other modules call `add`, `get`, `list_offers`, `save_extraction`. Migrating to SQLite (accepted technical debt, ADR-0001) must mean rewriting that one module
+- **Only `llm.py` imports `anthropic`.** Functions that use the model take `complete=llm.complete_json` as a parameter, so tests pass a fake and never spend credit. Models and effort live in constants there (`EXTRACTION_MODEL`, `TAILORING_MODEL`)
+
+**Offer file** (`data/offers/<id>.json`): `id` (`YYYY-MM-DD-company-role`, ASCII; `YYYY-MM-DD-pendiente-<hash8>` until the first extraction names company and role, then renamed once and never again), `added`, `company`, `role`, `url`, `status` (free, optional), `raw` (`text`, `sha256`; written once) and `extraction` (`null` while pending): `schema_version`, `model`, `extracted_at`, `company`, `role`, `role_family`, `seniority`, `language`, `languages_required`, `years_required`, `skills_required` / `skills_nice` (`{term, canonical}`), `responsibilities`. Identical text is rejected as a duplicate.
+
+**Role families:** keys of `cv.json → profiles` minus `default`, plus `other`.
+
+**Skill states** (decided by code, never by the model): `covered` (canonical name is in `tech_stack`), `mentioned` (appears in cv.json text but not in `tech_stack`; a candidate to add), `gap` (nowhere in cv.json). `data/skills_vocabulary.json` holds `aliases` (alias → canonical; the alias file wins over the model's `canonical`) and `general_terms` (a class of technology such as "Lakehouse" → the CV skills that back it). A general term backed by a gap makes loading fail. Matching is whole-term and case-insensitive (`textutil.term_in`): "R" does not match "R-1" or "RAG".
+
+**Market report:** per family, skills ordered by `report.skill_weight()` (2 × required + nice-to-have, state ignored), coverage per offer (share of required skills that are not gaps), seniority, years, languages. Fewer than 10 offers → weak-signal warning.
+
+**Adjustments file** (`adjustments.json`): `target`, `lang`, `profile` (set by code from the family; a render label only), optional `title` (must be a hand-written title), `summary`, `experience_order`, `experience` (`{company: [bullets]}`; omitted entries keep base bullets), optional `tech_stack_order` (`[{category, first}]`, reorder only), `projects_shown` / `academic_shown` (titles to show, may reveal a `"cv": false` project). The model answers with lists because the API rejects objects with dynamic keys; `tailor._convert()` reshapes them.
+
+**Validator rules** (`validator.validate()` returns Spanish reasons; empty list = OK). The "original" of an entry is the union of its hand-written variants (base + every `profile_overrides` version):
+
+1. No gap term or alias anywhere; in the letter, the offer's own company and role strings are exempt
+2. Every figure in a bullet exists in some variant of that entry; figures in the summary and the letter exist in cv.json text for that language (the letter's `date` is exempt). Figures are compared as bare digits (`textutil.numbers`)
+3. No more bullets than the entry's longest variant
+4. Known companies only, `experience_order` lists every entry of that language exactly once, `title` is hand-written
+5. `tech_stack_order`, `projects_shown` and `academic_shown` name only existing groups, skills and projects
+6. A general term appears only in a text unit that also names one of its backing skills
+
+Plus markup: templates render with `autoescape=False`, so only bare `<strong>` / `<em>` are allowed (no attributes, no raw `<`), in every letter field too, and the summary may not contain `"` or `\` (it is inserted in a JSON-LD string in `cv.html`).
+
+A rejected answer is retried once with the reasons; a second rejection writes `adjustments.rejected.json` and renders nothing. `RENDER=1` re-validates the stored adjustments against the current cv.json before rendering. Derived CVs are rendered without the Gemini key. A designed CV over 4 pages is a warning: remove a project from `projects_shown` / `academic_shown` and re-render.
+
+Experience that is real but not yet written goes into `cv.json` first; nothing enters a derived CV from anywhere else.
 
 ### Template conventions
 
@@ -219,6 +258,6 @@ Resolution order (first non-empty wins):
 
 The `.env` file is in `.gitignore`. Expected variables: `GEMINI_API_KEY=your_key_here`.
 
-### Anthropic API key (for `make apply`)
+### Anthropic API key (for `make offer-add`, `make apply`, `make cv-market`)
 
-Resolution: `ANTHROPIC_API_KEY` env var or `.env` file. Required only for `make apply` (tailoring). Not needed for regular CV/portfolio builds.
+Resolution: `ANTHROPIC_API_KEY` env var or `.env` file. Required only for the commands that call the model. Not needed for regular CV/portfolio builds, `make offers-report`, `RENDER=1` or `make test`. API usage is billed separately from a Claude subscription and needs credit in the Anthropic Console.
