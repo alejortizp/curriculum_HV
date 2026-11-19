@@ -4,6 +4,7 @@ from validator import entry_variants, hand_written_titles, validate
 
 OK = {
     "lang": "es",
+    "profile": "data-engineer",
     "summary": "Ingeniera de datos con pipelines en <strong>Python</strong>.",
     "experience_order": ["Acme", "Salud SA"],
     "experience": {"Acme": ["Extracción con <strong>95%</strong> de precisión."]},
@@ -165,3 +166,30 @@ def test_empty_texts_are_rejected(bad):
     assert any("vacío" in r for r in bad(summary="<strong> </strong>"))
     assert any("Acme" in r for r in bad(experience={"Acme": []}))
     assert any("Acme" in r for r in bad(experience={"Acme": ["Pipelines con Python.", "  "]}))
+
+
+# Archivos editados a mano: la forma se comprueba antes que las reglas
+def test_malformed_adjustments_give_reasons_not_exceptions(cv):
+    assert any("summary" in r for r in validate(cv, {"lang": "es"}, T))
+    assert any("lang" in r for r in validate(cv, {**OK, "lang": "fr"}, T))
+    assert any("experience" in r for r in validate(cv, {**OK, "experience": ["Acme"]}, T))
+    assert any("experience" in r for r in validate(cv, {**OK, "experience": {"Acme": "una viñeta"}}, T))
+    assert any("experience_order" in r for r in validate(cv, {**OK, "experience_order": "Acme"}, T))
+    assert any("tech_stack_order" in r for r in validate(cv, {**OK, "tech_stack_order": [{"first": []}]}, T))
+    assert validate(cv, "no es un objeto", T) != []
+
+
+def test_profile_must_be_a_profile_of_the_cv(bad):
+    assert any("profile" in r for r in bad(profile="<script>alert(1)</script>"))
+    assert any("profile" in r for r in validate_without("profile"))
+
+
+def validate_without(key):
+    from tests_cv import CV
+    return validate(CV(), {k: v for k, v in OK.items() if k != key}, T)
+
+
+def test_letter_is_checked_in_every_language_and_needs_the_target_language(cv):
+    assert validate(cv, OK, T, {"opening": {"es": "Hola.", "en": "<script>x</script>"}}) != []
+    assert any("opening" in r for r in validate(cv, OK, T, {"opening": {"en": "Hello."}}))
+    assert validate(cv, OK, T, {"opening": {"es": "Hola."}, "why_me": {"es": ["Uno."]}}) == []

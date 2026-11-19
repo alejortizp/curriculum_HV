@@ -27,6 +27,13 @@ def test_plain_removes_tags_and_entities():
     ("kubernetes", "desplegado en Kubernetes (EKS)", True),
     ("Lake", "sobre Delta Lake", True),
     ("Spark", "con PySpark", False),
+    ("C", "motor en C++ y Rust", False),
+    ("C", "API en C#.", False),
+    ("R", "equipo de R&D", False),
+    ("Go", "we go live on Monday", False),
+    ("R", "modelos en R y Python", True),
+    ("AI", "equipo de AI aplicada", True),
+    ("Python", "stack: Python+SQL", True),
 ])
 def test_term_in(term, text, expected):
     assert term_in(term, text) is expected

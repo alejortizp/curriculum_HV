@@ -38,13 +38,17 @@ def fenced(text: str, tag: str = "offer") -> str:
 
 
 def term_in(term: str, text: str) -> bool:
-    """True if `term` appears in `text` as a whole term, ignoring case.
+    """True if `term` appears in `text` as a whole term.
 
-    A match glued to a letter, a digit or a hyphen does not count, so "R" is not
-    found in "R-1" or "RAG" and "Spark" is not found in "PySpark".
+    A match glued to a letter, a digit or a hyphen does not count, so "Spark" is not
+    found in "PySpark". Terms of one or two characters are stricter, because they
+    collide with ordinary text: they are case-sensitive ("Go" is not "go live") and
+    may not touch +, # or & ("C" is not found in "C++" or "C#", nor "R" in "R&D").
     """
-    pattern = r"(?<![\w-])" + re.escape(term) + r"(?![\w-])"
-    return re.search(pattern, text, re.IGNORECASE) is not None
+    short = len(term) <= 2
+    edge = r"\w\-+#&" if short else r"\w\-"
+    pattern = rf"(?<![{edge}])" + re.escape(term) + rf"(?![{edge}])"
+    return re.search(pattern, text, 0 if short else re.IGNORECASE) is not None
 
 
 _NUMBER = re.compile(r"\d+(?:[.,]\d+)*")

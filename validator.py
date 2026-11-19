@@ -104,13 +104,54 @@ def _rule_summary_quotes(summary: str) -> list[str]:
     return []
 
 
-def _letter_strings(letter: dict | None, lang: str) -> list[tuple[str, str]]:
-    """Every string of the letter, including company, role and date, for the markup rule."""
+def _letter_strings(letter: dict | None) -> list[tuple[str, str]]:
+    """Every string of the letter, in every language and including company, role and
+    date, for the markup rule: the template can print any of them."""
     units = []
     for key, value in (letter or {}).items():
-        texts = value.get(lang, "") if isinstance(value, dict) else value
-        units += [(f"carta: {key}", str(text)) for text in (texts if isinstance(texts, list) else [texts])]
+        for texts in (value.values() if isinstance(value, dict) else [value]):
+            units += [(f"carta: {key}", str(text)) for text in (texts if isinstance(texts, list) else [texts])]
     return units
+
+
+def _rule_letter_language(letter: dict | None, lang: str) -> list[str]:
+    return [f"carta: {key} no tiene texto en '{lang}'"
+            for key, value in (letter or {}).items()
+            if isinstance(value, dict) and lang not in value]
+
+
+def _strings(value) -> bool:
+    return isinstance(value, list) and all(isinstance(item, str) for item in value)
+
+
+def _rule_shape(cv: dict, adjustments, cover_letter) -> list[str]:
+    """Shape of the files, checked first: a hand-edited file must fail with a reason,
+    not with a traceback halfway through the other rules."""
+    if not isinstance(adjustments, dict):
+        return ["los ajustes deben ser un objeto JSON"]
+    reasons = []
+    if adjustments.get("lang") not in ("es", "en"):
+        reasons.append("lang: debe ser 'es' o 'en'")
+    if adjustments.get("profile") not in cv["profiles"]:
+        reasons.append(f"profile: debe ser uno de {list(cv['profiles'])}")
+    if not isinstance(adjustments.get("summary"), str):
+        reasons.append("summary: falta o no es un texto")
+    if not isinstance(adjustments.get("title"), (str, type(None))):
+        reasons.append("title: debe ser un texto")
+    experience = adjustments.get("experience", {})
+    if not isinstance(experience, dict) or not all(_strings(bullets) for bullets in experience.values()):
+        reasons.append("experience: debe tener la forma {empresa: [viñetas]}")
+    for key in ("experience_order", "projects_shown", "academic_shown"):
+        if not _strings(adjustments.get(key) or []):
+            reasons.append(f"{key}: debe ser una lista de textos")
+    order = adjustments.get("tech_stack_order", [])
+    if not isinstance(order, list) or not all(
+            isinstance(spec, dict) and isinstance(spec.get("category"), str)
+            and _strings(spec.get("first", [])) for spec in order):
+        reasons.append("tech_stack_order: debe ser una lista de {category, first}")
+    if cover_letter is not None and not isinstance(cover_letter, dict):
+        reasons.append("la carta debe ser un objeto JSON")
+    return reasons
 
 
 def _rule_figures(cv, adjustments, letter_units, lang) -> list[str]:
@@ -198,6 +239,9 @@ def _rule_selection(cv, adjustments, lang) -> list[str]:
 
 def validate(cv: dict, adjustments: dict, target: dict,
              cover_letter: dict | None = None) -> list[str]:
+    shape = _rule_shape(cv, adjustments, cover_letter)
+    if shape:
+        return shape
     lang = adjustments["lang"]
     cv_units = [("resumen", adjustments["summary"])] + [
         (f"{company} viñeta {i}", bullet)
@@ -213,6 +257,7 @@ def validate(cv: dict, adjustments: dict, target: dict,
         *_rule_selection(cv, adjustments, lang),                   # 5
         *_rule_not_empty(adjustments),
         *_rule_general_terms(units, target),                       # 6
-        *_rule_markup(cv_units + _letter_strings(cover_letter, lang)),
+        *_rule_markup(cv_units + _letter_strings(cover_letter)),
+        *_rule_letter_language(cover_letter, lang),
         *_rule_summary_quotes(adjustments["summary"]),
     ]

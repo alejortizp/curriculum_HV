@@ -109,3 +109,8 @@ def test_report_command_writes_one_report_per_family_with_offers(offers_dir, cv_
     assert [p.parent.name for p in paths] == ["data-engineer"] and paths[0].name == "report.md"
     empty = offers_cli.cmd_report(family="ml-engineer", out_root=tmp_path / "market")[0].read_text()
     assert "\n0 ofertas." in empty
+
+
+def test_one_offer_is_singular(cv, tmp_path):
+    md = render_markdown(build_report([mk("a", F, ["Python"])], F, vocab(cv, tmp_path)))
+    assert "\n1 oferta entre" in md and "1 ofertas" not in md

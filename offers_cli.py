@@ -70,6 +70,9 @@ def cmd_report(family: str | None = None, since: date | None = None,
                out_root: Path | None = None) -> list[Path]:
     """Write report.json and report.md per family; returns the Markdown paths."""
     cv, vocab = _context()
+    known = extraction.role_families(cv)
+    if family and family not in known:
+        raise ValueError(f"Familia desconocida: {family}. Opciones: {', '.join(known)}")
     everything = offers.list_offers()
     families = [family] if family else sorted(
         {o["extraction"]["role_family"] for o in everything if o["extraction"]})
@@ -118,7 +121,11 @@ def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     try:
         if args.command == "add":
-            text = Path(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
+            try:
+                text = Path(args.file).read_text(encoding="utf-8") if args.file else sys.stdin.read()
+            except UnicodeDecodeError:
+                print(f"Error: {args.file} no está en UTF-8. Guárdalo como UTF-8 y vuelve a intentar.")
+                sys.exit(1)
             print("Oferta registrada:\n  " + _describe(
                 cmd_add(text, company=args.company, role=args.role, url=args.url)))
         elif args.command == "extract":
@@ -142,7 +149,8 @@ def main(argv: list[str] | None = None) -> None:
         print(f"Esa oferta ya está registrada: {e.existing_id}")
         sys.exit(1)
     except (offers.EmptyOffer, offers.OfferNotFound, llm.LLMError, extraction.ExtractionError,
-            session.SessionError, vocabulary.VocabularyError, OSError) as e:
+            session.SessionError, vocabulary.VocabularyError, offers.CorruptOffer, ValueError,
+            OSError) as e:
         print(f"Error: {e}")
         if isinstance(e, (llm.LLMError, extraction.ExtractionError)):
             print("El texto quedó guardado; reintenta con: make offers-extract")

@@ -85,3 +85,26 @@ def test_default_directory_when_env_is_unset(monkeypatch):
     monkeypatch.delenv("OFFERS_DIR", raising=False)
     monkeypatch.setattr(offers, "_dotenv", lambda key: "")
     assert offers.offers_dir() == offers.ROOT / "data" / "offers"
+
+
+def test_final_id_that_contains_the_provisional_word_is_never_renamed(offers_dir):
+    offer = offers.add("texto", company="Acme", role="Pendiente de definir", today=D)
+    assert offer["id"] == "2026-11-19-acme-pendiente-de-definir"
+    for _ in range(2):
+        again = offers.save_extraction(offer["id"], {"company": "A", "role": "B", "role_family": "other"})
+        assert again["id"] == offer["id"]
+    assert [o["id"] for o in offers.list_offers()] == [offer["id"]]
+
+
+def test_line_endings_do_not_hide_a_duplicate(offers_dir):
+    first = offers.add("linea uno\r\nlinea dos", company="Acme", role="X", today=D)
+    with pytest.raises(offers.DuplicateOffer) as exc:
+        offers.add("linea uno\nlinea dos", today=D)
+    assert exc.value.existing_id == first["id"]
+
+
+def test_corrupt_offer_file_is_named_in_the_error(offers_dir):
+    offers.add("texto", company="Acme", role="X", today=D)
+    (offers_dir / "rota.json").write_text("{ esto no es json")
+    with pytest.raises(offers.CorruptOffer, match="rota.json"):
+        offers.list_offers()

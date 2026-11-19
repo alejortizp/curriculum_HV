@@ -102,7 +102,7 @@ def render_markdown(report: dict) -> str:
     lines = [f"# Informe de mercado: {report['family']}", ""]
     period = f" entre {report['date_range'][0]} y {report['date_range'][1]}" if report["date_range"] else ""
     since = f" (desde {report['since']})" if report["since"] else ""
-    lines += [f"{n} ofertas{period}{since}.", ""]
+    lines += [f"{n} {'oferta' if n == 1 else 'ofertas'}{period}{since}.", ""]
     if report["weak_signal"]:
         lines += [f"> **Señal débil:** hay menos de {MIN_OFFERS} ofertas en esta familia. "
                   "Lee las frecuencias como ejemplos, no como tendencia.", ""]

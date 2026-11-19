@@ -25,6 +25,12 @@ class EmptyOffer(Exception):
     pass
 
 
+class CorruptOffer(Exception):
+    def __init__(self, path: Path):
+        super().__init__(f"El archivo de oferta {path.name} está dañado (no es JSON válido). "
+                         f"Corrígelo o muévelo fuera de {path.parent}.")
+
+
 class DuplicateOffer(Exception):
     def __init__(self, existing_id: str):
         super().__init__(existing_id)
@@ -56,11 +62,18 @@ def _write(offer: dict) -> None:
     )
 
 
+def _read(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        raise CorruptOffer(path) from e
+
+
 def _all() -> list[dict]:
     folder = offers_dir()
     if not folder.exists():
         return []
-    return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("*.json"))]
+    return [_read(p) for p in sorted(folder.glob("*.json"))]
 
 
 def _final_id(added: str, company: str, role: str) -> str | None:
@@ -79,7 +92,8 @@ def _unique(base: str) -> str:
 
 def add(raw_text: str, *, company: str = "", role: str = "", url: str = "",
         today: date | None = None) -> dict:
-    text = raw_text.strip()
+    # same text with Windows or Unix line endings is the same offer
+    text = raw_text.replace("\r\n", "\n").replace("\r", "\n").strip()
     if not text:
         raise EmptyOffer("El texto de la oferta está vacío.")
     sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -106,8 +120,8 @@ def add(raw_text: str, *, company: str = "", role: str = "", url: str = "",
 def get(offer_id: str) -> dict:
     path = _path(offer_id)
     if not path.exists():
-        raise OfferNotFound(offer_id)
-    return json.loads(path.read_text(encoding="utf-8"))
+        raise OfferNotFound(f"No existe la oferta '{offer_id}'. Lista las registradas con: make offers-list")
+    return _read(path)
 
 
 def list_offers(*, family: str | None = None, since: date | None = None) -> list[dict]:
@@ -129,7 +143,8 @@ def save_extraction(offer_id: str, extraction: dict) -> dict:
     offer["company"] = offer["company"] or extraction.get("company", "").strip()
     offer["role"] = offer["role"] or extraction.get("role", "").strip()
 
-    if PROVISIONAL in offer_id:
+    # only a provisional id is renamed; a final one may contain the same word
+    if offer_id.startswith(offer["added"] + PROVISIONAL):
         final = _final_id(offer["added"], offer["company"], offer["role"])
         if final:
             offer["id"] = _unique(final)

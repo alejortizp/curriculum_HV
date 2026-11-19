@@ -60,7 +60,7 @@ def mk(id, family, required, nice=(), added="2026-11-01", raw="texto", **extra):
 
 
 TARGET = {
-    "kind": "offer", "id": "2026-11-19-globex-data-engineer", "label": "Globex - Data Engineer",
+    "kind": "offer", "id": "2026-11-19-globex-data-engineer",
     "lang": "es", "profile": "data-engineer",
     "emphasize": ["Python"], "general_terms": {},
     "gaps": [{"canonical": "Snowflake", "forms": ["Snowflake"]}],

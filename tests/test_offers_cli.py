@@ -44,3 +44,25 @@ def test_duplicate_is_reported_in_one_line_and_exits_1(offers_dir, cv_file, tmp_
     with pytest.raises(SystemExit) as exc:
         offers_cli.main(["add", "--file", str(source)])
     assert exc.value.code == 1 and offer["id"] in capsys.readouterr().out
+
+
+def test_file_that_is_not_utf8_is_reported_in_one_line(offers_dir, cv_file, tmp_path, capsys):
+    source = tmp_path / "oferta.txt"
+    source.write_bytes("dise\xf1o".encode("latin-1"))
+    with pytest.raises(SystemExit) as exc:
+        offers_cli.main(["add", "--file", str(source)])
+    assert exc.value.code == 1 and "UTF-8" in capsys.readouterr().out
+
+
+def test_corrupt_offer_is_reported_in_one_line(offers_dir, cv_file, capsys):
+    offers_dir.mkdir(parents=True)
+    (offers_dir / "rota.json").write_text("{")
+    with pytest.raises(SystemExit) as exc:
+        offers_cli.main(["list"])
+    assert exc.value.code == 1 and "rota.json" in capsys.readouterr().out
+
+
+def test_report_for_an_unknown_family_fails_and_writes_nothing(offers_dir, cv_file, tmp_path):
+    with pytest.raises(ValueError, match="astronauta"):
+        offers_cli.cmd_report(family="astronauta", out_root=tmp_path / "market")
+    assert not (tmp_path / "market").exists()

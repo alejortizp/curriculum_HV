@@ -57,3 +57,10 @@ def test_empty_report_cannot_be_a_target(cv, tmp_path):
     v = vocab(cv, tmp_path)
     with pytest.raises(TargetError, match="data-engineer"):
         from_report(build_report([], "data-engineer", v), cv, v)
+
+
+def test_every_declared_general_term_is_in_the_target_even_if_not_requested(cv, tmp_path):
+    v = vocab(cv, tmp_path, general_terms={"Lakehouse": ["Delta Lake"], "NoSQL": ["DynamoDB"]})
+    t = from_offer(mk("a", "data-engineer", ["Lakehouse"]), cv, v)
+    assert t["general_terms"] == {"Lakehouse": ["Delta Lake"], "NoSQL": ["DynamoDB"]}
+    assert "label" not in t

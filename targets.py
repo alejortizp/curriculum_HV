@@ -13,18 +13,21 @@ class TargetError(Exception):
 
 def _from_report(report: dict, cv: dict, vocab: Vocabulary) -> dict:
     """The part shared by both kinds: what to emphasize, what is backed, what is banned."""
-    emphasize, general_terms, gaps = [], {}, []
+    emphasize, gaps = [], []
     for skill in report["skills"]:          # already ordered by weight
         canonical = skill["canonical"]
         if skill["state"] == GAP:
             gaps.append({"canonical": canonical, "forms": vocab.forms(canonical)})
-        elif skill["backing"]:
-            # every way the backing skills may be written, so the validator can
-            # find "Databricks" when the vocabulary name is "Databricks + MLflow"
-            general_terms[canonical] = [
-                form for backing in skill["backing"] for form in vocab.forms(vocab.canonical(backing))]
-        else:
+        elif not skill["backing"]:
             emphasize.append(canonical)
+    # Every declared general term, requested or not: the rule that a general term must
+    # sit next to a backing skill applies to all of them. Each backing skill is listed in
+    # every way it may be written, so the validator finds "Databricks" when the
+    # vocabulary name is "Databricks + MLflow".
+    general_terms = {
+        term: [form for backing in skills for form in vocab.forms(vocab.canonical(backing))]
+        for term, skills in vocab.general_terms.items()
+    }
     family = report["family"]
     return {
         "profile": family if family in cv["profiles"] else "default",
@@ -44,7 +47,6 @@ def from_offer(offer: dict, cv: dict, vocab: Vocabulary, lang: str | None = None
     return {
         "kind": "offer",
         "id": offer["id"],
-        "label": f"{offer['company']} - {offer['role']}",
         "lang": lang or (offer_lang if offer_lang in ("es", "en") else "es"),
         **_from_report(report, cv, vocab),
         "context": {"company": offer["company"], "role": offer["role"]},
@@ -58,7 +60,6 @@ def from_report(report: dict, cv: dict, vocab: Vocabulary, lang: str = "es") -> 
     return {
         "kind": "family",
         "id": report["family"],
-        "label": report["family"],
         "lang": lang,
         **_from_report(report, cv, vocab),
         "context": {"family": report["family"], "n_offers": report["n_offers"]},
