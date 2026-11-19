@@ -12,8 +12,8 @@ wheels/
 # Environment variables
 .env
 
-# Job offer data (personal per application)
-data/job_offer.json
+# Historial de ofertas (privado; ver docs/adr/0001)
+data/offers/
 
 # Generated tailored applications
 applications/

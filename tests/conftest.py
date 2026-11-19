@@ -133,3 +133,20 @@ def offers_dir(tmp_path, monkeypatch):
     path = tmp_path / "offers"
     monkeypatch.setenv("OFFERS_DIR", str(path))
     return path
+
+
+@pytest.fixture
+def cv_file(cv, tmp_path, monkeypatch):
+    """Point the commands at a throwaway cv.json and an empty vocabulary file."""
+    import json
+
+    import build
+    import vocabulary
+
+    path = tmp_path / "cv.json"
+    path.write_text(json.dumps(cv, ensure_ascii=False), encoding="utf-8")
+    vocab_path = tmp_path / "skills_vocabulary.json"
+    vocab_path.write_text(json.dumps({"aliases": {"K8s": "Kubernetes"}, "general_terms": {}}))
+    monkeypatch.setattr(build, "DATA_FILE", path)
+    monkeypatch.setattr(vocabulary, "VOCAB_FILE", vocab_path)
+    return path

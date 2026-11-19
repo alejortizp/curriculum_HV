@@ -1,4 +1,4 @@
-.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio offer-add offers-extract offers-list apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -53,6 +53,16 @@ portfolio:
 # Tailor CV + cover letter for a job offer (reads data/job_offer.json)
 apply:
 	uv run python tailor.py $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,)
+
+# Job-offer history (stored in data/offers/, never committed; see docs/adr/0001)
+offer-add:
+	uv run python offers_cli.py add $(if $(FILE),--file "$(FILE)",) $(if $(COMPANY),--company "$(COMPANY)",) $(if $(ROLE),--role "$(ROLE)",) $(if $(URL),--url "$(URL)",)
+
+offers-extract:
+	uv run python offers_cli.py extract $(if $(FORCE),--force,)
+
+offers-list:
+	uv run python offers_cli.py list
 
 # Run the test suite (deterministic code only; never calls the API)
 test:
@@ -112,7 +122,11 @@ help:
 	@echo "  carta-es   Build cover letter - Spanish only"
 	@echo "  carta-en   Build cover letter - English only"
 	@echo "  portfolio  Build portfolio pages in docs/ (GitHub Pages)"
+	@echo "  offer-add  Register a job offer: make offer-add FILE=offer.txt [COMPANY= ROLE= URL=]"
+	@echo "  offers-extract  Extract pending offers (FORCE=1 re-extracts all)"
+	@echo "  offers-list     List registered offers"
 	@echo "  apply      Tailor CV + cover letter for a job offer (uses Claude API)"
+	@echo "  test       Run the test suite"
 	@echo "  setup      First-time setup (install dependencies)"
 	@echo "  clean      Remove all generated HTML and PDF files"
 	@echo "  open-es    Build HTML and open Spanish CV in browser"
