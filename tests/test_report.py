@@ -107,4 +107,5 @@ def test_report_command_writes_one_report_per_family_with_offers(offers_dir, cv_
     offers_cli.cmd_add("uno", complete=fake(GOOD))
     paths = offers_cli.cmd_report(out_root=tmp_path / "market")
     assert [p.parent.name for p in paths] == ["data-engineer"] and paths[0].name == "report.md"
-    assert offers_cli.cmd_report(family="ml-engineer", out_root=tmp_path / "market")[0].read_text().count("0 ofertas") == 1
+    empty = offers_cli.cmd_report(family="ml-engineer", out_root=tmp_path / "market")[0].read_text()
+    assert "\n0 ofertas." in empty
