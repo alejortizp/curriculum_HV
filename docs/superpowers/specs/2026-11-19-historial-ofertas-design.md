@@ -1,7 +1,7 @@
 # Historial de ofertas y CV derivados: diseño
 
 - **Fecha:** 2026-11-19
-- **Estado:** aprobado el 2026-11-19
+- **Estado:** aprobado el 2026-11-19. Actualizado el mismo día por el [ADR-0003](../../adr/0003-pasos-del-modelo-en-sesion-de-claude-code.md): los dos pasos del modelo se responden en una sesión de Claude Code y la API queda como opción apagada. Donde este documento dice "llamada al modelo", el camino por defecto es ese intercambio por archivos.
 - **Decisiones registradas:** [ADR-0001](../../adr/0001-historial-de-ofertas-en-archivos-json-locales.md), [ADR-0002](../../adr/0002-cv-json-inmutable-con-ajustes-validados.md)
 - **Vocabulario:** [GLOSSARY.md](../../../GLOSSARY.md)
 

@@ -216,15 +216,17 @@ Guarda las ofertas de empleo que te interesan, analiza qué pide cada familia de
 
 | Comando | Qué hace |
 |---|---|
-| `make offer-add FILE=oferta.txt` | Registra una oferta y extrae su estructura (usa la API de Claude). `COMPANY=`, `ROLE=` y `URL=` son opcionales |
-| `make offers-extract` | Extrae las ofertas pendientes; `FORCE=1` las vuelve a extraer todas |
+| `make offer-add FILE=oferta.txt` | Registra una oferta y deja pendiente su extracción. `COMPANY=`, `ROLE=` y `URL=` son opcionales |
+| `make offers-extract` | Importa las extracciones escritas en sesión; `FORCE=1` las vuelve a pedir todas |
 | `make offers-list` | Lista las ofertas registradas |
 | `make offers-report` | Informe de mercado por familia de cargo, sin usar la API. `FAMILY=` y `SINCE=AAAA-MM-DD` son opcionales |
-| `make apply OFFER=<id>` | CV derivado y carta para una oferta (usa la API de Claude) |
-| `make cv-market FAMILY=<familia>` | CV derivado para una familia de cargo, a partir de su informe (usa la API de Claude) |
+| `make apply OFFER=<id>` | CV derivado y carta para una oferta |
+| `make cv-market FAMILY=<familia>` | CV derivado para una familia de cargo, a partir de su informe |
 | `make apply OFFER=<id> RENDER=1` | Vuelve a renderizar un `adjustments.json` editado a mano, sin llamar a la API |
 | `make test` | Ejecuta las pruebas |
 
-Los comandos que usan la API necesitan `ANTHROPIC_API_KEY` en `.env` y saldo en la Consola de Anthropic; ese uso se factura aparte de una suscripción de Claude.
+Los dos pasos que necesitan un modelo (extraer una oferta y redactar el CV) se responden en una sesión de Claude Code: el comando escribe un archivo `*.prompt.md` y se detiene; en la sesión, Claude lee ese archivo y escribe `*.response.json` en la misma carpeta; al ejecutar de nuevo el mismo comando, la respuesta se valida y el flujo continúa. No tiene costo fuera de la suscripción.
+
+Para usar la API de Anthropic en su lugar, define `LLM_PROVIDER=api` y `ANTHROPIC_API_KEY` en `.env`. Ese uso se factura aparte y necesita saldo en la Consola; el adaptador de API no se ha probado con una llamada real (ver `docs/adr/0003-*.md`).
 
 El diseño está en `docs/superpowers/specs/2026-11-19-historial-ofertas-design.md`, las decisiones en `docs/adr/` y el vocabulario en `GLOSSARY.md`.

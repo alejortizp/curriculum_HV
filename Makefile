@@ -50,7 +50,8 @@ carta-en:
 portfolio:
 	uv run python build.py portfolio
 
-# Derived CV + cover letter for one registered offer (uses the Claude API; RENDER=1 skips it)
+# Derived CV + cover letter for one registered offer. The model step is answered in a Claude Code
+# session: run once to write the prompt, again to read the response. RENDER=1 re-renders only.
 TAILOR_FLAGS = $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,) $(if $(RENDER),--render-only,)
 apply:
 	uv run python tailor.py $(if $(OFFER),--offer $(OFFER),) $(TAILOR_FLAGS)
@@ -135,8 +136,8 @@ help:
 	@echo "  offers-extract  Extract pending offers (FORCE=1 re-extracts all)"
 	@echo "  offers-list     List registered offers"
 	@echo "  offers-report   Market report per role family [FAMILY= SINCE=YYYY-MM-DD]"
-	@echo "  apply      Derived CV + cover letter for an offer: make apply OFFER=<id> (uses Claude API)"
-	@echo "  cv-market  Derived CV for a role family: make cv-market FAMILY=<family> (uses Claude API)"
+	@echo "  apply      Derived CV + cover letter for an offer: make apply OFFER=<id>"
+	@echo "  cv-market  Derived CV for a role family: make cv-market FAMILY=<family>"
 	@echo "  test       Run the test suite"
 	@echo "  setup      First-time setup (install dependencies)"
 	@echo "  clean      Remove all generated HTML and PDF files"
@@ -153,4 +154,5 @@ help:
 	@echo "                Without PROFILE, all profiles are built."
 	@echo "  OFFER_LANG=es|en  Output language for 'make apply' / 'make cv-market' (default: the offer's; es)"
 	@echo "  HTML=1        Skip PDF generation for 'make apply' / 'make cv-market'"
-	@echo "  RENDER=1      Re-render adjustments.json without calling the API"
+	@echo "  RENDER=1      Re-render adjustments.json without a model step"
+	@echo "  LLM_PROVIDER=api  Use the Anthropic API instead of a Claude Code session (needs credit)"
