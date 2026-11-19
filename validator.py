@@ -94,9 +94,10 @@ def _rule_markup(units) -> list[str]:
 
 
 def _rule_summary_quotes(summary: str) -> list[str]:
-    # cv.html puts `summary | striptags` inside a JSON-LD string, and striptags decodes
-    # entities first: &quot; becomes a quote and &lt;/script&gt; closes the script block.
-    # So the decoded text is what must be free of quotes, backslashes and '<'.
+    # cv.html puts `summary | striptags` in the JSON-LD block, and striptags decodes entities
+    # first (&quot; becomes a quote, &lt;/script&gt; a closing tag). The template now encodes
+    # that value with tojson, so this rule is a second barrier: a derived CV's summary stays
+    # free of quotes, backslashes and '<' even if a template ever interpolates it raw again.
     decoded = html.unescape(_ALLOWED_TAG.sub("", summary))
     if any(char in decoded for char in '"\\<'):
         return ["resumen: no puede contener comillas dobles, barras invertidas ni '<', "

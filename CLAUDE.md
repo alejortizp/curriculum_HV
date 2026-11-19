@@ -151,7 +151,7 @@ Two boundaries hold the design together and must not be crossed:
 5. `tech_stack_order`, `projects_shown` and `academic_shown` name only existing groups, skills and projects
 6. A general term appears only in a text unit that also names one of its backing skills
 
-Plus markup: templates render with `autoescape=False`, so only bare `<strong>` / `<em>` are allowed (no attributes, no raw `<`), in every letter field too, and the summary may not contain `"` or `\` (it is inserted in a JSON-LD string in `cv.html`).
+Plus markup: templates render with `autoescape=False`, so only bare `<strong>` / `<em>` are allowed (no attributes, no raw `<`), in every letter field too, and the summary may not contain `"`, a backslash or `<`, not even written as entities. `cv.html` encodes the JSON-LD description with `tojson`; this validator rule is a second barrier.
 
 With the API, a rejected answer is retried once with the reasons; a rejection that stands (the first one, in session) writes `adjustments.<lang>.rejected.json` and renders nothing. `RENDER=1` re-validates the stored adjustments against the current cv.json before rendering. Derived CVs are rendered without the Gemini key. A designed CV over 4 pages is a warning: remove a project from `projects_shown` / `academic_shown` and re-render.
 

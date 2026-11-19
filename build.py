@@ -101,6 +101,8 @@ def get_jinja_env() -> Environment:
     global _jinja_env
     if _jinja_env is None:
         _jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+        # tojson (used for the JSON-LD description) keeps accents readable; it still escapes < > & '
+        _jinja_env.policies["json.dumps_kwargs"] = {"ensure_ascii": False, "sort_keys": True}
         _jinja_env.globals["current_year"] = datetime.now().year
         _jinja_env.filters["ats"] = ats_text
     return _jinja_env

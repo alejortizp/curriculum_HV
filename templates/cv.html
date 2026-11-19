@@ -51,7 +51,7 @@
         "@type": "Person",
         "name": "{{ cv.personal.name }}",
         "jobTitle": "{{ cv.personal.title }}",
-        "description": "{{ cv.profile[lang] | striptags | truncate(200, True, '...') }}",
+        "description": {{ cv.profile[lang] | striptags | truncate(200, True, '...') | tojson }},
         "email": "{{ cv.personal.email }}",
         "telephone": "{{ cv.personal.phone }}",
         "image": "{{ cv.personal.portfolio.url }}profile.jpg",
