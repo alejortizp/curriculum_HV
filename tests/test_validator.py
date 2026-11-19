@@ -140,3 +140,11 @@ def test_summary_cannot_break_out_of_the_json_ld_string(bad):
     assert bad(summary='Experta en "pipelines".') != []
     assert bad(summary="Ruta C:\\datos.") != []
     assert bad(summary="Experta en «pipelines» y 'ETL'.") == []
+
+
+def test_summary_is_checked_in_its_decoded_form(bad):
+    # Jinja's striptags decodes entities before the summary lands in the JSON-LD block
+    assert bad(summary="&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;") != []
+    assert bad(summary="dijo &quot;hola&quot;") != []
+    assert bad(summary="ruta &#92;datos") != []
+    assert bad(summary="Datos &amp; IA con <strong>Python</strong>.") == []

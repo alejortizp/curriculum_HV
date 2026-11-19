@@ -6,6 +6,7 @@ What it cannot see is left to the human reading the adjustments file: overstated
 wording and an entry that mixes two stories.
 """
 
+import html
 import re
 
 from textutil import numbers, plain, term_in
@@ -93,9 +94,13 @@ def _rule_markup(units) -> list[str]:
 
 
 def _rule_summary_quotes(summary: str) -> list[str]:
-    # cv.html inserts the summary inside a JSON-LD string; a quote or backslash breaks it
-    if '"' in summary or "\\" in summary:
-        return ["resumen: no puede contener comillas dobles ni barras invertidas"]
+    # cv.html puts `summary | striptags` inside a JSON-LD string, and striptags decodes
+    # entities first: &quot; becomes a quote and &lt;/script&gt; closes the script block.
+    # So the decoded text is what must be free of quotes, backslashes and '<'.
+    decoded = html.unescape(_ALLOWED_TAG.sub("", summary))
+    if any(char in decoded for char in '"\\<'):
+        return ["resumen: no puede contener comillas dobles, barras invertidas ni '<', "
+                "tampoco escritos como entidades (&quot;, &lt;)"]
     return []
 
 
