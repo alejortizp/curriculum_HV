@@ -26,6 +26,13 @@ def tags(markup: str) -> set[str]:
     return {name.lower() for name in _TAG_NAME.findall(markup)}
 
 
+def fenced(text: str, tag: str = "offer") -> str:
+    """Untrusted text wrapped in <tag>…</tag>, with any closing tag of its own removed
+    so the text cannot end the fence early and pose as instructions."""
+    cleaned = re.sub(rf"<\s*/\s*{tag}\s*>", "", text, flags=re.IGNORECASE)
+    return f"<{tag}>\n{cleaned}\n</{tag}>"
+
+
 def term_in(term: str, text: str) -> bool:
     """True if `term` appears in `text` as a whole term, ignoring case.
 
