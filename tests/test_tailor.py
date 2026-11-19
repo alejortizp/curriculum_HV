@@ -124,3 +124,11 @@ def test_unknown_family_is_rejected(cv_file, offers_dir, capsys):
     with pytest.raises(SystemExit) as exc:
         tailor.main(["--family", "astronauta"])
     assert exc.value.code == 1 and "astronauta" in capsys.readouterr().out
+
+
+def test_prompt_explains_how_the_letter_template_composes_its_fields(cv):
+    # found in the first real run: the template prints "<greeting> <recipient>," and "<sign_off>,"
+    complete = fake(RESP)
+    generate(cv, TARGET, complete=complete)
+    prompt = complete.prompts[0]
+    assert "appends the recipient" in prompt and "appends a comma and the candidate's name" in prompt
