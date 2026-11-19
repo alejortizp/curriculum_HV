@@ -192,7 +192,7 @@ The CV template is optimized for Applicant Tracking Systems and OCR extraction:
 - Contact form uses Formspree (AJAX submit, no redirect). The Formspree ID is in `cv.json` → `personal.formspree_id`
 - Google Analytics is optional — set `personal.google_analytics_id` in `cv.json` (gtag.js script is conditionally injected only when the ID has a value)
 - Mobile menu: hamburger button toggles a slide-in panel with overlay (JS in base template)
-- "Descargar CV" / "Download CV" button on index page has a dropdown with two groups: "CV completo" (designed HTML CV, ES/EN) and "Versión ATS (PDF)" (`docs/ats/Alejandro_Ortiz_Perdomo_CV_{ES,EN}.pdf`, `download` links). Opening it scrolls the menu into view (it sits near the fold on desktop)
+- "Descargar CV" / "Download CV" button on index page has a dropdown with three groups: "CV completo" (designed HTML CV, ES/EN), "Versión ATS (PDF)" (`docs/ats/Alejandro_Ortiz_Perdomo_CV_{ES,EN}.pdf`, `download` links) and "Perfil Data Engineer" (designed CV + ATS PDF of the `data-engineer` profile, ES/EN; links are hard-coded in `portfolio_index.html`, and the two HTML CVs are also listed in the sitemap). Opening it scrolls the menu into view (it sits near the fold on desktop)
 - `profile.jpg` canonical source is `static/profile.jpg` — build copies it to `docs/`
 - Tailwind CSS custom color tokens (defined in `tailwind/portfolio.config.js`): `primary`, `primary-hover`, `surface-secondary`, `surface-secondary-hover`, `border-dark`, `text-secondary`
 - GitHub Pages serves from `docs/` folder on `main` branch

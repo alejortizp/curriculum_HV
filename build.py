@@ -405,6 +405,7 @@ def build_portfolio(cv_data: dict):
             "projects.html", "projects_en.html",
             "contact.html", "contact_en.html",
             "CV_español.html", "CV_english.html",
+            "CV_español_data-engineer.html", "CV_english_data-engineer.html",
         ]
         sitemap_entries = "\n".join(
             f"  <url><loc>{base_url}{page}</loc></url>" for page in pages
