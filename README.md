@@ -222,7 +222,7 @@ Guarda las ofertas de empleo que te interesan, analiza qué pide cada familia de
 | `make offers-report` | Informe de mercado por familia de cargo, sin usar la API. `FAMILY=` y `SINCE=AAAA-MM-DD` son opcionales |
 | `make apply OFFER=<id>` | CV derivado y carta para una oferta |
 | `make cv-market FAMILY=<familia>` | CV derivado para una familia de cargo, a partir de su informe |
-| `make apply OFFER=<id> RENDER=1` | Vuelve a renderizar un `adjustments.json` editado a mano, sin llamar a la API |
+| `make apply OFFER=<id> RENDER=1` | Vuelve a renderizar un `adjustments.<lang>.json` editado a mano, sin llamar a la API |
 | `make test` | Ejecuta las pruebas |
 
 Los dos pasos que necesitan un modelo (extraer una oferta y redactar el CV) se responden en una sesión de Claude Code: el comando escribe un archivo `*.prompt.md` y se detiene; en la sesión, Claude lee ese archivo y escribe `*.response.json` en la misma carpeta; al ejecutar de nuevo el mismo comando, la respuesta se valida y el flujo continúa. No tiene costo fuera de la suscripción.

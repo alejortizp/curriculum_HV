@@ -104,3 +104,21 @@ def seed_offer(family, required, text="oferta de prueba"):
 
 
 BAD_SUMMARY = "Experto en Snowflake."
+
+
+RESP_EN = {
+    "title": "Data Engineer | Machine Learning Engineer",
+    "summary": "Data engineer building pipelines in <strong>Python</strong>.",
+    "experience_order": ["Acme"],
+    "experience": [{"company": "Acme", "bullets": ["Pipelines with Python.", "Deployment in <strong>2 days</strong>."]}],
+    "tech_stack_order": [{"category": "Datos", "first": ["Python"]}],
+    "projects_shown": ["System B"],
+    "academic_shown": [],
+    "cover_letter": {
+        "recipient": "Hiring team", "date": "November 19, 2026", "subject": "Application for Data Engineer",
+        "greeting": "Dear", "opening": "I am interested in the Data Engineer role at Globex.",
+        "why_me_title": "Why me", "why_me": ["I build pipelines with Python."],
+        "differentiator_title": "What sets me apart", "differentiator": "A background in statistics.",
+        "closing": "I would be glad to talk.", "farewell": "Thank you for your time.", "sign_off": "Sincerely",
+    },
+}

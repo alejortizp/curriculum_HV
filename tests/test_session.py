@@ -106,10 +106,10 @@ def test_apply_in_session_waits_then_renders(tmp_path, cv_file, in_session):
     out = tmp_path / "salida"
     with pytest.raises(AwaitingResponse) as exc:
         tailor.run(TARGET, out, html_only=True)
-    assert exc.value.prompt_path == out / "tailoring.prompt.md"
+    assert exc.value.prompt_path == out / "tailoring.es.prompt.md"
     exc.value.response_path.write_text(json.dumps(RESP))
     tailor.run(TARGET, out, html_only=True)
-    assert (out / "adjustments.json").exists() and list(out.glob("CV-*.html"))
+    assert (out / "adjustments.es.json").exists() and list(out.glob("CV-*.html"))
 
 
 def test_rejected_answer_in_session_is_reported_without_a_second_prompt(tmp_path, cv_file, in_session):
@@ -121,7 +121,7 @@ def test_rejected_answer_in_session_is_reported_without_a_second_prompt(tmp_path
     with pytest.raises(tailor.Rejected):
         tailor.run(TARGET, out, html_only=True)
     assert exc.value.prompt_path.read_text() == before and exc.value.response_path.exists()
-    assert json.loads((out / "adjustments.rejected.json").read_text())["reasons"]
+    assert json.loads((out / "adjustments.es.rejected.json").read_text())["reasons"]
 
 
 def test_prompt_file_warns_that_the_offer_is_untrusted_data(tmp_path):

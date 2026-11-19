@@ -65,4 +65,8 @@ def complete_json(prompt: str, schema: dict, *, model: str, effort: str,
         raise LLMError("El modelo rechazó la solicitud.")
     if response.stop_reason == "max_tokens":
         raise LLMError("La respuesta se cortó por max_tokens.")
-    return json.loads(next(b.text for b in response.content if b.type == "text"))
+    text = next((b.text for b in response.content if b.type == "text"), "")
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        raise LLMError("La respuesta del modelo no es JSON válido.") from e

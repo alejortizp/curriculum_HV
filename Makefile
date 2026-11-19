@@ -154,5 +154,5 @@ help:
 	@echo "                Without PROFILE, all profiles are built."
 	@echo "  OFFER_LANG=es|en  Output language for 'make apply' / 'make cv-market' (default: the offer's; es)"
 	@echo "  HTML=1        Skip PDF generation for 'make apply' / 'make cv-market'"
-	@echo "  RENDER=1      Re-render adjustments.json without a model step"
+	@echo "  RENDER=1      Re-render adjustments.<lang>.json without a model step"
 	@echo "  LLM_PROVIDER=api  Use the Anthropic API instead of a Claude Code session (needs credit)"

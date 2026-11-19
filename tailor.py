@@ -29,6 +29,10 @@ _LETTER_FIELDS = ("recipient", "date", "subject", "greeting", "opening", "why_me
                   "differentiator_title", "differentiator", "closing", "farewell", "sign_off")
 
 
+class RenderError(Exception):
+    pass
+
+
 class Rejected(Exception):
     """The adjustments did not pass the validator."""
 
@@ -205,7 +209,13 @@ def render(cv: dict, adjustments: dict, cover_letter: dict | None, out_dir: Path
 
     if html_only:
         return result
-    build.generate_pdfs(jobs, {"top": "0", "bottom": "0", "left": "0", "right": "0"})
+    try:
+        build.generate_pdfs(jobs, {"top": "0", "bottom": "0", "left": "0", "right": "0"})
+    except Exception as e:
+        raise RenderError(
+            f"No se pudieron generar los PDF: {e}. Se renderizan con el Google Chrome del sistema "
+            "(comprueba: google-chrome --version). Los HTML sí quedaron generados; con HTML=1 se "
+            "omiten los PDF.") from e
     build.add_pdf_metadata(cv_pdf, f"{author} — CV", author)
     result["cv_pdf"] = cv_pdf
     if cover_letter:
@@ -221,8 +231,11 @@ def render(cv: dict, adjustments: dict, cover_letter: dict | None, out_dir: Path
 def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bool = False,
         complete=None) -> dict:
     cv = build.load_json(build.DATA_FILE)
-    adjustments_path, letter_path = out_dir / "adjustments.json", out_dir / "cover_letter.json"
-    rejected_path = out_dir / "adjustments.rejected.json"
+    # one set of files per language, so an English run does not overwrite the Spanish one
+    lang = target["lang"]
+    adjustments_path = out_dir / f"adjustments.{lang}.json"
+    letter_path = out_dir / f"cover_letter.{lang}.json"
+    rejected_path = out_dir / f"adjustments.{lang}.rejected.json"
     dump = lambda value: json.dumps(value, ensure_ascii=False, indent=2) + "\n"  # noqa: E731
 
     if render_only:
@@ -235,7 +248,7 @@ def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bo
     else:
         out_dir.mkdir(parents=True, exist_ok=True)
         # default provider: a Claude Code session answering through files in out_dir
-        complete, attempts = (complete, 2) if complete else session.provider(out_dir, "tailoring")
+        complete, attempts = (complete, 2) if complete else session.provider(out_dir, f"tailoring.{lang}")
         try:
             adjustments, letter = generate(cv, target, complete, attempts)
         except Rejected as e:
@@ -272,6 +285,17 @@ def main_offer(offer_id: str, out_dir: Path | None = None, *, lang: str | None =
     target = targets.from_offer(offer, cv, vocabulary.load(cv), lang)
     return run(target, out_dir or APPLICATIONS_DIR / offer["id"], html_only=html_only,
                render_only=render_only, complete=complete)
+
+
+def summary_lines(result: dict) -> list[str]:
+    """What a run prints: the files it wrote and, with a PDF, its page count."""
+    lines = [f"  {result[key]}" for key in ("cv_html", "cv_pdf", "letter_html", "letter_pdf") if result[key]]
+    if result["pages"] is not None:
+        lines.append(f"Páginas del CV: {result['pages']}")
+        if result["pages"] > MAX_PAGES:
+            lines.append(f"Aviso: supera el límite de {MAX_PAGES}. Quita un proyecto de projects_shown o "
+                         "academic_shown en el archivo de ajustes y vuelve a renderizar con RENDER=1.")
+    return lines
 
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
@@ -321,19 +345,16 @@ def main(argv: list[str] | None = None) -> None:
         for reason in e.reasons:
             print(f"  - {reason}")
         if not args.render_only:
-            print(f"Resultado rechazado guardado en {out_dir / 'adjustments.rejected.json'}")
-            print("En una sesión: corrige tailoring.response.json en esa carpeta y vuelve a ejecutar.")
+            print(f"Resultado rechazado guardado en {out_dir} (adjustments.<idioma>.rejected.json).")
+            print("En una sesión: corrige tailoring.<idioma>.response.json en esa carpeta y vuelve a ejecutar.")
         sys.exit(1)
     except (offers.OfferNotFound, targets.TargetError, llm.LLMError, session.SessionError,
-            vocabulary.VocabularyError, FileNotFoundError, ValueError) as e:
+            vocabulary.VocabularyError, offers.CorruptOffer, RenderError, FileNotFoundError,
+            ValueError) as e:
         _fail(f"Error: {e}")
 
-    for key in ("cv_html", "cv_pdf", "letter_html", "letter_pdf"):
-        if result[key]:
-            print(f"  {result[key].relative_to(build.ROOT)}")
-    if result["pages"] and result["pages"] > MAX_PAGES:
-        print(f"Aviso: el CV tiene {result['pages']} páginas (límite {MAX_PAGES}). Quita un proyecto de "
-              "projects_shown o academic_shown en adjustments.json y vuelve a renderizar con RENDER=1.")
+    for line in summary_lines(result):
+        print(line)
 
 
 if __name__ == "__main__":

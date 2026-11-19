@@ -61,14 +61,14 @@ def test_two_rejections_raise_with_reasons(cv):
 def test_run_writes_rejected_file_and_renders_nothing(tmp_path, cv_file):
     with pytest.raises(Rejected):
         run(TARGET, tmp_path, html_only=True, complete=fake(BAD, BAD))
-    rejected = json.loads((tmp_path / "adjustments.rejected.json").read_text())
+    rejected = json.loads((tmp_path / "adjustments.es.rejected.json").read_text())
     assert rejected["reasons"] and not list(tmp_path.glob("*.html"))
-    assert not (tmp_path / "adjustments.json").exists()
+    assert not (tmp_path / "adjustments.es.json").exists()
 
 
 def test_run_html_only_writes_adjustments_and_html(tmp_path, cv_file):
     out = run(TARGET, tmp_path, html_only=True, complete=fake(RESP))
-    assert (tmp_path / "adjustments.json").exists() and (tmp_path / "cover_letter.json").exists()
+    assert (tmp_path / "adjustments.es.json").exists() and (tmp_path / "cover_letter.es.json").exists()
     assert out["pages"] is None
     [cv_html] = tmp_path.glob("CV-*.html")
     assert list(tmp_path.glob("Carta-*.html"))
@@ -86,7 +86,7 @@ def test_render_only_revalidates_against_current_cv(tmp_path, cv_file):
 
 def test_render_only_uses_hand_edited_adjustments(tmp_path, cv_file):
     run(TARGET, tmp_path, html_only=True, complete=fake(RESP))
-    path = tmp_path / "adjustments.json"
+    path = tmp_path / "adjustments.es.json"
     adj = json.loads(path.read_text())
     adj["summary"] = "Resumen editado a mano."
     path.write_text(json.dumps(adj, ensure_ascii=False))
@@ -111,7 +111,7 @@ def test_family_run_writes_report_and_cv_without_letter(tmp_path, cv_file, offer
     seed_offer("data-engineer", ["Python", "Snowflake"])
     out = tailor.main_family("data-engineer", tmp_path, lang="es", html_only=True, complete=fake(RESP_NO_LETTER))
     assert (tmp_path / "report.json").exists() and (tmp_path / "report.md").exists()
-    assert (tmp_path / "adjustments.json").exists() and not list(tmp_path.glob("Carta-*"))
+    assert (tmp_path / "adjustments.es.json").exists() and not list(tmp_path.glob("Carta-*"))
     assert out["weak_signal"] is True
 
 
@@ -132,3 +132,39 @@ def test_prompt_explains_how_the_letter_template_composes_its_fields(cv):
     generate(cv, TARGET, complete=complete)
     prompt = complete.prompts[0]
     assert "appends the recipient" in prompt and "appends a comma and the candidate's name" in prompt
+
+
+# Hallazgos menores de la revisión final
+def test_spanish_and_english_runs_keep_separate_files(tmp_path, cv_file):
+    from helpers import RESP_EN
+    run(TARGET, tmp_path, html_only=True, complete=fake(RESP))
+    run({**TARGET, "lang": "en"}, tmp_path, html_only=True, complete=fake(RESP_EN))
+    assert json.loads((tmp_path / "adjustments.es.json").read_text())["lang"] == "es"
+    assert json.loads((tmp_path / "adjustments.en.json").read_text())["lang"] == "en"
+    assert (tmp_path / "cover_letter.es.json").exists() and (tmp_path / "cover_letter.en.json").exists()
+    assert list(tmp_path.glob("CV-*-ES.html")) and list(tmp_path.glob("CV-*-EN.html"))
+
+
+def test_page_count_is_always_reported(tmp_path):
+    base = {"cv_html": tmp_path / "CV.html", "cv_pdf": None, "letter_html": None, "letter_pdf": None}
+    assert any("Páginas del CV: 3" in line for line in tailor.summary_lines({**base, "pages": 3}))
+    over = "\n".join(tailor.summary_lines({**base, "pages": 5}))
+    assert "Páginas del CV: 5" in over and "límite" in over
+    assert not any("Páginas" in line for line in tailor.summary_lines({**base, "pages": None}))
+
+
+def test_pdf_failure_is_reported_as_render_error(tmp_path, cv_file, monkeypatch):
+    import build
+
+    def boom(jobs, margin):
+        raise RuntimeError("Executable does not exist")
+    monkeypatch.setattr(build, "generate_pdfs", boom)
+    with pytest.raises(tailor.RenderError, match="Chrome"):
+        run(TARGET, tmp_path, complete=fake(RESP))
+    assert list(tmp_path.glob("CV-*.html"))            # el HTML sí queda
+
+
+def test_unknown_offer_is_reported_in_one_line(cv_file, offers_dir, capsys):
+    with pytest.raises(SystemExit) as exc:
+        tailor.main(["--offer", "no-existe"])
+    assert exc.value.code == 1 and "No existe la oferta" in capsys.readouterr().out
