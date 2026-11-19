@@ -1,0 +1,42 @@
+import pytest
+
+from textutil import numbers, plain, slugify_ascii, tags, term_in
+
+
+def test_slugify_ascii_strips_accents_and_enie():
+    assert slugify_ascii("Compañía Ñandú  S.A.S") == "compania-nandu-sas"
+
+
+def test_slugify_ascii_of_symbols_only_is_empty():
+    assert slugify_ascii("—🚀—") == ""
+
+
+def test_plain_removes_tags_and_entities():
+    assert plain("<strong>a</strong> &lt;200ms &amp; b") == "a <200ms & b"
+
+
+@pytest.mark.parametrize("term,text,expected", [
+    ("Go", "servicio en Go (Gin)", True),
+    ("R", "LLMs como DeepSeek R-1", False),
+    ("R", "agente RAG", False),
+    ("C++", "motor en C++ y Rust", True),
+    ("C#", "API en C#.", True),
+    (".NET", "backend .NET 8", True),
+    ("kubernetes", "desplegado en Kubernetes (EKS)", True),
+    ("Lake", "sobre Delta Lake", True),
+    ("Spark", "con PySpark", False),
+])
+def test_term_in(term, text, expected):
+    assert term_in(term, text) is expected
+
+
+def test_tags():
+    assert tags('<strong>a</strong> <a href="x">b</a> <EM>c</EM>') == {"strong", "a", "em"}
+
+
+def test_numbers_finds_plain_integers():
+    assert {"95", "500"} <= numbers("95% de precisión, 500 CVs")
+
+
+def test_numbers_ignores_text_without_digits():
+    assert numbers("sin cifras") == set()

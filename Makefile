@@ -1,4 +1,4 @@
-.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio apply setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -53,6 +53,10 @@ portfolio:
 # Tailor CV + cover letter for a job offer (reads data/job_offer.json)
 apply:
 	uv run python tailor.py $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,)
+
+# Run the test suite (deterministic code only; never calls the API)
+test:
+	uv run pytest -q
 
 # First-time setup
 setup:
