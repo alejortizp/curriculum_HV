@@ -32,7 +32,7 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 - `docs/projects.html` / `docs/projects_en.html` — Portfolio projects (ES/EN)
 - `docs/contact.html` / `docs/contact_en.html` — Portfolio contact (ES/EN)
 - `docs/CV_español.html` / `docs/CV_english.html` — Generated CV files, default profile
-- `docs/CV_español_<profile>.html` / `docs/CV_english_<profile>.html` — Profile variant CVs (ai-engineer, ml-engineer, mlops)
+- `docs/CV_español_<profile>.html` / `docs/CV_english_<profile>.html` — Profile variant CVs (ai-engineer, ml-engineer, mlops, data-engineer)
 - `docs/CV-Alejandro-Ortiz-Perdomo-*.pdf` — ASCII-safe PDF copies for GitHub Pages download button
 - `docs/sitemap.xml` / `docs/robots.txt` — Auto-generated SEO files
 - `docs/static/` — Copy of styles.css + ai-suite.js (needed by CVs in docs/)
@@ -42,7 +42,7 @@ Bilingual (Spanish/English) professional CV for Alejandro Ortiz Perdomo (AI Engi
 
 ```bash
 make              # Build everything: all CV profiles (HTML + PDF) + ATS PDFs + bilingual portfolio
-make build        # Build all profiles × both languages (8 CVs: 4 profiles × 2 langs)
+make build        # Build all profiles × both languages (10 CVs: 5 profiles × 2 langs)
 make html         # Build HTML only (skip PDF), all profiles
 make es           # Build Spanish CVs only (all profiles)
 make en           # Build English CVs only (all profiles)
@@ -66,11 +66,11 @@ make open-portfolio # Build and open portfolio in browser
 make help         # Show all targets
 ```
 
-CV targets accept a `PROFILE` variable to build a single profile: `make es PROFILE=ai-engineer`. Without `PROFILE`, **all profiles are built** (default, ai-engineer, ml-engineer, mlops). Available profiles are defined in `cv.json` → `profiles`.
+CV targets accept a `PROFILE` variable to build a single profile: `make es PROFILE=ai-engineer`. Without `PROFILE`, **all profiles are built** (default, ai-engineer, ml-engineer, mlops, data-engineer). Available profiles are defined in `cv.json` → `profiles`.
 
 Output naming: default profile uses `CV_español.html` / `CV_english.html`. Profile variants use `CV_español_<profile>.html` / `CV_english_<profile>.html` (e.g., `CV_español_ai-engineer.html`). PDFs use ASCII-safe names: `CV-Alejandro-Ortiz-Perdomo-ES.pdf`, `CV-Alejandro-Ortiz-Perdomo-AI-Engineer-EN.pdf`, etc.
 
-`make` (default) runs `build` + `ats` + `portfolio`, so updating `cv.json` and running `make` regenerates all 8 CVs, PDFs, and the bilingual portfolio in one step.
+`make` (default) runs `build` + `ats` + `portfolio`, so updating `cv.json` and running `make` regenerates all 10 CVs, PDFs, and the bilingual portfolio in one step.
 
 The Makefile wraps `uv run python build.py` with various flags. `build.py` uses **argparse** — run `uv run python build.py --help` for usage. Example: `uv run python build.py es --html-only --profile ai-engineer`.
 
@@ -89,8 +89,8 @@ The Makefile wraps `uv run python build.py` with various flags. `build.py` uses 
 All translatable fields use `{"es": "...", "en": "..."}` objects. Fields with identical text in both languages use plain strings. Key sections:
 
 - `personal` — Name, contact info, links (with `display_url` for ATS-visible URLs), portfolio URL, formspree_id, google_analytics_id (location is i18n)
-- `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
-- `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` to tell a data-to-production story instead of model-effectiveness metrics
+- `profiles` — Professional summary variants keyed by role name (default, ai-engineer, ml-engineer, mlops, data-engineer). Each variant has `{"es": "...", "en": "..."}`. Without `--profile`, all profiles are built. `build.py --profile <name>` filters to one; resolved to `cv.profile` before rendering so the template just reads `cv.profile[lang]`
+- `profile_overrides` — Optional per-profile replacements applied by `build.py` → `apply_profile_overrides()`: `title` (header/JSON-LD title) and `experience` (`{company: {lang: [bullets]}}`, replaces that company's bullets). Unknown company names raise an error. Currently used by `mlops` (data-to-production story instead of model-effectiveness metrics) and `data-engineer` (data pipelines/ETL story; Savia Salud keeps its base bullets). A new profile also needs its display label added in `get_ats_outputs()` (`build.py`), the `<title>` replace chain in `cv.html` and the `chosen_profile` list in `tailor.py`
 - `experience` — Work history. `start`/`end` (`"YYYY-MM"`, `end: null` = current) are the structured dates used by the ATS template; `date` is the display string for the designed CV. Each entry has a `langs` array (`["es", "en"]` or `["es"]`) to control which CV versions include it
 - `projects` — Open source projects (i18n for title/description). Shown in the CV and the portfolio. Portfolio-only fields: `categories` (filter keys: `agents`, `genai-rag`, `classic-ml`; a project can have several) and `icon` (Material Symbols name for the card). Optional `"cv": false` hides a project from the page-limited designed CV (`cv.html`) while keeping it in the portfolio and ATS CVs (used by MLOps-Pipeline to keep the Spanish CVs at 4 pages). Filter buttons are rendered only for categories some project uses, so "ML Clásico" appears once a project has `classic-ml`
 - `academic_projects` — MISO master's course projects (CV only). Same shape as `projects` plus an i18n `course` label; `url`/`url_label` are optional because most course repos are private. `"cv": false` works here too: it hides the entry from the designed CV but keeps it in the ATS CVs (used by Alarmas QR to keep the Spanish CVs at 4 pages)

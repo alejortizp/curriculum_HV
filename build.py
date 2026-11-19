@@ -278,7 +278,8 @@ ATS_MARGIN = {"top": "1.4cm", "bottom": "1.4cm", "left": "1.6cm", "right": "1.6c
 
 def get_ats_outputs(profile_name: str, lang: str) -> dict:
     """ATS file names follow the Firstname_Lastname_CV convention recruiters expect."""
-    names = {"default": "", "ai-engineer": "AI-Engineer", "ml-engineer": "ML-Engineer", "mlops": "MLOps"}
+    names = {"default": "", "ai-engineer": "AI-Engineer", "ml-engineer": "ML-Engineer", "mlops": "MLOps",
+             "data-engineer": "Data-Engineer"}
     label = names.get(profile_name, profile_name)
     label = f"_{label}" if label else ""
     stem = f"Alejandro_Ortiz_Perdomo_CV{label}_{lang.upper()}"
@@ -452,7 +453,7 @@ def parse_args() -> argparse.Namespace:
         "--profile",
         type=str,
         default=None,
-        help="Build a specific CV profile (e.g., ai-engineer, ml-engineer, mlops)",
+        help="Build a specific CV profile (e.g., ai-engineer, ml-engineer, mlops, data-engineer)",
     )
     return parser.parse_args()
 

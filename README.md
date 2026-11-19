@@ -29,8 +29,8 @@ CV profesional bilingüe (español/inglés) como AI Engineer & Machine Learning 
 │   ├── contact_en.html          # Contacto (EN)
 │   ├── CV_español.html          # CV español - perfil default
 │   ├── CV_english.html          # CV inglés - perfil default
-│   ├── CV_español_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
-│   ├── CV_english_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops)
+│   ├── CV_español_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops, data-engineer)
+│   ├── CV_english_<profile>.html # CVs por perfil (ai-engineer, ml-engineer, mlops, data-engineer)
 │   ├── CV-Alejandro-Ortiz-*.pdf # PDFs con nombres ASCII-safe para descarga
 │   ├── sitemap.xml              # Sitemap auto-generado
 │   ├── robots.txt               # Robots.txt auto-generado
@@ -72,7 +72,7 @@ make setup
 
 ```bash
 make              # Build todo: todos los perfiles (HTML + PDF) + portfolio bilingüe
-make build        # Todos los perfiles × ambos idiomas (8 CVs)
+make build        # Todos los perfiles × ambos idiomas (10 CVs)
 make html         # Solo generar HTMLs (sin PDFs), todos los perfiles
 make es           # Solo español (todos los perfiles)
 make en           # Solo inglés (todos los perfiles)
@@ -91,7 +91,7 @@ make help         # Mostrar todos los comandos
 
 ### Perfiles customizables
 
-El CV soporta variantes del perfil profesional para adaptarse al rol al que aplicas. **Por defecto, `make` genera todos los perfiles** (4 perfiles × 2 idiomas = 8 CVs):
+El CV soporta variantes del perfil profesional para adaptarse al rol al que aplicas. **Por defecto, `make` genera todos los perfiles** (5 perfiles × 2 idiomas = 10 CVs):
 
 | Perfil | Enfoque | Archivo generado (ejemplo ES) |
 |--------|---------|-------------------------------|
@@ -99,11 +99,12 @@ El CV soporta variantes del perfil profesional para adaptarse al rol al que apli
 | `ai-engineer` | GenAI/RAG/Agentes | `CV_español_ai-engineer.html` |
 | `ml-engineer` | ML predictivo | `CV_español_ml-engineer.html` |
 | `mlops` | CI/CD/deployment | `CV_español_mlops.html` |
+| `data-engineer` | Data pipelines/ETL | `CV_español_data-engineer.html` |
 
 Para generar solo un perfil específico, usar `PROFILE=`:
 
 ```bash
-make build                     # Todos los perfiles (8 CVs)
+make build                     # Todos los perfiles (10 CVs)
 make es PROFILE=ai-engineer    # Solo AI Engineer en español (1 CV)
 make build PROFILE=mlops       # Solo MLOps, ambos idiomas (2 CVs)
 ```

@@ -40,6 +40,10 @@
     "mlops": {
       "es": "MLOps Engineer enfocado en llevar modelos de ML y LLMs <strong>de los datos a producción</strong>: <strong>data pipelines y ETL</strong>, entrenamiento reproducible, despliegue y monitoreo. Implementé <strong>CI/CD</strong> con <strong>Databricks + MLflow</strong> que redujo el despliegue de 2 semanas a <strong>2 días</strong> y monitoreo de <strong>data/model drift</strong> con reentrenamiento automático. Experiencia desplegando servicios en <strong>Azure, AWS y GCP</strong> con <strong>Docker</strong>, <strong>Kubernetes (EKS)</strong>, <strong>Terraform</strong> y serverless (<strong>Azure Functions</strong>, <strong>Lambda</strong>, <strong>Cloud Run</strong>), automatizados con metodologías <strong>DevOps</strong> y <strong>GitHub Actions</strong>.",
       "en": "MLOps Engineer focused on taking ML models and LLMs <strong>from data to production</strong>: <strong>data pipelines and ETL</strong>, reproducible training, deployment and monitoring. Implemented <strong>CI/CD</strong> with <strong>Databricks + MLflow</strong> that cut deployment from 2 weeks to <strong>2 days</strong>, and <strong>data/model drift</strong> monitoring with automated retraining. Experience deploying services on <strong>Azure, AWS and GCP</strong> with <strong>Docker</strong>, <strong>Kubernetes (EKS)</strong>, <strong>Terraform</strong> and serverless (<strong>Azure Functions</strong>, <strong>Lambda</strong>, <strong>Cloud Run</strong>), automated with <strong>DevOps</strong> practices and <strong>GitHub Actions</strong>."
+    },
+    "data-engineer": {
+      "es": "Data Engineer con <strong>5+ años</strong> construyendo <strong>data pipelines y ETL</strong>: desde <strong>SQL</strong> y tareas programadas para BI y reportes regulatorios hasta pipelines en <strong>PySpark</strong> sobre <strong>Databricks</strong> (<strong>Delta Lake</strong>, <strong>Unity Catalog</strong>, <strong>Workflows</strong>) y procesos batch orquestados con <strong>Apache Airflow</strong> que alimentan modelos de ML en producción. Aplico prácticas <strong>DevOps y CI/CD</strong> (<strong>GitHub Actions</strong>, <strong>Docker</strong>) y despliego en <strong>Azure, AWS y GCP</strong>. Combino base en Estadística con Maestría en Ingeniería de Software (en curso) para entregar datos confiables, trazables y listos para analítica e IA.",
+      "en": "Data Engineer with <strong>5+ years</strong> building <strong>data pipelines and ETL</strong>: from <strong>SQL</strong> and scheduled jobs for BI and regulatory reporting to <strong>PySpark</strong> pipelines on <strong>Databricks</strong> (<strong>Delta Lake</strong>, <strong>Unity Catalog</strong>, <strong>Workflows</strong>) and batch jobs orchestrated with <strong>Apache Airflow</strong> feeding ML models in production. Applies <strong>DevOps and CI/CD</strong> practices (<strong>GitHub Actions</strong>, <strong>Docker</strong>) and deploys on <strong>Azure, AWS and GCP</strong>. Combines a Statistics foundation with a Master in Software Engineering (in progress) to deliver reliable, traceable data ready for analytics and AI."
     }
   },
 
@@ -121,6 +125,81 @@
           "es": [
             "<strong>SQL, ETL y tareas programadas:</strong> Construí consultas <strong>SQL</strong> y procesos <strong>ETL</strong> automatizados con <strong>tareas programadas</strong> para consolidar datos de múltiples fuentes.",
             "<strong>Reportes regulatorios y BI:</strong> Construí la información que la EPS reportaba a la <strong>Supersalud</strong>, el <strong>Ministerio de Salud</strong>, la <strong>Contraloría</strong>, la <strong>Procuraduría</strong> y demás entes de control, y dashboards en <strong>Qlik Sense</strong> con KPIs operacionales y financieros."
+          ]
+        }
+      }
+    },
+    "data-engineer": {
+      "title": "Data Engineer | Machine Learning Engineer",
+      "experience": {
+        "Periferia IT Group": {
+          "es": [
+            "<strong>Pipeline de ingesta documental e indexación:</strong> Construí el pipeline que extrae los datos de CVs con el OCR de <strong>Azure Document Intelligence</strong> (modelo personalizado para un formato documental propio) y los indexa en <strong>Azure AI Search</strong> con indexación incremental por SQL trigger, empaquetado como <strong>Azure Functions en Docker</strong>: <strong>500+ CVs/día</strong> y <strong>10k+ búsquedas/mes</strong> con latencia <strong>&lt;200ms</strong>.",
+            "<strong>DevOps y CI/CD:</strong> Aplico metodologías <strong>DevOps</strong> con pipelines de <strong>CI/CD</strong> en <strong>GitHub Actions</strong> que automatizan la integración, las pruebas y el despliegue de las soluciones de IA en producción.",
+            "<strong>Portal de incidencias con agente RAG en producción:</strong> Agente conversacional con RAG (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>) sobre un índice vectorial <strong>FAISS</strong> que atiende <strong>10k+ consultas/mes</strong>.",
+            "<strong>Plataforma de agentes LLM (SRPA) multi-cloud:</strong> Diseño técnico y documentación de una plataforma de agentes <em>plug-and-play</em> que automatiza el SDLC, operada sobre <strong>Azure / AWS / GCP</strong> para uso interno y comercial.",
+            "<strong>Arquitecturas de referencia:</strong> Defino arquitecturas, estimaciones y dimensionamiento de equipos para soluciones de datos e IA (<strong>GenAI, Agentic AI y RAG</strong>) en clientes enterprise (banca, seguros, retail, energía y telco)."
+          ],
+          "en": [
+            "<strong>Document ingestion &amp; indexing pipeline:</strong> Built the pipeline that extracts CV data with <strong>Azure Document Intelligence</strong> OCR (custom model for a proprietary document format) and indexes it in <strong>Azure AI Search</strong> with SQL-triggered incremental indexing, packaged as <strong>Dockerized Azure Functions</strong>: <strong>500+ CVs/day</strong> and <strong>10k+ searches/month</strong> at <strong>&lt;200ms</strong> latency.",
+            "<strong>DevOps &amp; CI/CD:</strong> Apply <strong>DevOps</strong> practices with <strong>CI/CD</strong> pipelines on <strong>GitHub Actions</strong> that automate integration, testing and deployment of AI solutions to production.",
+            "<strong>Production incident portal with RAG agent:</strong> RAG conversational agent (<strong>LangChain</strong>, <strong>Azure OpenAI</strong>) over a <strong>FAISS</strong> vector index serving <strong>10k+ queries/month</strong>.",
+            "<strong>Multi-cloud LLM agent platform (SRPA):</strong> Technical design and documentation of a <em>plug-and-play</em> agent platform automating the SDLC, run on <strong>Azure / AWS / GCP</strong> for internal and commercial use.",
+            "<strong>Reference architectures:</strong> Define architectures, estimates and team sizing for data and AI solutions (<strong>GenAI, Agentic AI and RAG</strong>) for enterprise clients (banking, insurance, retail, energy and telco)."
+          ]
+        },
+        "Freelance": {
+          "es": [
+            "<strong>Procesamiento serverless por colas:</strong> Llevé a producción dos agentes (<strong>LangGraph</strong> + <strong>Azure OpenAI</strong>) sobre <strong>Azure Functions</strong> con procesamiento por colas (poison-queue y deduplicación), persistencia en <strong>Table Storage</strong> y secretos en <strong>Key Vault</strong> con managed identity.",
+            "<strong>Integraciones y observabilidad:</strong> Webhook de <strong>WhatsApp Cloud API</strong> con verificación HMAC, sincronización con <strong>Outlook (Microsoft Graph)</strong> y alertas en <strong>Application Insights</strong>. Lógica crítica determinista (bloqueo contra doble reserva) y desarrollo TDD con <strong>118 tests</strong>."
+          ],
+          "en": [
+            "<strong>Serverless queue-based processing:</strong> Took two agents (<strong>LangGraph</strong> + <strong>Azure OpenAI</strong>) to production on <strong>Azure Functions</strong> with queue-based processing (poison-queue handling and deduplication), <strong>Table Storage</strong> persistence and <strong>Key Vault</strong> secrets via managed identity.",
+            "<strong>Integrations &amp; observability:</strong> <strong>WhatsApp Cloud API</strong> webhook with HMAC verification, sync with <strong>Outlook (Microsoft Graph)</strong> and <strong>Application Insights</strong> alerting. Deterministic critical logic (locking against double booking) and test-driven development with <strong>118 tests</strong>."
+          ]
+        },
+        "Global Hitss": {
+          "es": [
+            "<strong>Data pipelines y ETL en Databricks:</strong> Construí los <strong>data pipelines y ETL</strong> con <strong>PySpark</strong> sobre <strong>Delta Lake</strong>, gobernados con <strong>Unity Catalog</strong> y orquestados con <strong>Databricks Workflows</strong>, que alimentan el portafolio de modelos en producción.",
+            "<strong>CI/CD y operación:</strong> Implementé el pipeline CI/CD que redujo el despliegue de 2 semanas a <strong>2 días</strong>, con monitoreo automático de drift y reentrenamiento.",
+            "<strong>Entrega de datos al negocio:</strong> Resultados servidos por <strong>batch</strong> o <strong>endpoint</strong> según el caso de uso, con scores de churn integrados al <strong>CRM</strong> y versionado en <strong>MLflow Model Registry</strong>.",
+            "<strong>Modelos alimentados por los pipelines:</strong> Riesgo de crédito, transacciones sospechosas, fijación de precios y precios dinámicos, <em>Next Best Offer</em>, churn, caracterización de clientes, análisis de redes y riesgo geoespacial de la competencia."
+          ],
+          "en": [
+            "<strong>Data pipelines &amp; ETL on Databricks:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> on <strong>Delta Lake</strong>, governed by <strong>Unity Catalog</strong> and orchestrated with <strong>Databricks Workflows</strong>, feeding the model portfolio in production.",
+            "<strong>CI/CD &amp; operations:</strong> Implemented the CI/CD pipeline that cut deployment from 2 weeks to <strong>2 days</strong>, with automated drift monitoring and retraining.",
+            "<strong>Data delivery to the business:</strong> Results served through <strong>batch</strong> or <strong>endpoint</strong> depending on the use case, with churn scores fed into the <strong>CRM</strong> and versioning in the <strong>MLflow Model Registry</strong>.",
+            "<strong>Models fed by the pipelines:</strong> Credit risk, suspicious transactions, pricing and dynamic pricing, <em>Next Best Offer</em>, churn, customer characterization, network analysis and geospatial competitor risk."
+          ]
+        },
+        "Grupo CINTE": {
+          "es": [
+            "<strong>Pipelines de datos para NBO:</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> en <strong>Databricks</strong> que alimentan el modelo de recomendación de ofertas y planes por cliente (<em>Next Best Offer</em>), versionado en <strong>MLflow</strong>.",
+            "<strong>Monitoreo de datos y modelos:</strong> Diseñé la metodología de monitoreo para detección de <em>data/model drift</em> con alertas automáticas de reentrenamiento, adoptada como estándar del equipo de ciencia de datos."
+          ],
+          "en": [
+            "<strong>Data pipelines for NBO:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> on <strong>Databricks</strong> feeding the model recommending offers and plans per customer (<em>Next Best Offer</em>), versioned in <strong>MLflow</strong>.",
+            "<strong>Data &amp; model monitoring:</strong> Designed the monitoring methodology for <em>data/model drift</em> detection with automated retraining alerts, adopted as the data science team's standard."
+          ]
+        },
+        "NAE": {
+          "es": [
+            "<strong>Pipelines de datos para campañas:</strong> Construí los <strong>pipelines de datos y ETL</strong> con <strong>PySpark</strong> en <strong>Databricks</strong> que alimentan un modelo <strong>LightGBM</strong> de recomendación de franjas horarias y canales de contacto por cliente, cuyos resultados alimentan las campañas."
+          ],
+          "en": [
+            "<strong>Data pipelines for campaigns:</strong> Built the <strong>data pipelines and ETL</strong> with <strong>PySpark</strong> on <strong>Databricks</strong> feeding a <strong>LightGBM</strong> model that recommends contact time slots and channels per customer, whose output feeds the campaigns."
+          ]
+        },
+        "Xolit": {
+          "es": [
+            "<strong>Pipelines batch con Apache Airflow:</strong> Construí los <strong>pipelines de datos y ETL</strong> y los orquesté con <strong>Apache Airflow</strong> como procesos <strong>batch</strong> programados que entregan los scores de los modelos a la operación de cobranza.",
+            "<strong>Reporting en Power BI:</strong> Construí dashboards en <strong>Power BI</strong> para seguimiento de métricas de desempeño de los modelos en producción y KPIs de recaudo.",
+            "<strong>Modelos alimentados:</strong> Propensión de pago (alimenta <strong>focos automáticos</strong> de gestión de cartera), recomendación de franja horaria de contacto y segmentación de titulares por clustering."
+          ],
+          "en": [
+            "<strong>Batch pipelines with Apache Airflow:</strong> Built the <strong>data pipelines and ETL</strong> and orchestrated them with <strong>Apache Airflow</strong> as scheduled <strong>batch</strong> jobs delivering model scores to the collections operation.",
+            "<strong>Power BI reporting:</strong> Built <strong>Power BI</strong> dashboards tracking production model performance metrics and collection KPIs.",
+            "<strong>Models fed:</strong> Payment propensity (feeding <strong>automated management priorities</strong> for the portfolio), contact time-slot recommendation and clustering-based account-holder segmentation."
           ]
         }
       }

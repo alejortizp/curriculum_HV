@@ -93,7 +93,7 @@ CRITICAL RULES:
 ## YOUR TASK:
 Return a JSON object with exactly this structure:
 {{
-  "chosen_profile": "<best matching profile from: default, ai-engineer, ml-engineer, mlops>",
+  "chosen_profile": "<best matching profile from: default, ai-engineer, ml-engineer, mlops, data-engineer>",
   "tailored_summary": "<rewritten professional summary tailored to this offer, in {lang_name}. Use <strong> tags for key terms matching the offer. 3-4 sentences max. Based ONLY on real experience.>",
   "experience_order": [<indices 0 to {num_exp - 1} of experience entries, ordered by relevance to this offer. Most relevant first. Include ALL indices.>],
   "experience_bullets": {{

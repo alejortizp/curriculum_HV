@@ -119,7 +119,7 @@ help:
 	@echo "  help       Show this help"
 	@echo ""
 	@echo "Options:"
-	@echo "  PROFILE=name  Build only a specific profile (default, ai-engineer, ml-engineer, mlops)"
+	@echo "  PROFILE=name  Build only a specific profile (default, ai-engineer, ml-engineer, mlops, data-engineer)"
 	@echo "                Example: make es PROFILE=ai-engineer"
 	@echo "                Without PROFILE, all profiles are built."
 	@echo "  OFFER_LANG=es|en  Override language for 'make apply' (default: from job_offer.json)"

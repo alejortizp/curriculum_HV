@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ cv.personal.name }} — {% if lang == 'es' %}Hoja de Vida{% else %}Resume{% endif %}{% if profile_name != 'default' %} — {{ profile_name | replace('ai-engineer','AI Engineer') | replace('ml-engineer','ML Engineer') | replace('mlops','MLOps') }}{% endif %}</title>
+    <title>{{ cv.personal.name }} — {% if lang == 'es' %}Hoja de Vida{% else %}Resume{% endif %}{% if profile_name != 'default' %} — {{ profile_name | replace('ai-engineer','AI Engineer') | replace('ml-engineer','ML Engineer') | replace('mlops','MLOps') | replace('data-engineer','Data Engineer') }}{% endif %}</title>
     <!-- Preconnect hints for CDNs -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
