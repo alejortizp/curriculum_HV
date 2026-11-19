@@ -92,6 +92,13 @@ def _rule_markup(units) -> list[str]:
     ]
 
 
+def _rule_summary_quotes(summary: str) -> list[str]:
+    # cv.html inserts the summary inside a JSON-LD string; a quote or backslash breaks it
+    if '"' in summary or "\\" in summary:
+        return ["resumen: no puede contener comillas dobles ni barras invertidas"]
+    return []
+
+
 def _letter_strings(letter: dict | None, lang: str) -> list[tuple[str, str]]:
     """Every string of the letter, including company, role and date, for the markup rule."""
     units = []
@@ -179,4 +186,5 @@ def validate(cv: dict, adjustments: dict, target: dict,
         *_rule_selection(cv, adjustments, lang),                   # 5
         *_rule_general_terms(units, target),                       # 6
         *_rule_markup(cv_units + _letter_strings(cover_letter, lang)),
+        *_rule_summary_quotes(adjustments["summary"]),
     ]

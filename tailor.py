@@ -1,340 +1,324 @@
 #!/usr/bin/env python3
-"""Tailor CV and cover letter for a specific job offer using Claude API."""
+"""Generate a derived CV for a target: one job offer, or a role family's market report.
+
+data/cv.json is read and never written. The model writes an adjustments file, the
+validator checks it against cv.json, and build.py renders it (see docs/adr/0002).
+"""
 
 import argparse
-import copy
 import json
-import os
-import re
 import sys
+from datetime import date
 from pathlib import Path
 
-from anthropic import Anthropic
+import build
+import llm
+import offers
+import report
+import targets
+import vocabulary
+from extraction import role_families
+from textutil import slugify_ascii
+from validator import entry_variants, hand_written_titles, validate
 
-from build import (
-    ROOT,
-    add_pdf_metadata,
-    copy_static_assets,
-    get_api_key,
-    load_json,
-    render_cover_letter,
-    render_cv,
-)
-
-DATA_DIR = ROOT / "data"
-JOB_OFFER_FILE = DATA_DIR / "job_offer.json"
-CV_FILE = DATA_DIR / "cv.json"
-APPLICATIONS_DIR = ROOT / "applications"
-
-
-def get_anthropic_key() -> str:
-    """Resolve ANTHROPIC_API_KEY from env var or .env file."""
-    key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not key:
-        env_file = ROOT / ".env"
-        if env_file.exists():
-            for line in env_file.read_text().splitlines():
-                if line.startswith("ANTHROPIC_API_KEY="):
-                    key = line.split("=", 1)[1].strip().strip('"').strip("'")
-                    break
-    if not key:
-        print("Error: ANTHROPIC_API_KEY not found.")
-        print("Set it in .env or as environment variable.")
-        sys.exit(1)
-    return key
+APPLICATIONS_DIR = build.ROOT / "applications"
+MAX_PAGES = 4
+_ACRONYMS = {"ai", "ml", "mlops", "it", "sas", "ibm", "nae"}
+_LETTER_FIELDS = ("recipient", "date", "subject", "greeting", "opening", "why_me_title", "why_me",
+                  "differentiator_title", "differentiator", "closing", "farewell", "sign_off")
 
 
-def slugify(text: str) -> str:
-    """Convert text to filesystem-safe slug."""
-    slug = text.lower().strip()
-    slug = re.sub(r"[^\w\s-]", "", slug)
-    slug = re.sub(r"[\s_]+", "-", slug)
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug
+class Rejected(Exception):
+    """The adjustments did not pass the validator."""
+
+    def __init__(self, reasons: list[str], adjustments: dict, cover_letter: dict | None = None):
+        super().__init__("; ".join(reasons))
+        self.reasons = reasons
+        self.adjustments = adjustments
+        self.cover_letter = cover_letter
 
 
-def company_label(company: str) -> str:
-    """Convert company name to ASCII-safe label for PDF filenames."""
-    _acronyms = {"ai", "ml", "mlops", "it", "sas", "ibm", "nae"}
-    return "-".join(
-        w.upper() if w.lower() in _acronyms else w.capitalize()
-        for w in company.split()
-    )
+def _t(value, lang: str):
+    return value.get(lang, "") if isinstance(value, dict) else value
 
 
-def build_tailoring_prompt(cv_data: dict, job_offer: dict, lang: str) -> str:
-    """Build the prompt for Claude to tailor the CV and generate a cover letter."""
-    lang_name = "Spanish" if lang == "es" else "English"
-    num_exp = len(cv_data.get("experience", []))
-
-    return f"""You are an expert career consultant. Tailor a CV and generate a cover letter for a specific job offer.
-
-CRITICAL RULES:
-- NEVER invent or fabricate experience, skills, or achievements
-- ONLY reformulate, reorder, and emphasize what already exists in the CV data
-- Keep all facts (dates, companies, metrics, numbers) exactly as they are
-- You may rephrase bullet points to better highlight keywords from the job offer
-- All output must be in {lang_name} ("{lang}")
-
-## CV DATA (source of truth):
-```json
-{json.dumps(cv_data, ensure_ascii=False, indent=2)}
-```
-
-## JOB OFFER:
-- Company: {job_offer.get('company', 'N/A')}
-- Role: {job_offer.get('role', 'N/A')}
-- Location: {job_offer.get('location', 'N/A')}
-- Description: {job_offer.get('description', 'N/A')}
-- Requirements: {json.dumps(job_offer.get('requirements', []), ensure_ascii=False)}
-- Nice to have: {json.dumps(job_offer.get('nice_to_have', []), ensure_ascii=False)}
-- Notes: {job_offer.get('notes', '')}
-
-## YOUR TASK:
-Return a JSON object with exactly this structure:
-{{
-  "chosen_profile": "<best matching profile from: default, ai-engineer, ml-engineer, mlops, data-engineer>",
-  "tailored_summary": "<rewritten professional summary tailored to this offer, in {lang_name}. Use <strong> tags for key terms matching the offer. 3-4 sentences max. Based ONLY on real experience.>",
-  "experience_order": [<indices 0 to {num_exp - 1} of experience entries, ordered by relevance to this offer. Most relevant first. Include ALL indices.>],
-  "experience_bullets": {{
-    "<index>": [<reordered AND/OR rephrased bullets for that experience entry in "{lang}". Keep all facts identical. Emphasize keywords from the offer. Only include entries that exist in "{lang}".>]
-  }},
-  "cover_letter": {{
-    "recipient": "<appropriate recipient in {lang_name}>",
-    "date": "<today's date formatted in {lang_name}>",
-    "subject": "<application subject line>",
-    "greeting": "<greeting>",
-    "opening": "<compelling opening paragraph tailored to this company and role. May use <strong> for emphasis.>",
-    "why_me_title": "<section title>",
-    "why_me": ["<3-4 bullet points explaining fit, based ONLY on real experience. Use <strong> for emphasis.>"],
-    "differentiator_title": "<section title>",
-    "differentiator": "<what sets the candidate apart, based on real qualifications.>",
-    "closing": "<closing paragraph>",
-    "farewell": "<farewell>",
-    "sign_off": "<sign off>"
-  }}
-}}
-
-Return ONLY the JSON object. No markdown fences, no explanations."""
+def file_label(name: str) -> str:
+    """ASCII label for file names: 'Periferia IT Group' -> 'Periferia-IT-Group'."""
+    words = slugify_ascii(name).split("-")
+    return "-".join(w.upper() if w in _ACRONYMS else w.capitalize() for w in words if w) or "Oferta"
 
 
-def call_claude(prompt: str, api_key: str) -> dict:
-    """Call Claude API and parse the JSON response."""
-    client = Anthropic(api_key=api_key)
+def material(cv: dict, lang: str) -> dict:
+    """Everything hand-written that the model may choose from, reorder or rephrase."""
+    def projects(section):
+        return [{"title": _t(p["title"], lang), "description": _t(p["description"], lang),
+                 "stack": p.get("stack", ""), "shown_by_default": p.get("cv", True)}
+                for p in cv.get(section, [])]
 
-    print("  Calling Claude API...")
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    response_text = message.content[0].text.strip()
-    # Remove markdown fences if present
-    if response_text.startswith("```"):
-        response_text = response_text.split("\n", 1)[1]
-    if response_text.endswith("```"):
-        response_text = response_text.rsplit("```", 1)[0].strip()
-
-    return json.loads(response_text)
-
-
-def apply_tailoring(cv_data: dict, tailoring: dict, lang: str) -> tuple[dict, dict]:
-    """Apply Claude's tailoring to cv_data. Returns (tailored_cv, cover_letter_data)."""
-    tailored = copy.deepcopy(cv_data)
-
-    # Apply tailored summary as the profile
-    tailored["profile"] = {lang: tailoring["tailored_summary"]}
-
-    # Reorder experience entries by relevance
-    order = tailoring.get("experience_order", list(range(len(tailored["experience"]))))
-    original_exp = tailored["experience"]
-    tailored["experience"] = [original_exp[i] for i in order if i < len(original_exp)]
-
-    # Apply rephrased/reordered bullets
-    experience_bullets = tailoring.get("experience_bullets", {})
-    for str_idx, bullets in experience_bullets.items():
-        orig_idx = int(str_idx)
-        # Find where this entry ended up after reordering
-        if orig_idx in order:
-            new_pos = order.index(orig_idx)
-            entry = tailored["experience"][new_pos]
-            if lang in entry.get("items", {}):
-                entry["items"][lang] = bullets
-
-    # Build cover letter data (i18n structure with single language)
-    cl = tailoring["cover_letter"]
-    cover_letter = {
-        "company": cv_data.get("_job_company", ""),
-        "recipient": {lang: cl.get("recipient", "")},
-        "role": cv_data.get("_job_role", ""),
-        "date": {lang: cl.get("date", "")},
-        "subject": {lang: cl.get("subject", "")},
-        "greeting": {lang: cl.get("greeting", "")},
-        "opening": {lang: cl.get("opening", "")},
-        "why_me_title": {lang: cl.get("why_me_title", "")},
-        "why_me": {lang: cl.get("why_me", [])},
-        "differentiator_title": {lang: cl.get("differentiator_title", "")},
-        "differentiator": {lang: cl.get("differentiator", "")},
-        "closing": {lang: cl.get("closing", "")},
-        "farewell": {lang: cl.get("farewell", "")},
-        "sign_off": {lang: cl.get("sign_off", "")},
+    return {
+        "titles": sorted(hand_written_titles(cv)),
+        "summaries": {name: text[lang] for name, text in cv["profiles"].items() if lang in text},
+        "experience": [
+            {"company": exp["company"], "title": _t(exp["title"], lang), "date": _t(exp["date"], lang),
+             "variants": entry_variants(cv, exp["company"], lang)}
+            for exp in cv["experience"] if lang in exp.get("langs", [lang])
+        ],
+        "tech_stack": [{"category": cat["category"],
+                        "lines": [[skill["name"] for skill in line] for line in cat["items"]]}
+                       for cat in cv["tech_stack"]],
+        "projects": projects("projects"),
+        "academic_projects": projects("academic_projects"),
     }
 
-    return tailored, cover_letter
+
+def _object(properties: dict) -> dict:
+    return {"type": "object", "properties": properties,
+            "required": list(properties), "additionalProperties": False}
 
 
-def generate_tailored_pdfs(output_dir: Path, html_pdf_pairs: list[tuple[Path, Path]]):
-    """Generate PDFs from HTML files in the applications directory."""
-    from playwright.sync_api import sync_playwright
-
-    margin = {"top": "0", "bottom": "0", "left": "0", "right": "0"}
-
-    with sync_playwright() as p:
-        # system Google Chrome, same as build.generate_pdfs
-        browser = p.chromium.launch(channel="chrome")
-        for html_path, pdf_path in html_pdf_pairs:
-            page = browser.new_page()
-            page.goto(f"file://{html_path.resolve()}", wait_until="networkidle")
-            page.evaluate("async () => { await document.fonts.ready; }")
-            page.pdf(
-                path=str(pdf_path),
-                format="A4",
-                print_background=True,
-                margin=margin,
-                tagged=True,
-                outline=True,
-            )
-            page.close()
-            print(f"  PDF: {pdf_path.relative_to(ROOT)}")
-        browser.close()
+def build_schema(kind: str) -> dict:
+    """The API rejects objects with dynamic keys, so the model answers with lists."""
+    string, strings = {"type": "string"}, {"type": "array", "items": {"type": "string"}}
+    properties = {
+        "title": {"anyOf": [string, {"type": "null"}]},
+        "summary": string,
+        "experience_order": strings,
+        "experience": {"type": "array", "items": _object({"company": string, "bullets": strings})},
+        "tech_stack_order": {"type": "array", "items": _object({"category": string, "first": strings})},
+        "projects_shown": strings,
+        "academic_shown": strings,
+    }
+    if kind == "offer":
+        properties["cover_letter"] = _object(
+            {field: strings if field == "why_me" else string for field in _LETTER_FIELDS})
+    return _object(properties)
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Tailor CV and cover letter for a job offer using Claude API."
-    )
-    parser.add_argument(
-        "--html-only", action="store_true", help="Skip PDF generation"
-    )
-    parser.add_argument(
-        "--lang", type=str, default=None, help="Override language (es/en)"
-    )
-    return parser.parse_args()
+def build_prompt(cv: dict, target: dict) -> str:
+    lang = target["lang"]
+    lang_name = "Spanish" if lang == "es" else "English"
+    dump = lambda value: json.dumps(value, ensure_ascii=False, indent=1)  # noqa: E731
+    letter = "" if target["kind"] != "offer" else f"""
+- cover_letter: a complete letter for this offer in {lang_name}, based only on the material.
+  `date` is today, {date.today().isoformat()}, written out in {lang_name}. why_me has 3-4 items."""
+    offer_text = "" if not target["source_text"] else f"""
+## The offer, for context only (do not copy requirements the material does not back)
+<offer>
+{target['source_text']}
+</offer>
+"""
+    return f"""You are an expert career consultant. Write the adjustments that turn a base CV into a CV aimed at one target. Everything you write is in {lang_name}.
+
+HARD RULES (a program checks them and rejects the answer otherwise):
+- Never invent experience, skills, achievements or figures. Only choose, reorder, combine and rephrase the MATERIAL. Dates, companies and numbers stay exactly as written.
+- Never mention any of the BANNED terms, in any spelling: the CV does not back them.
+- A GENERAL TERM may be used only in a sentence that also names one of the skills listed next to it.
+- For each experience entry you may pick and combine bullets across its `variants`, but never write more bullets than its longest variant has, and the entry must still tell one coherent story.
+- `experience_order` lists every company in the material exactly once. Keep reverse-chronological order unless there is a strong reason not to.
+- `title` is one of the listed titles, or null to keep the base one.
+- The only markup allowed is <strong> and <em>, without attributes. Write a literal "<" as &lt;.
+- `tech_stack_order` only reorders: list groups in the order to show them and, in `first`, the first skill of each line to bring forward. `projects_shown` and `academic_shown` are titles from the material, in the order to show them; an empty list keeps the default selection.
+- The designed CV must fit in {MAX_PAGES} pages: keep bullets about as long as the originals and show at most 3 projects and 2 academic projects.
+
+WHAT TO DO:
+- summary: 3-4 sentences, built from the listed summaries, leading with what the target asks for.
+- Emphasize the skills in EMPHASIZE, most important first, wherever the material backs them.
+- In `experience`, include only the entries whose bullets you change; the rest keep their base bullets.{letter}
+
+## TARGET
+kind: {target['kind']}
+context: {dump(target['context'])}
+EMPHASIZE: {dump(target['emphasize'])}
+GENERAL TERMS (term -> skills that back it): {dump(target['general_terms'])}
+BANNED: {dump([form for gap in target['gaps'] for form in gap['forms']])}
+responsibilities the target describes: {dump(target['responsibilities'])}
+{offer_text}
+## MATERIAL (the only source of truth)
+{dump(material(cv, lang))}"""
 
 
-def main():
-    args = parse_args()
+def _convert(response: dict, target: dict) -> tuple[dict, dict | None]:
+    """Model answer (lists) -> adjustments file and cover letter, in their stored shapes."""
+    lang = target["lang"]
+    adjustments = {
+        "target": {"kind": target["kind"], "id": target["id"]},
+        "lang": lang,
+        "profile": target["profile"],     # set by code, never chosen by the model
+        "summary": response["summary"],
+        "experience_order": response["experience_order"],
+        "experience": {entry["company"]: entry["bullets"] for entry in response["experience"]},
+    }
+    for key in ("title", "tech_stack_order", "projects_shown", "academic_shown"):
+        if response.get(key):
+            adjustments[key] = response[key]
 
-    # Load job offer
-    if not JOB_OFFER_FILE.exists():
-        print(f"Error: {JOB_OFFER_FILE} not found.")
-        print(
-            "Copy data/job_offer_template.json to data/job_offer.json and fill it in."
-        )
-        sys.exit(1)
+    letter = response.get("cover_letter") if target["kind"] == "offer" else None
+    if letter:
+        letter = {"company": target["context"]["company"], "role": target["context"]["role"],
+                  **{field: {lang: letter[field]} for field in _LETTER_FIELDS}}
+    return adjustments, letter
 
-    job_offer = load_json(JOB_OFFER_FILE)
-    cv_data = load_json(CV_FILE)
 
-    company = job_offer.get("company", "").strip()
-    role = job_offer.get("role", "").strip()
-    if not company or not role:
-        print("Error: job_offer.json must have 'company' and 'role' fields.")
-        sys.exit(1)
+def generate(cv: dict, target: dict, complete=llm.complete_json) -> tuple[dict, dict | None]:
+    """Ask the model for adjustments; retry once with the validator's reasons."""
+    prompt, schema = build_prompt(cv, target), build_schema(target["kind"])
+    for _ in range(2):
+        response = complete(prompt, schema, model=llm.TAILORING_MODEL, effort=llm.TAILORING_EFFORT)
+        adjustments, letter = _convert(response, target)
+        reasons = validate(cv, adjustments, target, letter)
+        if not reasons:
+            return adjustments, letter
+        prompt += "\n\nYour previous answer was rejected. Fix every problem and answer again:\n" + "\n".join(
+            f"- {reason}" for reason in reasons)
+    raise Rejected(reasons, adjustments, letter)
 
-    lang = args.lang or job_offer.get("lang", "es")
-    if lang not in ("es", "en"):
-        print(f"Error: lang must be 'es' or 'en', got '{lang}'")
-        sys.exit(1)
 
-    # Prepare output directory
-    company_slug = slugify(company)
-    output_dir = APPLICATIONS_DIR / company_slug
-    output_dir.mkdir(parents=True, exist_ok=True)
+def render(cv: dict, adjustments: dict, cover_letter: dict | None, out_dir: Path, *,
+           label: str, html_only: bool = False) -> dict:
+    lang = adjustments["lang"]
+    data = build.apply_adjustments(cv, adjustments)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    build.copy_static_assets(out_dir / "static")
+    author = cv["personal"]["name"]
+    stem = f"{author.replace(' ', '-')}-{label}-{lang.upper()}"
 
-    # Copy static files so HTML can reference them
-    copy_static_assets(output_dir / "static")
+    cv_pdf = out_dir / f"CV-{stem}.pdf"
+    cv_html = out_dir / f"CV-{label}-{lang.upper()}.html"
+    # no Gemini key: a derived CV is a file meant to be sent
+    cv_html.write_text(build.render_cv(data, lang, "", cv_pdf.name, adjustments["profile"]),
+                       encoding="utf-8")
+    result = {"cv_html": cv_html, "cv_pdf": None, "letter_html": None, "letter_pdf": None, "pages": None}
+    jobs = [{"html": str(cv_html), "pdf": str(cv_pdf)}]
 
-    # Filenames
-    author = cv_data.get("personal", {}).get("name", "")
-    author_slug = author.replace(" ", "-")
-    comp_label = company_label(company)
-    lang_label = lang.upper()
+    if cover_letter:
+        prefix = "Carta" if lang == "es" else "Cover-Letter"
+        letter_html = out_dir / f"{prefix}-{label}-{lang.upper()}.html"
+        letter_html.write_text(build.render_cover_letter(data, cover_letter, lang), encoding="utf-8")
+        result["letter_html"] = letter_html
+        jobs.append({"html": str(letter_html), "pdf": str(out_dir / f"{prefix}-{stem}.pdf")})
 
-    cv_pdf_name = f"CV-{author_slug}-{comp_label}-{lang_label}.pdf"
-    carta_prefix = "Carta" if lang == "es" else "Cover-Letter"
-    carta_pdf_name = f"{carta_prefix}-{author_slug}-{comp_label}-{lang_label}.pdf"
+    if html_only:
+        return result
+    build.generate_pdfs(jobs, {"top": "0", "bottom": "0", "left": "0", "right": "0"})
+    build.add_pdf_metadata(cv_pdf, f"{author} — CV", author)
+    result["cv_pdf"] = cv_pdf
+    if cover_letter:
+        subject = "Carta de Presentacion" if lang == "es" else "Cover Letter"
+        build.add_pdf_metadata(Path(jobs[1]["pdf"]), f"{author} - {subject}", author, subject)
+        result["letter_pdf"] = Path(jobs[1]["pdf"])
 
-    print(f"\nTailoring CV for: {company} - {role} ({lang_label})")
+    from pypdf import PdfReader
+    result["pages"] = len(PdfReader(cv_pdf).pages)
+    return result
 
-    # Call Claude API
-    anthropic_key = get_anthropic_key()
-    cv_data["_job_company"] = company
-    cv_data["_job_role"] = role
-    prompt = build_tailoring_prompt(cv_data, job_offer, lang)
-    tailoring = call_claude(prompt, anthropic_key)
 
-    chosen_profile = tailoring.get("chosen_profile", "default")
-    print(f"  Profile chosen: {chosen_profile}")
+def run(target: dict, out_dir: Path, *, html_only: bool = False, render_only: bool = False,
+        complete=llm.complete_json) -> dict:
+    cv = build.load_json(build.DATA_FILE)
+    adjustments_path, letter_path = out_dir / "adjustments.json", out_dir / "cover_letter.json"
+    rejected_path = out_dir / "adjustments.rejected.json"
+    dump = lambda value: json.dumps(value, ensure_ascii=False, indent=2) + "\n"  # noqa: E731
 
-    # Apply tailoring
-    tailored_cv, cover_letter_data = apply_tailoring(cv_data, tailoring, lang)
-    cover_letter_data["company"] = company
-    cover_letter_data["role"] = role
-
-    # Generate CV HTML
-    gemini_key = get_api_key()
-    cv_html_name = f"CV-{company_slug}-{lang_label}.html"
-    cv_html = render_cv(tailored_cv, lang, gemini_key, cv_pdf_name, chosen_profile)
-    cv_html_path = output_dir / cv_html_name
-    cv_html_path.write_text(cv_html, encoding="utf-8")
-    print(f"  HTML: {cv_html_path.relative_to(ROOT)}")
-
-    # Generate cover letter HTML
-    carta_html_name = f"{carta_prefix}-{company_slug}-{lang_label}.html"
-    carta_html = render_cover_letter(tailored_cv, cover_letter_data, lang)
-    carta_html_path = output_dir / carta_html_name
-    carta_html_path.write_text(carta_html, encoding="utf-8")
-    print(f"  HTML: {carta_html_path.relative_to(ROOT)}")
-
-    # Generate PDFs
-    if not args.html_only:
-        print("Generating PDFs...")
+    if render_only:
+        # hand-edited adjustments are validated against the cv.json of right now
+        adjustments = json.loads(adjustments_path.read_text(encoding="utf-8"))
+        letter = json.loads(letter_path.read_text(encoding="utf-8")) if letter_path.exists() else None
+        reasons = validate(cv, adjustments, target, letter)
+        if reasons:
+            raise Rejected(reasons, adjustments, letter)
+    else:
+        out_dir.mkdir(parents=True, exist_ok=True)
         try:
-            pairs = [
-                (cv_html_path, output_dir / cv_pdf_name),
-                (carta_html_path, output_dir / carta_pdf_name),
-            ]
-            generate_tailored_pdfs(output_dir, pairs)
+            adjustments, letter = generate(cv, target, complete)
+        except Rejected as e:
+            rejected_path.write_text(dump({"reasons": e.reasons, "adjustments": e.adjustments,
+                                           "cover_letter": e.cover_letter}), encoding="utf-8")
+            raise
+        rejected_path.unlink(missing_ok=True)
+        adjustments_path.write_text(dump(adjustments), encoding="utf-8")
+        if letter:
+            letter_path.write_text(dump(letter), encoding="utf-8")
 
-            # Add metadata
-            cv_pdf_path = output_dir / cv_pdf_name
-            if cv_pdf_path.exists():
-                add_pdf_metadata(
-                    cv_pdf_path, f"{author} - CV ({company})", author
-                )
-            carta_pdf_path = output_dir / carta_pdf_name
-            if carta_pdf_path.exists():
-                subject = "Carta de Presentacion" if lang == "es" else "Cover Letter"
-                add_pdf_metadata(
-                    carta_pdf_path,
-                    f"{author} - {subject} ({company})",
-                    author,
-                    subject,
-                )
-        except Exception as e:
-            print(f"\n  Error generating PDFs: {e}")
-            print("  PDFs are rendered with the system Google Chrome; make sure it is installed.")
-            sys.exit(1)
+    name = target["context"].get("company") or target["id"]
+    return render(cv, adjustments, letter, out_dir, label=file_label(name), html_only=html_only)
 
-    # Save the tailoring result for reference
-    tailoring_path = output_dir / "tailoring_result.json"
-    tailoring_path.write_text(
-        json.dumps(tailoring, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
 
-    print(f"\nDone! Files in: {output_dir.relative_to(ROOT)}/")
+def main_family(family: str, out_dir: Path, *, lang: str = "es", since: date | None = None,
+                html_only: bool = False, render_only: bool = False,
+                complete=llm.complete_json) -> dict:
+    """Derived CV for a role family. The report is rebuilt first, so it is never stale."""
+    cv = build.load_json(build.DATA_FILE)
+    vocab = vocabulary.load(cv)
+    market = report.build_report(offers.list_offers(), family, vocab, since)
+    target = targets.from_report(market, cv, vocab, lang)
+    report.write_report(market, out_dir)
+    result = run(target, out_dir, html_only=html_only, render_only=render_only, complete=complete)
+    return {**result, "weak_signal": market["weak_signal"], "n_offers": market["n_offers"]}
+
+
+def main_offer(offer_id: str, out_dir: Path | None = None, *, lang: str | None = None,
+               html_only: bool = False, render_only: bool = False,
+               complete=llm.complete_json) -> dict:
+    cv = build.load_json(build.DATA_FILE)
+    offer = offers.get(offer_id)
+    target = targets.from_offer(offer, cv, vocabulary.load(cv), lang)
+    return run(target, out_dir or APPLICATIONS_DIR / offer["id"], html_only=html_only,
+               render_only=render_only, complete=complete)
+
+
+def parse_args(argv: list[str] | None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="CV derivado para una oferta o una familia de cargo.")
+    parser.add_argument("--offer", help="Identificador de la oferta (make offers-list)")
+    parser.add_argument("--family", help="Familia de cargo (un perfil de cv.json u 'other')")
+    parser.add_argument("--lang", choices=["es", "en"], help="Idioma de salida")
+    parser.add_argument("--since", type=date.fromisoformat, help="Con --family: ofertas desde AAAA-MM-DD")
+    parser.add_argument("--html-only", action="store_true", help="No generar PDF")
+    parser.add_argument("--render-only", action="store_true",
+                        help="Volver a renderizar adjustments.json sin llamar al modelo")
+    return parser.parse_args(argv)
+
+
+def _fail(message: str) -> None:
+    print(message)
+    sys.exit(1)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = parse_args(argv)
+    if bool(args.offer) == bool(args.family):
+        _fail("Indica una oferta: make apply OFFER=<id>. Lista las disponibles con make offers-list; "
+              "registra una nueva con make offer-add FILE=<archivo>. "
+              "Para una familia de cargo: make cv-market FAMILY=<familia>.")
+    options = {"html_only": args.html_only, "render_only": args.render_only}
+    try:
+        if args.offer:
+            out_dir = APPLICATIONS_DIR / args.offer
+            result = main_offer(args.offer, out_dir, lang=args.lang, **options)
+        else:
+            families = role_families(build.load_json(build.DATA_FILE))
+            if args.family not in families:
+                _fail(f"Familia desconocida: {args.family}. Opciones: {', '.join(families)}")
+            out_dir = report.MARKET_DIR / args.family
+            result = main_family(args.family, out_dir, lang=args.lang or "es", since=args.since, **options)
+            if result["weak_signal"]:
+                print(f"Aviso: solo hay {result['n_offers']} ofertas en esta familia; la señal es débil.")
+    except Rejected as e:
+        print("El validador rechazó los ajustes:")
+        for reason in e.reasons:
+            print(f"  - {reason}")
+        if not args.render_only:
+            print(f"Resultado rechazado guardado en {out_dir / 'adjustments.rejected.json'}")
+        sys.exit(1)
+    except (offers.OfferNotFound, targets.TargetError, llm.LLMError, vocabulary.VocabularyError,
+            FileNotFoundError, ValueError) as e:
+        _fail(f"Error: {e}")
+
+    for key in ("cv_html", "cv_pdf", "letter_html", "letter_pdf"):
+        if result[key]:
+            print(f"  {result[key].relative_to(build.ROOT)}")
+    if result["pages"] and result["pages"] > MAX_PAGES:
+        print(f"Aviso: el CV tiene {result['pages']} páginas (límite {MAX_PAGES}). Quita un proyecto de "
+              "projects_shown o academic_shown en adjustments.json y vuelve a renderizar con RENDER=1.")
 
 
 if __name__ == "__main__":

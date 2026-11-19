@@ -57,3 +57,47 @@ def mk(id, family, required, nice=(), added="2026-11-01", raw="texto", **extra):
             "responsibilities": ["Construir pipelines."], **extra,
         },
     }
+
+
+TARGET = {
+    "kind": "offer", "id": "2026-11-19-globex-data-engineer", "label": "Globex - Data Engineer",
+    "lang": "es", "profile": "data-engineer",
+    "emphasize": ["Python"], "general_terms": {},
+    "gaps": [{"canonical": "Snowflake", "forms": ["Snowflake"]}],
+    "responsibilities": ["Construir pipelines."],
+    "context": {"company": "Globex", "role": "Data Engineer"},
+    "source_text": "Buscamos Data Engineer con Snowflake.",
+}
+
+RESP = {
+    "title": "Data Engineer | Machine Learning Engineer",
+    "summary": "Ingeniera de datos con pipelines en <strong>Python</strong>.",
+    "experience_order": ["Acme", "Salud SA"],
+    "experience": [{"company": "Acme", "bullets": ["Pipelines con Python.", "Despliegue en <strong>2 días</strong>."]}],
+    "tech_stack_order": [{"category": "Datos", "first": ["Python"]}],
+    "projects_shown": ["Sistema B"],
+    "academic_shown": [],
+    "cover_letter": {
+        "recipient": "Equipo de selección", "date": "19 de noviembre de 2026",
+        "subject": "Aplicación a Data Engineer", "greeting": "Hola:",
+        "opening": "Me interesa el cargo de Data Engineer en Globex.",
+        "why_me_title": "Por qué yo", "why_me": ["Construyo pipelines con Python."],
+        "differentiator_title": "Diferencial", "differentiator": "Base en estadística.",
+        "closing": "Quedo atenta.", "farewell": "Cordialmente,", "sign_off": "Ana Prueba",
+    },
+}
+RESP_NO_LETTER = {k: v for k, v in RESP.items() if k != "cover_letter"}
+
+
+def rename_company(cv_path, old, new):
+    data = json.loads(cv_path.read_text(encoding="utf-8"))
+    for entry in data["experience"]:
+        if entry["company"] == old:
+            entry["company"] = new
+    cv_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+
+
+def seed_offer(family, required, text="oferta de prueba"):
+    import offers
+    offer = offers.add(text, company="Empresa", role="Rol")
+    return offers.save_extraction(offer["id"], mk("x", family, required)["extraction"])

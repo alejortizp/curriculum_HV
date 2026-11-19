@@ -11,8 +11,11 @@ _CV = {
         "phone": "+57 300 000 0000",
         "email": "ana@example.com",
         "location": {"es": "Bogotá, Colombia", "en": "Bogota, Colombia"},
-        "links": [],
-        "portfolio": {"url": "https://example.com/", "display_url": "example.com"},
+        "linkedin": {"url": "https://example.com/in", "label": "LinkedIn", "display_url": "example.com/in"},
+        "github": {"url": "https://example.com/gh", "label": "GitHub", "display_url": "example.com/gh"},
+        "portfolio": {"url": "https://example.com/", "label": "Portafolio", "display_url": "example.com"},
+        "formspree_id": "",
+        "google_analytics_id": "",
     },
     "profiles": {
         "default": {"es": "Perfil general.", "en": "General profile."},
@@ -98,9 +101,9 @@ _CV = {
     ],
     "education": {
         "degrees": [
-            {"title": {"es": "Estadística", "en": "Statistics"}, "institution": "Universidad", "date": "2011 – 2016", "current": False}
+            {"title": {"es": "Estadística", "en": "Statistics"}, "institution": "Universidad", "date": {"es": "2011 – 2016", "en": "2011 – 2016"}, "current": False}
         ],
-        "diplomas": [],
+        "diplomas": [{"title": {"es": "Diplomado", "en": "Diploma"}, "institution": "Instituto", "year": "2022"}],
     },
     "tech_stack": [
         {
@@ -118,8 +121,13 @@ _CV = {
         },
     ],
     "power_skills": {"es": ["Comunicación"], "en": ["Communication"]},
-    "languages": [],
-    "certifications": [],
+    "languages": [
+        {"flag": "es", "name": {"es": "Español", "en": "Spanish"}, "level": {"es": "Nativo", "en": "Native"}}
+    ],
+    "certifications": [
+        {"title": {"es": "Certificación X", "en": "Certification X"}, "detail": None,
+         "institution": "Instituto", "date": {"es": "Feb 2026", "en": "Feb 2026"}}
+    ],
 }
 
 

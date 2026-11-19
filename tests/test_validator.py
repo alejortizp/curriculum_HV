@@ -133,3 +133,10 @@ def test_every_letter_field_is_checked_for_markup(cv):
         assert validate(cv, OK, T, {field: "<script>x</script>"}) != []
         assert validate(cv, OK, T, {field: {"es": "<b>x</b>"}}) != []
     assert validate(cv, OK, T, {"company": "Snowflake Inc", "date": {"es": "19 de noviembre de 2026"}}) == []
+
+
+def test_summary_cannot_break_out_of_the_json_ld_string(bad):
+    # cv.html inserts the summary inside a JSON-LD string, where a quote or a backslash breaks it
+    assert bad(summary='Experta en "pipelines".') != []
+    assert bad(summary="Ruta C:\\datos.") != []
+    assert bad(summary="Experta en «pipelines» y 'ETL'.") == []

@@ -1,4 +1,4 @@
-.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio offer-add offers-extract offers-list offers-report apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio offer-add offers-extract offers-list offers-report apply cv-market test setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -50,9 +50,14 @@ carta-en:
 portfolio:
 	uv run python build.py portfolio
 
-# Tailor CV + cover letter for a job offer (reads data/job_offer.json)
+# Derived CV + cover letter for one registered offer (uses the Claude API; RENDER=1 skips it)
+TAILOR_FLAGS = $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,) $(if $(RENDER),--render-only,)
 apply:
-	uv run python tailor.py $(if $(OFFER_LANG),--lang $(OFFER_LANG),) $(if $(HTML),--html-only,)
+	uv run python tailor.py $(if $(OFFER),--offer $(OFFER),) $(TAILOR_FLAGS)
+
+# Derived CV for a role family, from its market report
+cv-market:
+	uv run python tailor.py $(if $(FAMILY),--family $(FAMILY),) $(if $(SINCE),--since $(SINCE),) $(TAILOR_FLAGS)
 
 # Job-offer history (stored in data/offers/, never committed; see docs/adr/0001)
 offer-add:
@@ -130,7 +135,8 @@ help:
 	@echo "  offers-extract  Extract pending offers (FORCE=1 re-extracts all)"
 	@echo "  offers-list     List registered offers"
 	@echo "  offers-report   Market report per role family [FAMILY= SINCE=YYYY-MM-DD]"
-	@echo "  apply      Tailor CV + cover letter for a job offer (uses Claude API)"
+	@echo "  apply      Derived CV + cover letter for an offer: make apply OFFER=<id> (uses Claude API)"
+	@echo "  cv-market  Derived CV for a role family: make cv-market FAMILY=<family> (uses Claude API)"
 	@echo "  test       Run the test suite"
 	@echo "  setup      First-time setup (install dependencies)"
 	@echo "  clean      Remove all generated HTML and PDF files"
@@ -145,5 +151,6 @@ help:
 	@echo "  PROFILE=name  Build only a specific profile (default, ai-engineer, ml-engineer, mlops, data-engineer)"
 	@echo "                Example: make es PROFILE=ai-engineer"
 	@echo "                Without PROFILE, all profiles are built."
-	@echo "  OFFER_LANG=es|en  Override language for 'make apply' (default: from job_offer.json)"
-	@echo "  HTML=1        Skip PDF generation for 'make apply'"
+	@echo "  OFFER_LANG=es|en  Output language for 'make apply' / 'make cv-market' (default: the offer's; es)"
+	@echo "  HTML=1        Skip PDF generation for 'make apply' / 'make cv-market'"
+	@echo "  RENDER=1      Re-render adjustments.json without calling the API"
