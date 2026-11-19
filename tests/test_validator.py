@@ -114,3 +114,22 @@ def test_only_strong_and_em_are_allowed(bad):
     assert bad(summary="<strong>ok</strong> <em>ok</em>") == []
     assert bad(summary='<a href="http://x">enlace</a>') != []
     assert bad(experience={"Acme": ["<script>alert(1)</script>"]}) != []
+
+
+def test_allowed_tags_cannot_carry_attributes(bad):
+    assert bad(summary='<strong onmouseover="x()">a</strong>') != []
+    assert bad(summary="<em/>a") != []
+    assert bad(experience={"Acme": ["texto <img src=x onerror=alert(1)"]}) != []   # sin cerrar
+
+
+def test_entity_for_less_than_is_fine_but_a_raw_one_is_not(bad):
+    assert bad(experience={"Acme": ["precisión &lt;95%"]}) == []
+    assert bad(summary="a &lt; b") == []
+    assert bad(summary="a < b") != []
+
+
+def test_every_letter_field_is_checked_for_markup(cv):
+    for field in ("company", "role", "date"):
+        assert validate(cv, OK, T, {field: "<script>x</script>"}) != []
+        assert validate(cv, OK, T, {field: {"es": "<b>x</b>"}}) != []
+    assert validate(cv, OK, T, {"company": "Snowflake Inc", "date": {"es": "19 de noviembre de 2026"}}) == []

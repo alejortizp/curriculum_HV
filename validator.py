@@ -8,9 +8,11 @@ wording and an entry that mixes two stories.
 
 import re
 
-from textutil import numbers, plain, tags, term_in
+from textutil import numbers, plain, term_in
 
-ALLOWED_TAGS = {"strong", "em"}
+# Templates render these texts unescaped, so only these exact tags may appear:
+# no attributes, no other element, and no raw '<' (write it as &lt;).
+_ALLOWED_TAG = re.compile(r"</?(?:strong|em)>")
 _LETTER_SKIP = {"company", "role", "date"}
 
 
@@ -82,12 +84,21 @@ def _rule_general_terms(units, target) -> list[str]:
     ]
 
 
-def _rule_tags(units) -> list[str]:
+def _rule_markup(units) -> list[str]:
     return [
-        f"{where}: etiquetas no permitidas {sorted(tags(text) - ALLOWED_TAGS)}"
+        f"{where}: solo se permiten <strong> y <em> sin atributos; un '<' suelto se escribe &lt;"
         for where, text in units
-        if tags(text) - ALLOWED_TAGS
+        if "<" in _ALLOWED_TAG.sub("", text)
     ]
+
+
+def _letter_strings(letter: dict | None, lang: str) -> list[tuple[str, str]]:
+    """Every string of the letter, including company, role and date, for the markup rule."""
+    units = []
+    for key, value in (letter or {}).items():
+        texts = value.get(lang, "") if isinstance(value, dict) else value
+        units += [(f"carta: {key}", str(text)) for text in (texts if isinstance(texts, list) else [texts])]
+    return units
 
 
 def _rule_figures(cv, adjustments, letter_units, lang) -> list[str]:
@@ -167,5 +178,5 @@ def validate(cv: dict, adjustments: dict, target: dict,
         *_rule_structure(cv, adjustments, lang),                   # 3 and 4
         *_rule_selection(cv, adjustments, lang),                   # 5
         *_rule_general_terms(units, target),                       # 6
-        *_rule_tags(units),
+        *_rule_markup(cv_units + _letter_strings(cover_letter, lang)),
     ]
