@@ -1,0 +1,14 @@
+{
+  "aliases": {
+    "K8s": "Kubernetes",
+    "Databricks": "Databricks + MLflow",
+    "MLflow": "Databricks + MLflow",
+    "Scikit-Learn": "Scikit-learn",
+    "sklearn": "Scikit-learn",
+    "Azure Document Intelligence": "Document Intelligence",
+    "Microsoft Azure": "Azure",
+    "Data Pipeline": "Data Pipelines",
+    "ADF": "Azure Data Factory"
+  },
+  "general_terms": {}
+}
