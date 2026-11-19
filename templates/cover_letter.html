@@ -67,7 +67,7 @@
             <ul class="list-disc list-outside ml-4 text-sm text-gray-700 space-y-2.5 leading-relaxed">
                 {% set why_me_items = letter.why_me[lang] if letter.why_me is mapping else letter.why_me %}
                 {% for point in why_me_items %}
-                <li>{{ point }}</li>
+                <li class="break-inside-avoid">{{ point }}</li>
                 {% endfor %}
             </ul>
         </div>
