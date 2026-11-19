@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Command line for the job-offer history: add, extract, list."""
+"""Command line for the job-offer history: add, extract, list, report."""
 
 import argparse
 import sys
+from datetime import date
 from pathlib import Path
 
 import build
 import extraction
 import llm
 import offers
+import report
 import vocabulary
 
 
@@ -42,6 +44,20 @@ def cmd_list() -> list[dict]:
     return offers.list_offers()
 
 
+def cmd_report(family: str | None = None, since: date | None = None,
+               out_root: Path | None = None) -> list[Path]:
+    """Write report.json and report.md per family; returns the Markdown paths."""
+    cv, vocab = _context()
+    everything = offers.list_offers()
+    families = [family] if family else sorted(
+        {o["extraction"]["role_family"] for o in everything if o["extraction"]})
+    out_root = out_root or report.MARKET_DIR
+    return [
+        report.write_report(report.build_report(everything, name, vocab, since), out_root / name)[1]
+        for name in families
+    ]
+
+
 def _describe(offer: dict) -> str:
     family = (offer["extraction"] or {}).get("role_family", "pendiente")
     status = f" [{offer['status']}]" if offer["status"] else ""
@@ -62,6 +78,10 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     extract.add_argument("--force", action="store_true", help="Volver a extraer todas")
 
     sub.add_parser("list", help="Listar las ofertas registradas")
+
+    rep = sub.add_parser("report", help="Informe de mercado por familia de cargo")
+    rep.add_argument("--family", help="Solo esta familia (por defecto, todas las que tengan ofertas)")
+    rep.add_argument("--since", type=date.fromisoformat, help="Solo ofertas desde AAAA-MM-DD")
     return parser.parse_args(argv)
 
 
@@ -80,6 +100,9 @@ def main(argv: list[str] | None = None) -> None:
         elif args.command == "list":
             listed = cmd_list()
             print("\n".join(_describe(o) for o in listed) if listed else "No hay ofertas registradas.")
+        elif args.command == "report":
+            paths = cmd_report(args.family, args.since)
+            print("\n".join(f"Informe: {p}" for p in paths) if paths else "No hay ofertas extraídas.")
     except offers.DuplicateOffer as e:
         print(f"Esa oferta ya está registrada: {e.existing_id}")
         sys.exit(1)

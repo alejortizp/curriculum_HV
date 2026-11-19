@@ -1,4 +1,4 @@
-.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio offer-add offers-extract offers-list apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
+.PHONY: all build html es en ats ats-es ats-en carta carta-es carta-en portfolio offer-add offers-extract offers-list offers-report apply test setup clean open-es open-en open-carta open-carta-en open-portfolio help
 
 # Profile variant for CV (e.g., make es PROFILE=ai-engineer). No flag = all profiles.
 PROFILE_FLAG = $(if $(PROFILE),--profile $(PROFILE),)
@@ -64,6 +64,10 @@ offers-extract:
 offers-list:
 	uv run python offers_cli.py list
 
+# Market report per role family (deterministic; no API call)
+offers-report:
+	uv run python offers_cli.py report $(if $(FAMILY),--family $(FAMILY),) $(if $(SINCE),--since $(SINCE),)
+
 # Run the test suite (deterministic code only; never calls the API)
 test:
 	uv run pytest -q
@@ -125,6 +129,7 @@ help:
 	@echo "  offer-add  Register a job offer: make offer-add FILE=offer.txt [COMPANY= ROLE= URL=]"
 	@echo "  offers-extract  Extract pending offers (FORCE=1 re-extracts all)"
 	@echo "  offers-list     List registered offers"
+	@echo "  offers-report   Market report per role family [FAMILY= SINCE=YYYY-MM-DD]"
 	@echo "  apply      Tailor CV + cover letter for a job offer (uses Claude API)"
 	@echo "  test       Run the test suite"
 	@echo "  setup      First-time setup (install dependencies)"

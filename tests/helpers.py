@@ -40,3 +40,20 @@ GOOD = {
     "skills_nice": [{"term": "Snowflake", "canonical": "Snowflake"}],
     "responsibilities": ["Construir pipelines de datos."],
 }
+
+
+def mk(id, family, required, nice=(), added="2026-11-01", raw="texto", **extra):
+    """An offer with an extraction. `required`/`nice` are skill terms; `extra` are extraction fields."""
+    def skills(terms):
+        return [{"term": t, "canonical": t} for t in terms]
+
+    return {
+        "id": id, "added": added, "company": "Empresa", "role": "Rol", "url": "", "status": None,
+        "raw": {"text": raw, "sha256": ""},
+        "extraction": {
+            "schema_version": 1, "company": "Empresa", "role": "Rol", "role_family": family,
+            "seniority": "senior", "language": "es", "languages_required": [{"language": "en", "level": "B2"}],
+            "years_required": 3, "skills_required": skills(required), "skills_nice": skills(nice),
+            "responsibilities": ["Construir pipelines."], **extra,
+        },
+    }
