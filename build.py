@@ -2,6 +2,7 @@
 """Build script: generates CV, cover letter, and portfolio HTML files from templates + data."""
 
 import argparse
+import copy
 import json
 import os
 import shutil
@@ -225,6 +226,69 @@ def apply_profile_overrides(cv_data: dict, profile_name: str) -> dict:
         if exp["company"] in exp_overrides else exp
         for exp in data["experience"]
     ]
+    return data
+
+
+def apply_adjustments(cv_data: dict, adjustments: dict) -> dict:
+    """Return a copy of cv_data with a derived-CV adjustments file applied (see docs/adr/0002).
+
+    Adjustments only rewrite the summary, title and bullets, and reorder or select
+    among what cv.json already has. Any unknown name raises, so a stale adjustments
+    file can't silently render the base content.
+    """
+    lang = adjustments["lang"]
+    data = copy.deepcopy(cv_data)
+    if adjustments.get("title"):
+        data["personal"]["title"] = adjustments["title"]
+    data["profile"] = {lang: adjustments["summary"]}
+
+    by_company = {exp["company"]: exp for exp in data["experience"]}
+    if len(by_company) != len(data["experience"]):
+        names = [exp["company"] for exp in data["experience"]]
+        raise ValueError(f"adjustments: repeated companies {sorted({n for n in names if names.count(n) > 1})}")
+    bullets = adjustments.get("experience", {})
+    order = adjustments.get("experience_order", [])
+    unknown = (set(bullets) | set(order)) - set(by_company)
+    if unknown:
+        raise ValueError(f"adjustments: unknown companies {sorted(unknown)}")
+    for company, items in bullets.items():
+        by_company[company]["items"][lang] = list(items)
+    data["experience"] = [by_company[c] for c in order] + [
+        exp for exp in data["experience"] if exp["company"] not in order
+    ]
+
+    groups = {cat["category"]: cat for cat in data["tech_stack"]}
+    ordered = []
+    for spec in adjustments.get("tech_stack_order", []):
+        if spec["category"] not in groups:
+            raise ValueError(f"adjustments: unknown skill group {spec['category']!r}")
+        cat = groups.pop(spec["category"])
+        names = {skill["name"] for line in cat["items"] for skill in line}
+        missing = [name for name in spec["first"] if name not in names]
+        if missing:
+            raise ValueError(f"adjustments: unknown skills in {spec['category']!r}: {missing}")
+        rank = {name: i for i, name in enumerate(spec["first"])}
+        # a line is placed by its first skill; lines not listed keep their order after
+        cat["items"] = sorted(cat["items"], key=lambda line: rank.get(line[0]["name"], len(rank)))
+        ordered.append(cat)
+    data["tech_stack"] = ordered + list(groups.values())
+
+    for section, key in (("projects", "projects_shown"), ("academic_projects", "academic_shown")):
+        shown = adjustments.get(key)
+        if not shown:
+            continue
+        by_title = {}
+        for proj in data.get(section, []):
+            title = proj["title"]
+            by_title[title[lang] if isinstance(title, dict) else title] = proj
+        missing = [title for title in shown if title not in by_title]
+        if missing:
+            raise ValueError(f"adjustments: unknown {section} {missing}")
+        for title, proj in by_title.items():
+            proj["cv"] = title in shown
+        data[section] = [by_title[t] for t in shown] + [
+            proj for title, proj in by_title.items() if title not in shown
+        ]
     return data
 
 
